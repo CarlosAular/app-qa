@@ -14,8 +14,12 @@ For the QA Automation take-home brief, see [CHALLENGE.md](CHALLENGE.md).
 ## Setup
 
 ```sh
-bun install
+bun i
 cp .env.example .env
+bun prebuild
+bun run ios
+# or
+bun run android
 ```
 
 `.env` drives every API request:
@@ -32,17 +36,10 @@ Keep `EXPO_PUBLIC_BUGS_TIER=off` for the normal golden path. Higher tiers
 activate intentional API defects used in QA scenarios — see
 [CHALLENGE.md](CHALLENGE.md).
 
-Start Metro on the default port:
+Start Metro alone on the default port:
 
 ```sh
 bun run start
-```
-
-Run a native target:
-
-```sh
-bun run ios
-bun run android
 ```
 
 For a clean Metro restart after native, Babel, or React Compiler config changes:
