@@ -22,11 +22,11 @@ bun run android
 
 `.env` drives every API request:
 
-| Variable                   | Required | Description                                                                                             |
-| -------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
-| `EXPO_PUBLIC_API_URL`      | yes      | Base URL of the dummy API.                                                                              |
-| `EXPO_PUBLIC_CANDIDATE_ID` | no       | Isolates orders, cash, and holdings on the multi-tenant API. When empty, the device install id is used. |
-| `EXPO_PUBLIC_BUGS_TIER`    | no       | `off`, `easy`, `medium`, or `hard`. Defaults to `off`. Any other value also falls back to `off`.        |
+| Variable                   | Required | Description                                                                                      |
+| -------------------------- | -------- | ------------------------------------------------------------------------------------------------ |
+| `EXPO_PUBLIC_API_URL`      | yes      | Base URL of the dummy API.                                                                       |
+| `EXPO_PUBLIC_CANDIDATE_ID` | yes      | Isolates orders, cash, and holdings on the multi-tenant API. Must be a non-empty string.         |
+| `EXPO_PUBLIC_BUGS_TIER`    | no       | `off`, `easy`, `medium`, or `hard`. Defaults to `off`. Any other value also falls back to `off`. |
 
 Env vars are read at bundle time, so restart Metro after changing `.env`.
 
@@ -78,5 +78,4 @@ Every request carries two headers the API requires:
 
 - `X-Enable-Bugs` — the tier from `EXPO_PUBLIC_BUGS_TIER`. Requests without a
   valid value are rejected with `400`.
-- `X-Candidate-Id` — from `EXPO_PUBLIC_CANDIDATE_ID`, or the device install id as
-  a fallback. `/portfolio` and `/orders` are rejected with `400` without it.
+- `X-Candidate-Id` — from `EXPO_PUBLIC_CANDIDATE_ID`. The app fails to start if that value is missing, empty, or not a string.
