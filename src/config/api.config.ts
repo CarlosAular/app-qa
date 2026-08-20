@@ -5,6 +5,8 @@ import * as Application from "expo-application"
 import * as Device from "expo-device"
 import * as Network from "expo-network"
 
+import {resolveCandidateId} from "@/config/candidateId.config"
+
 const Headers = {
   IP: "X-Device-IP",
   APP_BUNDLE_ID: "X-App-Bundle-ID",
@@ -33,7 +35,9 @@ const resolveBugsTier = (): BugsTier => {
   return BUGS_TIERS.find(tier => tier === configured) ?? DEFAULT_BUGS_TIER
 }
 
-const configuredCandidateId = process.env.EXPO_PUBLIC_CANDIDATE_ID?.trim()
+const configuredCandidateId = resolveCandidateId(
+  process.env.EXPO_PUBLIC_CANDIDATE_ID
+)
 
 const baseConfig: CreateAxiosDefaults = {
   baseURL: process.env.EXPO_PUBLIC_API_URL,
@@ -41,6 +45,7 @@ const baseConfig: CreateAxiosDefaults = {
   headers: {
     "Content-Type": "application/json",
     [Headers.ENABLE_BUGS]: resolveBugsTier(),
+    [Headers.CANDIDATE_ID]: configuredCandidateId,
   },
 }
 
@@ -48,12 +53,6 @@ export const api = axios.create(baseConfig)
 
 api.interceptors.request.use(
   async config => {
-    // Set before the device lookups below, which are the fallback source and
-    // can fail, so a configured tenant id always reaches the API.
-    if (configuredCandidateId) {
-      config.headers[Headers.CANDIDATE_ID] = configuredCandidateId
-    }
-
     try {
       const [deviceId, ipAddress] = await Promise.all([
         Platform.OS === "android"
@@ -64,10 +63,6 @@ api.interceptors.request.use(
 
       if (deviceId) {
         config.headers[Headers.DEVICE_ID] = deviceId
-
-        if (!configuredCandidateId) {
-          config.headers[Headers.CANDIDATE_ID] = deviceId
-        }
       }
 
       if (ipAddress) {
