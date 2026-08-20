@@ -3,8 +3,6 @@
 React Native trading app built with Expo Router, TypeScript, Uniwind, TanStack
 Query, and a multi-tenant dummy trading API.
 
-For the QA Automation take-home brief, see [CHALLENGE.md](CHALLENGE.md).
-
 ## Requirements
 
 - Bun
@@ -82,9 +80,3 @@ Every request carries two headers the API requires:
   valid value are rejected with `400`.
 - `X-Candidate-Id` — from `EXPO_PUBLIC_CANDIDATE_ID`, or the device install id as
   a fallback. `/portfolio` and `/orders` are rejected with `400` without it.
-
-API state is persistent and derived: each tenant starts with 1,000,000 ARS, and
-`/portfolio` returns `{ cash, holdings }` computed from that tenant's FILLED
-orders. Orders the API cannot execute — unknown instrument, insufficient cash,
-insufficient shares, non-integer quantity — come back as `400` with an `error`
-message that the order ticket surfaces, instead of a `REJECTED` status.
