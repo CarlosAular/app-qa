@@ -3,6 +3,30 @@
 React Native trading app built with Expo Router, TypeScript, Uniwind, TanStack
 Query, and a multi-tenant dummy trading API.
 
+## Documentación QA
+
+Seis documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
+navegador, no necesitan servidor ni build.
+
+- [`docs/glosario.html`](docs/glosario.html) — qué significa cada término de la
+  app, la API y el resto de la documentación. Escrito desde cero, sin asumir
+  conocimiento del mundo financiero.
+- [`docs/puesta-en-marcha.html`](docs/puesta-en-marcha.html) — cómo levantar la
+  app a mano paso a paso, los dos obstáculos que frenan el primer intento, y el
+  stack de tecnología con las versiones exactas verificadas.
+- [`docs/producto-y-qa.html`](docs/producto-y-qa.html) — vista funcional:
+  pantallas, reglas de negocio, matriz de riesgo, hallazgos con evidencia y
+  limitaciones de testabilidad.
+- [`docs/tecnologias.html`](docs/tecnologias.html) — inventario vivo del stack: qué
+  tecnología usa la app, qué usamos nosotros para QA, para qué sirve cada pieza y
+  con qué versión se verificó.
+- [`docs/qase.html`](docs/qase.html) — el catálogo de casos de prueba: qué es Qase,
+  cómo está organizado el proyecto `COCOS`, los 50 casos con link a cada ficha y el
+  lugar donde se irán registrando las corridas.
+- [`docs/api.html`](docs/api.html) — contrato de la API observado con requests
+  reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
+  diferencias entre niveles de defectos.
+
 ## Requirements
 
 - Bun

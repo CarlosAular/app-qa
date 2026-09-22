@@ -1,0 +1,2007 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Puesta en marcha</title>
+    <meta
+      name="description"
+      content="Cómo levantar la app Cocos a mano en un simulador de iOS, con el stack de tecnología y las versiones exactas verificadas."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      h3 {
+        font-size: 1.06rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 34px 0 4px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ------------------------------ Pasos ------------------------------ */
+
+      .steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 24px 0;
+        max-width: none;
+        display: grid;
+        gap: 14px;
+      }
+
+      .steps > li {
+        counter-increment: step;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px 18px 60px;
+        position: relative;
+        margin: 0;
+      }
+
+      .steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(45, 212, 191, 0.12);
+        color: var(--primary);
+        border: 1px solid rgba(45, 212, 191, 0.35);
+        font-family: var(--mono);
+        font-size: 12.5px;
+        display: grid;
+        place-items: center;
+      }
+
+      .steps h3 {
+        margin: 0 0 6px;
+      }
+
+      .steps > li > :last-child {
+        margin-bottom: 0;
+      }
+
+      .steps p {
+        max-width: none;
+      }
+
+      /* ----------------------------- Código ------------------------------ */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 16px 0;
+        font-size: 13.5px;
+        line-height: 1.7;
+      }
+
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+        white-space: pre;
+        color: var(--fg);
+      }
+
+      pre .c {
+        color: var(--fg-dim);
+      }
+
+      pre .k {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Tablas ----------------------------- */
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 480px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num,
+      td.ver {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      td.ver {
+        color: var(--primary);
+      }
+
+      tbody tr.sep td {
+        border-top: 1px solid var(--border);
+      }
+
+      /* ------------------------------ Avisos ----------------------------- */
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note--bad {
+        border-left-color: var(--loss);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--ok {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--bad {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · App bajo prueba</p>
+        <h1>Puesta en marcha</h1>
+        <p class="standfirst">
+          Cómo levantar la app a mano en un simulador de iOS y en un emulador de
+          Android, desde una Mac sin nada instalado. Incluye los obstáculos que
+          el README del proyecto no menciona y que frenan el primer intento, el
+          stack completo con las versiones exactas verificadas, y una guía final
+          para levantar los dispositivos a mano y ponerse a testear.
+        </p>
+      </header>
+
+      <nav class="toc" aria-label="Índice">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#requisitos">Qué necesitás antes de empezar</a></li>
+          <li><a href="#pasos">Levantar la app, paso a paso</a></li>
+          <li><a href="#obstaculos">Obstáculos conocidos</a></li>
+          <li><a href="#env">Variables de entorno</a></li>
+          <li><a href="#verificar">Verificar que quedó bien</a></li>
+          <li><a href="#stack">Stack de tecnología y versiones</a></li>
+          <li><a href="#comandos">Comandos de referencia</a></li>
+          <li><a href="#manual">Levantar los dispositivos a mano</a></li>
+        </ol>
+      </nav>
+
+      <!-- ================================================================ -->
+      <h2 id="requisitos">1 · Qué necesitás antes de empezar</h2>
+      <p class="h2sub">
+        Esta app no corre en el navegador: es una app nativa. Para iOS necesitás
+        una Mac con Xcode. Para Android alcanza con el SDK por línea de comandos
+        y un JDK — <strong>no hace falta instalar Android Studio</strong>. Las
+        versiones de la derecha son con las que se verificó que funciona.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Herramienta</th>
+              <th>Para qué</th>
+              <th>Verificado con</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>macOS</strong></td>
+              <td>Xcode sólo existe en Mac</td>
+              <td class="ver">26.6.2 (arm64)</td>
+            </tr>
+            <tr>
+              <td><strong>Node.js</strong></td>
+              <td>Motor de las herramientas de build</td>
+              <td class="ver">24.19.0</td>
+            </tr>
+            <tr>
+              <td><strong>Bun</strong></td>
+              <td>Instala dependencias y corre los scripts</td>
+              <td class="ver">1.4.2</td>
+            </tr>
+            <tr>
+              <td><strong>Xcode</strong></td>
+              <td>Compila la app nativa de iOS</td>
+              <td class="ver">26.6 (17F113)</td>
+            </tr>
+            <tr>
+              <td><strong>Runtime de iOS</strong></td>
+              <td>El "sistema operativo" del simulador</td>
+              <td class="ver">iOS 26.5 (23F77)</td>
+            </tr>
+            <tr>
+              <td><strong>CocoaPods</strong></td>
+              <td>Dependencias nativas de iOS</td>
+              <td class="ver">1.17.0</td>
+            </tr>
+            <tr>
+              <td><strong>Ruby</strong></td>
+              <td>CocoaPods está escrito en Ruby</td>
+              <td class="ver">4.0.7 (Homebrew)</td>
+            </tr>
+            <tr class="sep">
+              <td><strong>JDK 17</strong></td>
+              <td>Gradle compila la app de Android con Java</td>
+              <td class="ver">OpenJDK 17.0.20.1</td>
+            </tr>
+            <tr>
+              <td><strong>Android cmdline-tools</strong></td>
+              <td>Trae <code>sdkmanager</code> y <code>avdmanager</code></td>
+              <td class="ver">22.0</td>
+            </tr>
+            <tr>
+              <td><strong>Platform-tools</strong></td>
+              <td>Es el paquete que trae <code>adb</code></td>
+              <td class="ver">37.0.1</td>
+            </tr>
+            <tr>
+              <td><strong>SDK Platform 36</strong></td>
+              <td>Android 16, contra el que compila Expo 56</td>
+              <td class="ver">API 36 (rev 2)</td>
+            </tr>
+            <tr>
+              <td><strong>Build-tools</strong></td>
+              <td>Empaqueta y firma el APK</td>
+              <td class="ver">36.0.0</td>
+            </tr>
+            <tr>
+              <td><strong>Android Emulator</strong></td>
+              <td>El dispositivo virtual donde corre la app</td>
+              <td class="ver">37.1.11</td>
+            </tr>
+            <tr>
+              <td><strong>Imagen del sistema</strong></td>
+              <td>El "Android" que corre adentro del emulador</td>
+              <td class="ver">android-36 · google_apis · arm64-v8a</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Si Bun no está instalado, alcanza con:</p>
+      <pre><code>npm install -g bun</code></pre>
+
+      <div class="note">
+        <span class="note__label">Cuánto tarda la primera vez</span>
+        <p>
+          Para <strong>iOS</strong>, contando la descarga del runtime (8,5 GB),
+          la instalación de dependencias y el build en frío, calculá entre 30 y
+          45 minutos. Para <strong>Android</strong>, entre el SDK (5,8 GB) y el
+          primer build de Gradle, otro tanto. Las veces siguientes, con todo
+          cacheado, la app levanta en menos de un minuto.
+        </p>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="pasos">2 · Levantar la app, paso a paso</h2>
+      <p class="h2sub">
+        Los dos primeros pasos son iguales para todos. Después seguí la vía de
+        la plataforma que quieras levantar — o las dos, que conviven sin
+        pisarse.
+      </p>
+
+      <h3>Pasos comunes</h3>
+
+      <ol class="steps">
+        <li>
+          <h3>Instalar las dependencias</h3>
+          <p>
+            Descarga los 919 paquetes de JavaScript del proyecto. Tarda unos 15
+            segundos.
+          </p>
+          <pre><code>bun install</code></pre>
+        </li>
+
+        <li>
+          <h3>Crear el archivo de configuración</h3>
+          <p>
+            Copiá el ejemplo y completá
+            <code>EXPO_PUBLIC_CANDIDATE_ID</code> con un valor propio (por
+            ejemplo tu nombre).
+            <strong>Sin ese valor la app no arranca.</strong>
+          </p>
+          <pre><code>cp .env.example .env</code></pre>
+        </li>
+      </ol>
+
+      <h3>Vía iOS</h3>
+
+      <ol class="steps">
+        <li>
+          <h3>Generar el proyecto nativo</h3>
+          <p>
+            Crea la carpeta <code>ios/</code> con el proyecto de Xcode. Es un
+            paso generado: la carpeta no está en el repositorio. Sin el
+            <code>--platform</code> genera las dos.
+          </p>
+          <pre><code>bunx expo prebuild --platform ios</code></pre>
+        </li>
+
+        <li>
+          <h3>Asegurarte de tener un simulador</h3>
+          <p>
+            Si este comando no lista ningún iPhone, no tenés ningún runtime
+            instalado — ver el obstáculo A más abajo.
+          </p>
+          <pre><code>xcrun simctl list devices available</code></pre>
+        </li>
+
+        <li>
+          <h3>Compilar y lanzar</h3>
+          <p>
+            Compila la app, la instala en el simulador, la abre y levanta Metro.
+            El
+            <code>LANG</code> es obligatorio — ver el obstáculo B.
+          </p>
+          <pre><code><span class="k">export</span> LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+bun run ios</code></pre>
+        </li>
+      </ol>
+
+      <div class="note note--warn">
+        <span class="note__label">Metro se cae al terminar el build</span>
+        <p>
+          Si macOS no le dio permiso de automatización a la terminal,
+          <code>bun run ios</code>
+          falla al final intentando traer la ventana del simulador al frente, y
+          se lleva puesto a Metro. La app ya quedó instalada, así que alcanza
+          con levantar Metro por separado y relanzarla:
+        </p>
+        <pre><code>bun run start
+xcrun simctl launch booted com.cocos.trading</code></pre>
+      </div>
+
+      <h3>Vía Android</h3>
+
+      <p>
+        Esta vía no usa Android Studio. Todo se hace por terminal con el SDK de
+        línea de comandos, que es además lo único que pide Appium si más
+        adelante querés automatizar.
+      </p>
+
+      <ol class="steps">
+        <li>
+          <h3>Instalar el JDK 17 y el SDK</h3>
+          <p>
+            Gradle necesita Java 17 para compilar. Ojo con el
+            <code>java</code> que ya trae macOS: ver el obstáculo C.
+          </p>
+          <pre><code>brew install openjdk@17
+brew install --cask android-commandlinetools</code></pre>
+        </li>
+
+        <li>
+          <h3>Dejar las variables en el shell</h3>
+          <p>
+            Agregá esto al final de tu <code>~/.zshrc</code> y abrí una terminal
+            nueva. Sin <code>ANDROID_HOME</code> las herramientas no encuentran
+            el SDK.
+          </p>
+          <pre><code><span class="k">export</span> JAVA_HOME=<span class="k">"/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"</span>
+<span class="k">export</span> ANDROID_HOME=<span class="k">"$HOME/Library/Android/sdk"</span>
+<span class="k">export</span> ANDROID_SDK_ROOT=<span class="k">"$ANDROID_HOME"</span>
+<span class="k">export</span> PATH=<span class="k">"$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"</span></code></pre>
+        </li>
+
+        <li>
+          <h3>Aceptar las licencias e instalar los componentes</h3>
+          <p>
+            Son unos 5,8 GB entre el SDK, el emulador y la imagen del sistema.
+            La imagen tiene que ser <strong>arm64-v8a</strong> si tu Mac es
+            Apple Silicon — ver el obstáculo E.
+          </p>
+          <pre><code>yes | sdkmanager --sdk_root=<span class="k">"$ANDROID_HOME"</span> --licenses
+
+sdkmanager --sdk_root=<span class="k">"$ANDROID_HOME"</span> \
+  <span class="k">"platform-tools"</span> <span class="k">"platforms;android-36"</span> <span class="k">"build-tools;36.0.0"</span> \
+  <span class="k">"emulator"</span> <span class="k">"cmdline-tools;latest"</span> \
+  <span class="k">"system-images;android-36;google_apis;arm64-v8a"</span></code></pre>
+        </li>
+
+        <li>
+          <h3>Crear el emulador y levantarlo</h3>
+          <p>
+            Un Pixel 8 con Android 16. El emulador queda ocupando la terminal,
+            así que mandalo al fondo con <code>&amp;</code> o usá otra pestaña.
+          </p>
+          <pre><code>avdmanager create avd -n Pixel_8_API_36 \
+  -k <span class="k">"system-images;android-36;google_apis;arm64-v8a"</span> -d pixel_8
+
+emulator -avd Pixel_8_API_36 &amp;
+adb devices   <span class="c"># tiene que listarlo como "device"</span></code></pre>
+        </li>
+
+        <li>
+          <h3>Generar el proyecto nativo y compilar</h3>
+          <p>
+            El primer build de Gradle descarga medio internet y tarda bastante;
+            los siguientes son de segundos.
+          </p>
+          <pre><code>bunx expo prebuild --platform android
+bun run android</code></pre>
+        </li>
+      </ol>
+
+      <h2 id="obstaculos">3 · Obstáculos conocidos</h2>
+      <p class="h2sub">
+        Ninguno está documentado en el README del proyecto y todos frenan el
+        primer intento en una máquina limpia. Los dos primeros son de iOS; los
+        otros cuatro aparecieron al montar Android desde cero. Todos están
+        verificados en esta Mac, no copiados de un foro.
+      </p>
+
+      <h3>Obstáculo A — Xcode instalado pero sin ningún simulador</h3>
+      <p>
+        Xcode se puede instalar sin runtimes de iOS. Cuando pasa,
+        <code>xcrun simctl list devices available</code> no lista ningún
+        dispositivo y el build falla sin un mensaje claro.
+      </p>
+      <pre><code><span class="c"># Descarga el runtime (~8,5 GB, 15-25 min)</span>
+xcodebuild -downloadPlatform iOS
+
+<span class="c"># Comprobar que quedó</span>
+xcrun simctl list runtimes | grep iOS</code></pre>
+      <p>
+        Al instalarse el runtime aparecen solos los dispositivos por defecto.
+        Booteá uno antes de compilar:
+      </p>
+      <pre><code>xcrun simctl boot "iPhone 17 Pro"</code></pre>
+
+      <h3>Obstáculo B — CocoaPods rompe por el idioma del sistema</h3>
+      <p>
+        Si tu terminal no está en UTF-8, <code>pod install</code> muere con un
+        error que no dice nada sobre el idioma:
+      </p>
+      <pre><code><span class="c">Unicode Normalization not appropriate for ASCII-8BIT
+(Encoding::CompatibilityError)</span></code></pre>
+      <p>La solución es exportar el locale antes de compilar:</p>
+      <pre><code><span class="k">export</span> LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8</code></pre>
+      <p>
+        Para no repetirlo en cada sesión, agregalo a tu <code>~/.zshrc</code>.
+        El propio CocoaPods lo avisa en un warning que es fácil pasar por alto.
+      </p>
+
+      <!-- ================================================================ -->
+      <h3>Obstáculo C — el <code>java</code> que ya tenés no sirve</h3>
+      <p>
+        Es el más engañoso de todos, porque <code>java -version</code> responde
+        perfecto y te hace creer que estás listo. macOS suele traer un JRE 1.8
+        del viejo plugin de applets:
+      </p>
+      <pre><code><span class="c">java version "1.8.0_461"
+Java(TM) SE Runtime Environment (build 1.8.0_461-b11)</span></code></pre>
+      <p>
+        Eso <strong>no</strong> compila nada: es un runtime para correr Java, no
+        un kit para desarrollar, y además Gradle 9 pide Java 17 como mínimo. La
+        pista de que estás en este caso es que
+        <code>/usr/libexec/java_home -V</code> sólo lista una entrada y dice
+        <code>JavaAppletPlugin</code>. Instalá un JDK de verdad y apuntá
+        <code>JAVA_HOME</code> ahí:
+      </p>
+      <pre><code>brew install openjdk@17
+<span class="k">export</span> JAVA_HOME=<span class="k">"/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"</span>
+<span class="k">export</span> PATH=<span class="k">"$JAVA_HOME/bin:$PATH"</span>
+
+java -version   <span class="c"># ahora tiene que decir 17.x</span></code></pre>
+      <div class="note">
+        <span class="note__label">Por qué <code>openjdk</code> y no Zulu</span>
+        <p>
+          Los docs de Expo recomiendan <code>brew install --cask zulu@17</code>.
+          Funciona igual, pero es un <code>.pkg</code> que instala en
+          <code>/Library</code> y te pide la contraseña de administrador. La
+          fórmula <code>openjdk@17</code> instala dentro de Homebrew sin pedir
+          <code>sudo</code>, y a Gradle le da exactamente lo mismo: las dos son
+          OpenJDK 17.
+        </p>
+      </div>
+
+      <h3>Obstáculo D — <code>avdmanager</code> no encuentra el SDK</h3>
+      <p>
+        Al intentar crear el emulador, esto: un error que nombra la lista de
+        imágenes válidas y acto seguido dice que la lista es <code>null</code>.
+      </p>
+      <pre><code><span class="c">Error: Package path is not valid. Valid system image paths are:
+null</span></code></pre>
+      <p>
+        No es que falte la imagen — está instalada y
+        <code>sdkmanager --list_installed</code> la muestra. El problema es que
+        el <code>avdmanager</code> que Homebrew deja en
+        <code>/opt/homebrew/bin</code> busca el SDK al lado suyo, y tu SDK está
+        en otro lado. Exportar <code>ANDROID_SDK_ROOT</code> no alcanza. La
+        solución es instalar las cmdline-tools <em>adentro</em> del SDK y usar
+        ese binario, que además es el layout que esperan Expo y Appium:
+      </p>
+      <pre><code>sdkmanager --sdk_root=<span class="k">"$ANDROID_HOME"</span> <span class="k">"cmdline-tools;latest"</span>
+
+<span class="c"># y poné este bin en el PATH, antes que el de Homebrew</span>
+<span class="k">export</span> PATH=<span class="k">"$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"</span></code></pre>
+
+      <h3>Obstáculo E — la imagen del emulador tiene que ser arm64</h3>
+      <p>
+        En una Mac con chip M (Apple Silicon) la imagen del sistema tiene que
+        ser
+        <code>arm64-v8a</code>. Si agarrás una <code>x86_64</code> el emulador
+        no bootea, o bootea tan lento que parece colgado, porque está emulando
+        otra arquitectura.
+      </p>
+      <pre><code><span class="c"># Correcta en Apple Silicon</span>
+system-images;android-36;google_apis;arm64-v8a
+
+<span class="c"># Verificar qué arquitectura tenés</span>
+uname -m   <span class="c"># arm64 = Apple Silicon</span></code></pre>
+
+      <h3>Obstáculo F — <code>--device</code> con el ID de adb no funciona</h3>
+      <p>
+        Parece lógico pasarle a Expo el identificador que devuelve
+        <code>adb devices</code>, pero no lo reconoce:
+      </p>
+      <pre><code><span class="c">CommandError: Could not find device with name: emulator-5554</span></code></pre>
+      <p>
+        Expo espera el nombre del AVD, no el serial de adb. Si tenés un solo
+        emulador prendido, lo más simple es no pasarle nada y dejar que lo elija
+        solo:
+      </p>
+      <pre><code>bun run android</code></pre>
+
+      <h2 id="env">4 · Variables de entorno</h2>
+      <p class="h2sub">
+        El archivo <code>.env</code> maneja todas las llamadas a la API. Se leen
+        <strong>al compilar el bundle</strong>, no al arrancar: si cambiás una,
+        tenés que reiniciar Metro para que tome efecto.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Obligatoria</th>
+              <th>Qué hace</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>EXPO_PUBLIC_API_URL</code></td>
+              <td><span class="chip chip--bad">sí</span></td>
+              <td>
+                Dirección de la API. Valor:
+                <code>https://dummy-api-topaz.vercel.app</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>EXPO_PUBLIC_CANDIDATE_ID</code></td>
+              <td><span class="chip chip--bad">sí</span></td>
+              <td>
+                Tu cuenta. Aísla órdenes, efectivo y tenencias del resto.
+                Cualquier texto no vacío.
+                <strong>La app lanza un error y no arranca si falta.</strong>
+              </td>
+            </tr>
+            <tr>
+              <td><code>EXPO_PUBLIC_BUGS_TIER</code></td>
+              <td><span class="chip chip--ok">no</span></td>
+              <td>
+                Nivel de defectos inyectados en la API: <code>off</code>,
+                <code>easy</code>, <code>medium</code> o <code>hard</code>.
+                Cualquier otro valor cae a <code>off</code>. Para uso normal,
+                dejalo en <code>off</code>.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="verificar">5 · Verificar que quedó bien</h2>
+      <p class="h2sub">
+        Cuatro comprobaciones rápidas, con el resultado esperado.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué comprueba</th>
+              <th>Resultado esperado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun test</code></td>
+              <td>Tests unitarios del proyecto</td>
+              <td><span class="chip chip--ok">43 pass, 0 fail</span></td>
+            </tr>
+            <tr>
+              <td><code>bun run lint</code></td>
+              <td>Reglas de código</td>
+              <td><span class="chip chip--ok">sin salida</span></td>
+            </tr>
+            <tr>
+              <td><code>bun run format:check</code></td>
+              <td>Formato</td>
+              <td><span class="chip chip--ok">sin hallazgos</span></td>
+            </tr>
+            <tr>
+              <td><code>bunx tsc --noEmit</code></td>
+              <td>Tipos de TypeScript</td>
+              <td><span class="chip chip--bad">1 error conocido</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--bad">
+        <span class="note__label">El error de tipos es preexistente</span>
+        <p>
+          <code>bunx tsc --noEmit</code> falla en un repo limpio, antes de tocar
+          nada, con:
+        </p>
+        <pre><code><span class="c">src/app/_layout.tsx(15,8): error TS2882
+Cannot find module or type declarations for
+side-effect import of '../global.css'.</span></code></pre>
+        <p>
+          No impide compilar ni correr la app, pero está en un comando que el
+          propio README lista como paso de verificación. Está registrado como
+          hallazgo.
+        </p>
+      </div>
+
+      <p>Y para confirmar que la app está viva de verdad:</p>
+      <pre><code><span class="c"># Metro tiene que responder 200</span>
+curl -s -o /dev/null -w <span class="k">"%{http_code}\n"</span> http://localhost:8081/status
+
+<span class="c"># La app tiene que estar instalada</span>
+xcrun simctl listapps booted | grep com.cocos.trading</code></pre>
+
+      <!-- ================================================================ -->
+      <h2 id="stack">6 · Stack de tecnología y versiones</h2>
+      <p class="h2sub">
+        Versiones <strong>realmente instaladas</strong> (leídas de
+        <code>node_modules</code>, no del rango declarado en
+        <code>package.json</code>).
+      </p>
+
+      <h3>Base</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Paquete</th>
+              <th>Versión</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>expo</code></td>
+              <td class="ver">56.0.18</td>
+              <td>
+                SDK que envuelve React Native y simplifica el build nativo
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-native</code></td>
+              <td class="ver">0.85.3</td>
+              <td>Framework de apps nativas con JavaScript</td>
+            </tr>
+            <tr>
+              <td><code>react</code></td>
+              <td class="ver">19.2.3</td>
+              <td>Librería de interfaz</td>
+            </tr>
+            <tr>
+              <td><code>expo-router</code></td>
+              <td class="ver">56.2.17</td>
+              <td>
+                Navegación por archivos. Los tabs son nativos, no JavaScript
+              </td>
+            </tr>
+            <tr>
+              <td><code>typescript</code></td>
+              <td class="ver">6.0.3</td>
+              <td>Tipado estático</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Datos y red</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Paquete</th>
+              <th>Versión</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@tanstack/react-query</code></td>
+              <td class="ver">5.100.14</td>
+              <td>
+                Caché y estado del servidor. Datos vigentes 30 s, en memoria 5
+                min
+              </td>
+            </tr>
+            <tr>
+              <td><code>axios</code></td>
+              <td class="ver">1.16.1</td>
+              <td>Cliente HTTP. Corta toda request a los 12 segundos</td>
+            </tr>
+            <tr>
+              <td><code>zod</code></td>
+              <td class="ver">4.4.3</td>
+              <td>Valida la forma de cada respuesta antes de usarla</td>
+            </tr>
+            <tr>
+              <td><code>react-hook-form</code></td>
+              <td class="ver">7.76.1</td>
+              <td>Formularios. Valida al enviar, no mientras se tipea</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Interfaz</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Paquete</th>
+              <th>Versión</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>uniwind</code></td>
+              <td class="ver">1.7.0</td>
+              <td>
+                Tailwind para React Native (clases en <code>className</code>)
+              </td>
+            </tr>
+            <tr>
+              <td><code>tailwindcss</code></td>
+              <td class="ver">4.1.18</td>
+              <td>Sistema de estilos y tokens de color</td>
+            </tr>
+            <tr>
+              <td><code>@shopify/flash-list</code></td>
+              <td class="ver">2.0.2</td>
+              <td>
+                Listas virtualizadas: lo que no está en pantalla no existe en el
+                árbol
+              </td>
+            </tr>
+            <tr>
+              <td><code>@shopify/react-native-skia</code></td>
+              <td class="ver">2.6.2</td>
+              <td>Motor de dibujo de los gráficos</td>
+            </tr>
+            <tr>
+              <td><code>victory-native</code></td>
+              <td class="ver">41.20.3</td>
+              <td>Gráficos de precios</td>
+            </tr>
+            <tr>
+              <td><code>@gorhom/bottom-sheet</code></td>
+              <td class="ver">5.2.14</td>
+              <td>El panel deslizante del ticket de órdenes</td>
+            </tr>
+            <tr>
+              <td><code>react-native-reanimated</code></td>
+              <td class="ver">4.3.1</td>
+              <td>Animaciones</td>
+            </tr>
+            <tr>
+              <td><code>sonner-native</code></td>
+              <td class="ver">0.25.1</td>
+              <td>Avisos flotantes (toasts), visibles 6 segundos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Identidad visual</h3>
+      <p>
+        La app es <strong>dark-only</strong>: el tema claro y el oscuro están
+        definidos con los mismos valores, así que no cambia con la preferencia
+        del sistema. La tipografía es <strong>Plus Jakarta Sans</strong> en
+        cuatro pesos.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>Valor</th>
+              <th>Dónde se ve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>background</code></td>
+              <td class="ver">#020617</td>
+              <td>Fondo de toda la app</td>
+            </tr>
+            <tr>
+              <td><code>card</code></td>
+              <td class="ver">#0e1223</td>
+              <td>Filas de las listas y tarjetas</td>
+            </tr>
+            <tr>
+              <td><code>primary</code></td>
+              <td class="ver">#2dd4bf</td>
+              <td>Acento teal: tab activo, íconos, acciones</td>
+            </tr>
+            <tr>
+              <td><code>profit</code></td>
+              <td class="ver">#34d399</td>
+              <td>Verde: subas, compras, órdenes ejecutadas</td>
+            </tr>
+            <tr>
+              <td><code>loss</code></td>
+              <td class="ver">#fb7185</td>
+              <td>Rojo: bajas, ventas, órdenes rechazadas</td>
+            </tr>
+            <tr>
+              <td><code>secondary</code></td>
+              <td class="ver">#38bdf8</td>
+              <td>Celeste: órdenes pendientes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ================================================================ -->
+      <h3>Toolchain nativo</h3>
+      <p>
+        No son paquetes de npm: es lo que compila la app de verdad. Son las
+        piezas que deciden qué versión de Java necesitás y contra qué Android se
+        compila.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Versión</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Gradle</code></td>
+              <td class="ver">9.3.1</td>
+              <td>
+                Sistema de build de Android. Es el que impone el piso de Java 17
+                — lo fija el
+                <em>wrapper</em> generado por el prebuild, no vos
+              </td>
+            </tr>
+            <tr>
+              <td><code>OpenJDK</code></td>
+              <td class="ver">17.0.20.1</td>
+              <td>
+                Java con el que corre Gradle y se compila el código nativo
+              </td>
+            </tr>
+            <tr>
+              <td><code>SDK Platform</code></td>
+              <td class="ver">android-36</td>
+              <td>Android 16 "Baklava", contra el que compila Expo 56</td>
+            </tr>
+            <tr>
+              <td><code>build-tools</code></td>
+              <td class="ver">36.0.0</td>
+              <td>Compila recursos, genera el DEX y firma el APK</td>
+            </tr>
+            <tr>
+              <td><code>Xcode</code></td>
+              <td class="ver">26.6 (17F113)</td>
+              <td>Equivalente de todo lo anterior, del lado de iOS</td>
+            </tr>
+            <tr>
+              <td><code>CocoaPods</code></td>
+              <td class="ver">1.17.0</td>
+              <td>Resuelve las dependencias nativas de iOS</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="comandos">7 · Comandos de referencia</h2>
+      <p class="h2sub">Todo lo que se usa a diario, en un solo lugar.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué hace</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun install</code></td>
+              <td>Instala dependencias</td>
+            </tr>
+            <tr>
+              <td><code>bun prebuild</code></td>
+              <td>
+                Genera los proyectos nativos <code>ios/</code> y
+                <code>android/</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>bun run ios</code></td>
+              <td>Compila, instala y abre en el simulador de iOS</td>
+            </tr>
+            <tr>
+              <td><code>bun run android</code></td>
+              <td>Lo mismo para el emulador de Android</td>
+            </tr>
+            <tr>
+              <td><code>bun run start</code></td>
+              <td>Levanta sólo Metro, en el puerto 8081</td>
+            </tr>
+            <tr>
+              <td><code>npx expo start --clear</code></td>
+              <td>
+                Reinicia Metro limpiando caché, tras cambiar configuración
+              </td>
+            </tr>
+            <tr>
+              <td><code>bun test</code></td>
+              <td>Corre los tests unitarios</td>
+            </tr>
+            <tr>
+              <td><code>bun run lint</code> · <code>bun run lint:fix</code></td>
+              <td>Revisa y corrige reglas de código</td>
+            </tr>
+            <tr>
+              <td>
+                <code>bun run format</code> · <code>bun run format:check</code>
+              </td>
+              <td>Formatea y verifica formato</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Manejo del simulador de iOS</h3>
+      <pre><code><span class="c"># Ver qué simuladores hay y cuáles están prendidos</span>
+xcrun simctl list devices available
+xcrun simctl list devices booted
+
+<span class="c"># Prender uno</span>
+xcrun simctl boot <span class="k">"iPhone 17 Pro"</span>
+
+<span class="c"># Abrir, cerrar y sacar una captura de la app</span>
+xcrun simctl launch booted com.cocos.trading
+xcrun simctl terminate booted com.cocos.trading
+xcrun simctl io booted screenshot captura.png</code></pre>
+
+      <h3>Manejo del emulador de Android</h3>
+      <pre><code><span class="c"># Ver qué emuladores hay definidos y cuáles están prendidos</span>
+emulator -list-avds
+adb devices
+
+<span class="c"># Prender uno (queda ocupando la terminal: mandalo al fondo con &amp;)</span>
+emulator -avd Pixel_8_API_36 &amp;
+
+<span class="c"># Abrir, cerrar y sacar una captura de la app</span>
+adb shell am start -n com.cocos.trading/.MainActivity
+adb shell am force-stop com.cocos.trading
+adb exec-out screencap -p &gt; captura.png
+
+<span class="c"># Ver los logs de la app en vivo</span>
+adb logcat --pid=$(adb shell pidof com.cocos.trading)
+
+<span class="c"># Apagar el emulador</span>
+adb emu kill</code></pre>
+
+      <div class="note">
+        <span class="note__label">Para limpiar y empezar de cero</span>
+        <p>
+          Si algo queda en un estado raro, esto fuerza un build completamente
+          nuevo. Tené en cuenta que después vuelve a tardar los 10-15 minutos
+          del build en frío.
+        </p>
+        <pre><code>rm -rf ios android node_modules
+bun install &amp;&amp; bun prebuild
+<span class="k">export</span> LANG=en_US.UTF-8 &amp;&amp; bun run ios</code></pre>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="manual">8 · Levantar los dispositivos a mano</h2>
+      <p class="h2sub">
+        Esta sección es para el día después: ya está todo instalado y te querés
+        sentar a ejecutar casos. Acá no se compila nada, sólo se prende lo que
+        ya existe. Si arrancás de cero, andá primero a la sección 2.
+      </p>
+
+      <h3>Tres formas de levantarla</h3>
+      <p>
+        No hay una sola, y elegir mal te hace esperar de más. La diferencia
+        entre ellas es <strong>cuánto trabajo hacen</strong>: desde sólo abrir
+        lo que ya existe, hasta recompilar la app entera.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Forma</th>
+              <th>Para qué sirve</th>
+              <th>Cuándo usarla</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>A · Metro y una tecla</strong></td>
+              <td>
+                Levantás Metro y apretás una letra. Él se encarga de prender el
+                dispositivo y abrir la app
+              </td>
+              <td>
+                <strong>El día a día.</strong> Es la más corta y la que menos
+                hay que recordar
+              </td>
+            </tr>
+            <tr>
+              <td><strong>B · Comandos sueltos</strong></td>
+              <td>
+                Vos controlás cada paso: qué dispositivo, cuándo abrir la app,
+                cuándo cerrarla
+              </td>
+              <td>
+                Cuando tenés <strong>varios dispositivos</strong> y querés uno
+                puntual, o cuando armás un script. Son además los comandos que
+                vas a usar para capturas, logs y reset
+              </td>
+            </tr>
+            <tr>
+              <td><strong>C · Compilar y correr</strong></td>
+              <td>Compila, instala y abre, además de levantar Metro</td>
+              <td>
+                La <strong>primera vez</strong>, o después de tocar dependencias
+                nativas, <code>app.config.ts</code> o plugins de Expo
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label">Si tenés dudas, empezá por la A</span>
+        <p>
+          Las tres terminan en lo mismo: la app abierta y conectada a Metro. La
+          C es la única que recompila, y por eso es la más lenta — no la uses
+          por costumbre.
+        </p>
+      </div>
+
+      <h4>Forma A · Metro y una tecla</h4>
+      <p>
+        Metro no es sólo un servidor: mientras corre, te escucha el teclado.
+        Todo pasa en una sola terminal.
+      </p>
+
+      <ol class="steps">
+        <li>
+          <h3>Levantar Metro</h3>
+          <p>Se queda corriendo. No cierres esta pestaña mientras testeás.</p>
+          <pre><code>bun run start</code></pre>
+        </li>
+
+        <li>
+          <h3>Apretar la letra de tu plataforma</h3>
+          <p>
+            Sobre esa misma terminal, sin escribir nada más.
+            <code>i</code> prende el simulador de iOS y abre la app;
+            <code>a</code> hace lo mismo con el emulador de Android. Si el
+            dispositivo no estaba prendido, lo prende él.
+          </p>
+          <pre><code><span class="c">i</span>   <span class="c"># iOS</span>
+<span class="c">a</span>   <span class="c"># Android</span></code></pre>
+        </li>
+      </ol>
+
+      <p>Las demás teclas que ofrece, útiles mientras testeás:</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tecla</th>
+              <th>Qué hace</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>r</code></td>
+              <td>Recarga la app sin recompilar</td>
+            </tr>
+            <tr>
+              <td><code>m</code></td>
+              <td>
+                Abre el menú de desarrollo dentro de la app — lo mismo que
+                <code>Cmd+D</code> en iOS
+              </td>
+            </tr>
+            <tr>
+              <td><code>j</code></td>
+              <td>
+                Abre React Native DevTools, con la pestaña Network donde ves
+                cada request
+              </td>
+            </tr>
+            <tr>
+              <td><code>?</code></td>
+              <td>Lista todas las teclas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">La limitación de esta forma</span>
+        <p>
+          Con <code>i</code> no elegís <em>qué</em> simulador. Agarra el que
+          esté prendido, o el que el sistema considere por defecto. Si tenés
+          varios y la app está instalada sólo en uno —que es el caso de esta
+          Mac, donde vive en el <code>iPhone 17 Pro</code>— puede abrirte el
+          equivocado. Para eso está la forma B.
+        </p>
+      </div>
+
+      <h4>Forma B · Comandos sueltos</h4>
+      <p>
+        Más tecleo, pero controlás exactamente qué dispositivo y en qué momento.
+        Es también la forma que vas a scriptear.
+      </p>
+
+      <ol class="steps">
+        <li>
+          <h3>Levantar Metro, en su propia pestaña</h3>
+          <p>
+            Igual que en la forma A: se queda corriendo y ocupa la terminal, así
+            que va aparte.
+          </p>
+          <pre><code>bun run start</code></pre>
+        </li>
+
+        <li>
+          <h3>Prender el dispositivo que querés</h3>
+          <p>
+            En iOS nombrás el simulador; en Android, el AVD. El de Android tarda
+            cerca de 20 segundos en estar listo, así que conviene esperarlo
+            antes de seguir.
+          </p>
+          <pre><code><span class="c"># iOS</span>
+xcrun simctl boot <span class="k">"iPhone 17 Pro"</span>
+open -a Simulator
+
+<span class="c"># Android</span>
+emulator -avd Pixel_8_API_36 &amp;
+adb wait-for-device
+<span class="k">until</span> [ <span class="s">"$(adb shell getprop sys.boot_completed 2&gt;/dev/null | tr -d '\r')"</span> = <span class="s">"1"</span> ]; <span class="k">do</span> sleep 2; <span class="k">done</span></code></pre>
+        </li>
+
+        <li>
+          <h3>Abrir la app</h3>
+          <p>
+            Ya está instalada del build anterior. Este es el único comando que
+            vas a repetir durante el día.
+          </p>
+          <pre><code><span class="c"># iOS</span>
+xcrun simctl launch booted com.cocos.trading
+
+<span class="c"># Android</span>
+adb shell am start -n com.cocos.trading/.MainActivity</code></pre>
+        </li>
+      </ol>
+
+      <div class="note">
+        <span class="note__label"
+          >Por qué el <code>until</code> en Android y no un loop adentro de
+          <code>adb shell</code></span
+        >
+        <p>
+          Parece lo mismo pero no lo es. <code>adb wait-for-device</code> vuelve
+          apenas adb ve el dispositivo, que es mucho antes de que Android
+          termine de arrancar. Si la espera corre <em>adentro</em> de
+          <code>adb shell</code> y esa conexión falla en esos primeros segundos,
+          el comando sale al toque, el loop nunca espera y el
+          <code>am start</code> se dispara contra un sistema que todavía no está
+          listo: el emulador queda abierto y la app no aparece, sin ningún error
+          visible. Corriendo el <code>until</code> del lado de la Mac, cada
+          intento fallido se reintenta.
+        </p>
+        <p>
+          En iOS no hace falta esperar nada:
+          <code>simctl launch</code> aguanta solo si el simulador todavía está
+          arrancando.
+        </p>
+      </div>
+
+      <h4>Forma C · Compilar y correr</h4>
+      <p>
+        Un solo comando que hace todo: compila, instala en el dispositivo, abre
+        la app y levanta Metro. Es la de la sección 2, la que usaste la primera
+        vez.
+      </p>
+
+      <pre><code><span class="k">export</span> LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8   <span class="c"># sólo iOS, ver obstáculo B</span>
+bun run ios
+
+<span class="c"># o</span>
+bun run android</code></pre>
+
+      <p>
+        La contra es que <strong>pasa por el compilador igual</strong> aunque no
+        hayas tocado nada. Si sólo cambiaste código de pantallas, no te hace
+        falta: eso lo recarga Metro solo. Reservala para cuando cambió algo
+        nativo:
+      </p>
+
+      <ul>
+        <li>Instalaste o sacaste una dependencia con parte nativa.</li>
+        <li>
+          Tocaste <code>app.config.ts</code> — nombre, ícono, permisos,
+          <code>scheme</code>, plugins.
+        </li>
+        <li>
+          Borraste las carpetas <code>ios/</code> o <code>android/</code>.
+        </li>
+      </ul>
+
+      <h3>Qué se repite y qué no</h3>
+      <p>
+        La secuencia completa es para <strong>empezar la sesión</strong>.
+        Después casi nada se repite: Metro y el dispositivo se quedan prendidos
+        hasta que los apagues o reinicies la Mac. Lo único que vas a volver a
+        usar durante el día es el <code>launch</code>.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Cada cuánto</th>
+              <th>Si lo repetís igual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun run start</code></td>
+              <td>Una vez por sesión</td>
+              <td>
+                Falla: el puerto 8081 ya está ocupado por el Metro que tenés
+                andando
+              </td>
+            </tr>
+            <tr>
+              <td><code>simctl boot</code> · <code>emulator -avd</code></td>
+              <td>Una vez por sesión</td>
+              <td>
+                Da error
+                <em>"Unable to boot device in current state: Booted"</em>.
+                Molesto pero inofensivo: el simulador sigue como estaba
+              </td>
+            </tr>
+            <tr>
+              <td><code>open -a Simulator</code></td>
+              <td>Sólo si cerraste la ventana</td>
+              <td>Nada, la trae al frente</td>
+            </tr>
+            <tr>
+              <td><code>simctl launch</code> · <code>am start</code></td>
+              <td><strong>Cada vez que abrís la app</strong></td>
+              <td>
+                Si ya está abierta <strong>no la reinicia</strong>: te devuelve
+                el mismo proceso — ver el aviso de abajo
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label"
+          >Para reiniciar la app de verdad hay que cerrarla primero</span
+        >
+        <p>
+          Es una trampa fácil cuando encadenás casos de prueba: corrés
+          <code>launch</code> creyendo que arrancás de cero, y en realidad te
+          quedaste en la app que ya estaba abierta, con su estado y su
+          navegación intactos. Se nota en el número de proceso: si
+          <code>launch</code> te devuelve el mismo de antes, no reinició nada.
+        </p>
+        <pre><code><span class="c"># iOS</span>
+xcrun simctl terminate booted com.cocos.trading
+xcrun simctl launch booted com.cocos.trading
+
+<span class="c"># Android</span>
+adb shell am force-stop com.cocos.trading
+adb shell am start -n com.cocos.trading/.MainActivity</code></pre>
+      </div>
+
+      <h3>Qué tiene que estar prendido</h3>
+      <p>
+        Son tres piezas, y cuando algo "no abre" casi siempre es que falta una.
+        Entender qué hace cada una te ahorra la mitad de los problemas.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Qué es</th>
+              <th>Cómo comprobás que está</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>El dispositivo</strong></td>
+              <td>
+                El simulador de iPhone o el emulador de Android: una computadora
+                virtual corriendo dentro de tu Mac
+              </td>
+              <td>
+                <code>xcrun simctl list devices booted</code> ·
+                <code>adb devices</code>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Metro</strong></td>
+              <td>
+                El servidor que le pasa el JavaScript a la app. Lo que
+                instalaste en el dispositivo es sólo el cascarón nativo: el
+                código de las pantallas se lo pide a Metro cada vez que arranca
+              </td>
+              <td>
+                <code>curl -s localhost:8081/status</code> tiene que responder
+                <code>packager-status:running</code>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>La app instalada</strong></td>
+              <td>
+                El APK o el <code>.app</code> ya compilado, adentro del
+                dispositivo. Sobrevive a que lo apagues: no hace falta
+                recompilar cada vez
+              </td>
+              <td>
+                <code>adb shell pm list packages | grep cocos</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Si algo no arranca</h3>
+      <p>
+        Buscá lo que ves en pantalla en la primera columna. Están ordenados por
+        frecuencia: los primeros tres son el 90% de los casos.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Lo que ves</th>
+              <th>Qué está pasando</th>
+              <th>Cómo se arregla</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pantalla negra que no se va</td>
+              <td>
+                Metro no está levantado, o la app no lo encuentra. Unos segundos
+                de negro al abrir son normales — está bajando el bundle
+              </td>
+              <td><code>bun run start</code> en otra pestaña</td>
+            </tr>
+            <tr>
+              <td><code>Unable to lookup app</code></td>
+              <td>
+                Booteaste un simulador donde la app no está instalada.
+                <strong>Cada simulador tiene su propio disco</strong>, y la app
+                quedó sólo en el que usaste para compilar
+              </td>
+              <td>Booteá el <code>iPhone 17 Pro</code></td>
+            </tr>
+            <tr>
+              <td>Cambiaste el <code>.env</code> y la app lo ignora</td>
+              <td>
+                Las <code>EXPO_PUBLIC_*</code> quedan escritas adentro del
+                bundle cuando Metro lo arma. No se leen en vivo, y la app no
+                avisa nada
+              </td>
+              <td>
+                Cortá Metro y arrancalo con <code>bunx expo start --clear</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>adb devices</code> no lista nada</td>
+              <td>El emulador todavía está booteando</td>
+              <td><code>adb wait-for-device</code></td>
+            </tr>
+            <tr>
+              <td>
+                <code>command not found: adb</code> o <code>emulator</code>
+              </td>
+              <td>Las variables del SDK no están cargadas en esa terminal</td>
+              <td>Abrí una terminal nueva, o <code>source ~/.zshrc</code></td>
+            </tr>
+            <tr>
+              <td>El simulador queda en el logo de Apple</td>
+              <td>
+                Todavía está booteando. <code>boot</code> devuelve enseguida,
+                pero el arranque sigue por detrás
+              </td>
+              <td>
+                <code>xcrun simctl bootstatus "iPhone 17 Pro" -b</code> espera a
+                que termine
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Ver en qué simuladores está instalada la app</h4>
+      <p>
+        Responde sin necesidad de bootear ninguno. Si no aparece ninguno, la app
+        no está compilada todavía: volvé a la sección 2.
+      </p>
+      <pre><code><span class="k">for</span> u <span class="k">in</span> $(xcrun simctl list devices available | grep -oE <span class="s">'[0-9A-F-]{36}'</span>); <span class="k">do</span>
+  <span class="k">if</span> find ~/Library/Developer/CoreSimulator/Devices/<span class="s">"$u"</span>/data/Containers/Bundle/Application \
+       -maxdepth 2 -name <span class="s">"Cocos.app"</span> 2&gt;/dev/null | grep -q .; <span class="k">then</span>
+    xcrun simctl list devices | grep <span class="s">"$u"</span>
+  <span class="k">fi</span>
+<span class="k">done</span></code></pre>
+
+      <h3>Lo mismo en cada plataforma</h3>
+      <p>
+        Es la tabla que más se consulta: la misma idea de un lado y del otro
+        cambia de comando, no de concepto.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Quiero…</th>
+              <th>iOS</th>
+              <th>Android</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ver los dispositivos</td>
+              <td><code>xcrun simctl list devices</code></td>
+              <td><code>emulator -list-avds</code></td>
+            </tr>
+            <tr>
+              <td>Ver cuál está prendido</td>
+              <td><code>xcrun simctl list devices booted</code></td>
+              <td><code>adb devices</code></td>
+            </tr>
+            <tr>
+              <td>Prenderlo</td>
+              <td><code>xcrun simctl boot "iPhone 17 Pro"</code></td>
+              <td><code>emulator -avd Pixel_8_API_36 &amp;</code></td>
+            </tr>
+            <tr>
+              <td>Esperar a que termine de prender</td>
+              <td><code>xcrun simctl bootstatus "iPhone 17 Pro" -b</code></td>
+              <td><code>adb wait-for-device</code></td>
+            </tr>
+            <tr>
+              <td>Abrir la app</td>
+              <td><code>xcrun simctl launch booted com.cocos.trading</code></td>
+              <td>
+                <code
+                  >adb shell am start -n com.cocos.trading/.MainActivity</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Cerrarla</td>
+              <td>
+                <code>xcrun simctl terminate booted com.cocos.trading</code>
+              </td>
+              <td><code>adb shell am force-stop com.cocos.trading</code></td>
+            </tr>
+            <tr>
+              <td>Sacar una captura</td>
+              <td><code>xcrun simctl io booted screenshot foto.png</code></td>
+              <td><code>adb exec-out screencap -p &gt; foto.png</code></td>
+            </tr>
+            <tr>
+              <td>Borrar los datos locales</td>
+              <td>
+                <code>xcrun simctl uninstall booted com.cocos.trading</code>
+              </td>
+              <td><code>adb shell pm clear com.cocos.trading</code></td>
+            </tr>
+            <tr>
+              <td>Ver qué endpoints pega</td>
+              <td>
+                <code>log stream</code> filtrado — ver "Ver los logs" más abajo
+              </td>
+              <td>No se puede por terminal: usá DevTools</td>
+            </tr>
+            <tr>
+              <td>Apagarlo</td>
+              <td><code>xcrun simctl shutdown booted</code></td>
+              <td><code>adb emu kill</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Durante la sesión de testing</h3>
+
+      <h4>Recargar la app sin recompilar</h4>
+      <p>
+        Si tocaste código de pantallas, Metro la recarga sola. Para forzarlo, lo
+        más corto es apretar <code>r</code> en la terminal de Metro. Si querés
+        el menú de desarrollo completo, es <code>m</code> desde ahí,
+        <code>Cmd+D</code> en el simulador de iOS, o este comando en Android:
+      </p>
+      <pre><code>adb shell input keyevent 82</code></pre>
+
+      <h4>Ver los logs mientras testeás</h4>
+      <p>
+        Lo primero que hay que saber es lo que nadie te dice:
+        <strong>esta app casi no loguea</strong>. En todo el código hay un solo
+        <code>console</code>, y está en el <code>catch</code> del interceptor de
+        red — o sea que sólo escribe algo cuando un request <em>falla</em>. Si
+        navegás y todo anda bien, la terminal te va a quedar vacía. No es que el
+        filtro esté mal: no hay nada para mostrar.
+      </p>
+      <p>
+        Esto es lo que da cada vía, medido en esta máquina y no copiado de la
+        documentación oficial:
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Vía</th>
+              <th>Qué ves</th>
+              <th>Sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>adb logcat -s ReactNativeJS:V</code></td>
+              <td>
+                Nada. <strong>Cero líneas.</strong> Ese tag no existe en React
+                Native 0.85 con la arquitectura nueva, aunque es lo que vas a
+                encontrar en cualquier tutorial
+              </td>
+              <td>no</td>
+            </tr>
+            <tr>
+              <td>
+                <code
+                  >adb logcat --pid=$(adb shell pidof com.cocos.trading)</code
+                >
+              </td>
+              <td>
+                Tres líneas de <code>hiddenapi</code> de la capa de
+                accesibilidad. Nada de la app
+              </td>
+              <td>no</td>
+            </tr>
+            <tr>
+              <td>
+                <code>xcrun simctl spawn booted log stream</code> sin filtrar
+              </td>
+              <td>
+                878 líneas por cada arranque, casi todo de
+                <code>com.apple.network</code> y <code>UIKit</code>
+              </td>
+              <td>no</td>
+            </tr>
+            <tr>
+              <td>El mismo, filtrado a las URLs</td>
+              <td>
+                <strong>La URL de cada request</strong>, en vivo. Headers y
+                cuerpo no aparecen
+              </td>
+              <td>sí, iOS</td>
+            </tr>
+            <tr>
+              <td>React Native DevTools</td>
+              <td>
+                Pestaña <strong>Network</strong> con cada request, sus headers y
+                su respuesta completa
+              </td>
+              <td>sí, las dos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        <strong>Para seguir los endpoints desde la terminal (iOS).</strong> Deja
+        corriendo una línea por cada llamada a la API a medida que navegás. Es
+        lo más cerca que vas a estar de "ver los logs en vivo" sin salir de la
+        consola:
+      </p>
+      <pre><code>xcrun simctl spawn booted log stream --predicate <span class="s">'process == "Cocos"'</span> --style compact \
+  | grep --line-buffered -oE <span class="s">'url: https://dummy-api-topaz[^ ,]+'</span></code></pre>
+
+      <p>
+        <strong>Para ver headers y respuestas (las dos plataformas).</strong>
+        Abrí el menú de desarrollo y elegí <em>Open DevTools</em>. La pestaña
+        Network te muestra cada request entero, que es donde vas a poder
+        comprobar cosas como que <code>x-platform</code> cambia entre iOS y
+        Android, o qué manda exactamente la app al crear una orden.
+      </p>
+      <p>
+        Lo más rápido es la tecla <code>j</code> sobre la terminal de Metro:
+        abre DevTools directo, sin pasar por el menú, y sirve para las dos
+        plataformas. Si preferís ir por el menú de la app:
+      </p>
+      <pre><code><span class="c"># Desde la terminal de Metro, para cualquiera de las dos</span>
+<span class="c">j</span>
+
+<span class="c"># O abriendo el menú de desarrollo dentro de la app:</span>
+<span class="c">#   Metro: la tecla m</span>
+<span class="c">#   iOS:   Cmd+D en la ventana del simulador</span>
+<span class="c">#   Android:</span>
+adb shell input keyevent 82</code></pre>
+
+      <div class="note">
+        <span class="note__label"
+          >Comprobar que el depurador está enganchado</span
+        >
+        <p>
+          Si <em>Open DevTools</em> no abre nada, primero fijate que Metro vea
+          el dispositivo. Esto lista un target por cada app conectada:
+        </p>
+        <pre><code>curl -s http://localhost:8081/json/list | jq -r <span class="s">'.[].deviceName'</span></code></pre>
+      </div>
+
+      <h4>Volver la cuenta a cero entre casos</h4>
+      <p>
+        Acá hay un detalle propio de esta app: el saldo, las órdenes y la
+        tenencia <strong>no viven en el teléfono</strong>, viven en la API,
+        separados por <code>EXPO_PUBLIC_CANDIDATE_ID</code>. Borrar los datos
+        locales te deja la cuenta exactamente como estaba.
+      </p>
+      <pre><code><span class="c"># Caché de pantallas (Android)</span>
+adb shell pm clear com.cocos.trading
+
+<span class="c"># Saldo, órdenes y tenencia: eso se borra contra la API</span>
+curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/reset"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span></code></pre>
+      <p>
+        Para empezar como un usuario nuevo, sin borrarle nada al anterior,
+        cambiá <code>EXPO_PUBLIC_CANDIDATE_ID</code> en el <code>.env</code> y
+        reiniciá Metro con <code>--clear</code>. La API te trata como otro
+        inquilino, con su millón de pesos intacto. Todo el detalle está en
+        <a href="api.html">el documento de la API</a>.
+      </p>
+
+      <h3>Al terminar</h3>
+      <p>
+        El emulador de Android consume bastante CPU y batería aunque esté
+        quieto, así que conviene apagarlo. Metro se corta con
+        <code>Ctrl+C</code> en su pestaña.
+      </p>
+      <pre><code>adb emu kill                    <span class="c"># apaga el emulador de Android</span>
+xcrun simctl shutdown booted    <span class="c"># apaga el simulador de iOS</span></code></pre>
+
+      <footer class="footer">
+        Puesta en marcha de la app Cocos bajo prueba · Versiones verificadas en
+        macOS 26.6.2 arm64 (Apple M3 Pro). iOS el 19/09/2026 con Xcode 26.6: el
+        build en frío tomó unos 8 minutos de
+        <code>pod install</code> (1,1 GB de dependencias nativas) más 4 minutos
+        de compilación. Android el 20/09/2026 con OpenJDK 17 y SDK 36, sin
+        Android Studio: 5,8 GB de SDK, imagen <code>arm64-v8a</code> y un AVD
+        Pixel 8 con Android 16.
+      </footer>
+    </main>
+  </body>
+</html>

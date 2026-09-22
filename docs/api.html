@@ -1,0 +1,1575 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Contrato de la API</title>
+    <meta
+      name="description"
+      content="Endpoints, headers, errores, reservas de saldo y resolución de órdenes límite de la API que consume la app Cocos, relevados con requests reales."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0 0 18px;
+      }
+
+      .baseurl {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 13.5px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+      }
+
+      .baseurl b {
+        font-size: 10px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        font-weight: 500;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 38px 0 4px;
+        scroll-margin-top: 24px;
+      }
+
+      h4 {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin: 22px 0 6px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      em {
+        color: var(--fg-muted);
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ---------------------------- Endpoints ----------------------------- */
+
+      .endpoint {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+        margin: 18px 0;
+      }
+
+      .endpoint > :last-child {
+        margin-bottom: 0;
+      }
+
+      .endpoint__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .verb {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        padding: 3px 9px;
+        border-radius: 5px;
+        border: 1px solid;
+      }
+
+      .verb--get {
+        color: var(--secondary);
+        background: rgba(56, 189, 248, 0.12);
+        border-color: rgba(56, 189, 248, 0.32);
+      }
+
+      .verb--post {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.32);
+      }
+
+      .path {
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .needs {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--fg-dim);
+        margin-left: auto;
+      }
+
+      .endpoint p,
+      .endpoint ul {
+        max-width: none;
+      }
+
+      /* ------------------------------ Tablas ------------------------------ */
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 18px 0;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--panel);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 520px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      td.id {
+        font-family: var(--mono);
+        color: var(--primary);
+        white-space: nowrap;
+      }
+
+      /* ------------------------------ Código ------------------------------ */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 16px 0;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+        white-space: pre;
+        color: var(--fg-muted);
+      }
+
+      pre .s {
+        color: var(--primary);
+      }
+
+      pre .n {
+        color: var(--secondary);
+      }
+
+      pre .c {
+        color: var(--fg-dim);
+      }
+
+      pre .k {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Chips ------------------------------- */
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--ok {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--wait {
+        color: var(--secondary);
+        background: rgba(56, 189, 248, 0.12);
+        border-color: rgba(56, 189, 248, 0.3);
+      }
+
+      .chip--bad {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .chip--warn {
+        color: var(--warning);
+        background: rgba(250, 204, 21, 0.12);
+        border-color: rgba(250, 204, 21, 0.3);
+      }
+
+      .chip--neutral {
+        color: var(--fg-muted);
+        background: var(--muted);
+        border-color: var(--border);
+      }
+
+      /* ------------------------------ Avisos ------------------------------ */
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note--bad {
+        border-left-color: var(--loss);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · API bajo prueba</p>
+        <h1>Contrato de la API</h1>
+        <p class="standfirst">
+          Referencia de la API REST que consume la app, escrita
+          <strong>desde la observación directa del servicio</strong>, no desde
+          su código fuente. Todo lo marcado como <em>observado</em> se verificó
+          con requests reales.
+        </p>
+        <p class="baseurl"><b>Base</b> https://dummy-api-topaz.vercel.app</p>
+      </header>
+
+      <nav class="toc" aria-label="Índice">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#headers">Headers obligatorios</a></li>
+          <li><a href="#endpoints">Endpoints</a></li>
+          <li><a href="#reglas">Reglas de negocio</a></li>
+          <li>
+            <a href="#limite">Resolución de órdenes límite</a>
+            <span>— la parte crítica</span>
+          </li>
+          <li><a href="#aislamiento">Aislamiento y persistencia</a></li>
+          <li><a href="#tiers">Niveles de defectos</a></li>
+          <li><a href="#anomalias">Anomalías observadas</a></li>
+          <li><a href="#recetas">Recetas de verificación</a></li>
+        </ol>
+      </nav>
+
+      <!-- ================================================================ -->
+      <h2 id="headers">1 · Headers obligatorios</h2>
+      <p class="h2sub">
+        Toda request necesita estos dos headers. Sin ellos la API responde 400.
+      </p>
+
+      <h3><code>X-Enable-Bugs</code> — en todos los endpoints</h3>
+      <p>
+        Nivel de defectos inyectados: <code>off</code>, <code>easy</code>,
+        <code>medium</code> o <code>hard</code>. No distingue mayúsculas (<code
+          >OFF</code
+        >
+        funciona). Ausente o con cualquier otro valor:
+      </p>
+      <pre><code>{<span class="s">"error"</span>: <span class="s">"X-Enable-Bugs must be off, easy, medium, or hard"</span>}</code></pre>
+      <p>
+        <code>off</code> es el camino sano y la línea base contra la que se
+        escriben las verificaciones.
+      </p>
+
+      <h3><code>X-Candidate-Id</code> — en portfolio, orders y reset</h3>
+      <p>Identifica la cuenta. Ausente o vacío:</p>
+      <pre><code>{<span class="s">"error"</span>: <span class="s">"Missing X-Candidate-Id header"</span>}</code></pre>
+      <ul>
+        <li>
+          <strong>Distingue mayúsculas:</strong> <code>carlos</code> y
+          <code>CARLOS</code> son dos cuentas distintas <em>(observado)</em>.
+        </li>
+        <li>
+          <code>/instruments</code> y <code>/search</code>
+          <strong>no</strong> lo requieren: los instrumentos son compartidos.
+        </li>
+        <li>
+          No hay autenticación: cualquiera que conozca un id puede leer y
+          modificar esa cuenta.
+        </li>
+      </ul>
+
+      <h4>Headers que la app agrega y la API ignora</h4>
+      <p>
+        <code>X-Device-IP</code>, <code>X-App-Bundle-ID</code>,
+        <code>X-Platform</code>, <code>X-Device-Model</code>,
+        <code>X-Device-Manufacturer</code>, <code>X-Device-Name</code>,
+        <code>X-Device-OS-Version</code>, <code>X-App-Version</code>,
+        <code>X-Device-ID</code>.
+      </p>
+
+      <!-- ================================================================ -->
+      <h2 id="endpoints">2 · Endpoints</h2>
+      <p class="h2sub">
+        Seis endpoints, más un health check que la app no consume.
+      </p>
+
+      <div class="note">
+        <span class="note__label"
+          >Los bloques "copiar y pegar" andan tal cual</span
+        >
+        <p>
+          Cada endpoint termina con un bloque listo para pegar en la terminal:
+          URL completa, headers y todo. No hace falta correr nada antes. Sólo
+          dos cosas:
+        </p>
+        <ul>
+          <li>
+            Los ejemplos usan <code>carlos-aular</code> como
+            <code>X-Candidate-Id</code>, que es el valor del
+            <code>.env</code> de este proyecto. Cambialo si querés operar sobre
+            otra cuenta — cualquier string sirve y crea un inquilino nuevo con
+            su millón de pesos.
+          </li>
+          <li>
+            Van con <code>| jq</code> para que la respuesta se lea. Si no tenés
+            <code>jq</code>, instalalo con <code>brew install jq</code> o borrá
+            ese pedazo.
+          </li>
+        </ul>
+        <p>
+          Los <code>POST</code> <strong>escriben de verdad</strong> sobre la
+          cuenta del <code>candidate-id</code> que pongas. El de
+          <code>/reset</code> borra todo sin preguntar.
+        </p>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--get">GET</span>
+          <span class="path">/instruments</span>
+          <span class="needs">sin candidate-id</span>
+        </div>
+        <p>Listado completo de instrumentos. Compartido y de sólo lectura.</p>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Notas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>id</code></td>
+                <td>number</td>
+                <td>Entero, 1 a 26</td>
+              </tr>
+              <tr>
+                <td><code>ticker</code></td>
+                <td>string</td>
+                <td>Ej. <code>DYCA</code></td>
+              </tr>
+              <tr>
+                <td><code>name</code></td>
+                <td>string</td>
+                <td>Ej. <code>Dycasa S.A.</code></td>
+              </tr>
+              <tr>
+                <td><code>type</code></td>
+                <td>string</td>
+                <td><code>ACCIONES</code> o <code>MONEDA</code></td>
+              </tr>
+              <tr>
+                <td><code>last_price</code></td>
+                <td>number</td>
+                <td>ARS, hasta 2 decimales</td>
+              </tr>
+              <tr>
+                <td><code>close_price</code></td>
+                <td>number</td>
+                <td>ARS, cierre previo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>[
+  {<span class="s">"id"</span>: <span class="n">1</span>, <span class="s">"ticker"</span>: <span class="s">"DYCA"</span>, <span class="s">"name"</span>: <span class="s">"Dycasa S.A."</span>,
+   <span class="s">"type"</span>: <span class="s">"ACCIONES"</span>, <span class="s">"last_price"</span>: <span class="n">45.72</span>, <span class="s">"close_price"</span>: <span class="n">50.07</span>},
+  {<span class="s">"id"</span>: <span class="n">26</span>, <span class="s">"ticker"</span>: <span class="s">"ARS"</span>, <span class="s">"name"</span>: <span class="s">"Pesos"</span>,
+   <span class="s">"type"</span>: <span class="s">"MONEDA"</span>, <span class="s">"last_price"</span>: <span class="n">1</span>, <span class="s">"close_price"</span>: <span class="n">1</span>}
+]</code></pre>
+        <p>
+          <em>Observado:</em> 26 instrumentos, 25 acciones y una moneda. Los
+          precios son <strong>estables entre requests</strong> — no hay
+          simulación de mercado en vivo, lo que hace determinísticas las
+          aserciones sobre precio. El retorno diario no viene en la respuesta:
+          lo calcula el cliente.
+        </p>
+        <h4>Copiar y pegar</h4>
+        <pre><code>curl -s <span class="s">"https://dummy-api-topaz.vercel.app/instruments"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> | jq
+
+<span class="c"># Sólo ticker y precio de cada instrumento</span>
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/instruments"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> | jq -r <span class="s">'.[] | "\(.ticker)\t\(.last_price)"'</span></code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--get">GET</span>
+          <span class="path">/search?query=</span>
+          <span class="needs">sin candidate-id</span>
+        </div>
+        <p>
+          Búsqueda de instrumentos. Devuelve el mismo esquema que
+          <code>/instruments</code>.
+        </p>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Entrada</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>DYCA</code></td>
+                <td>1 resultado</td>
+              </tr>
+              <tr>
+                <td><code>dyca</code></td>
+                <td>1 resultado — no distingue mayúsculas</td>
+              </tr>
+              <tr>
+                <td><code>DY</code> (prefijo)</td>
+                <td>1 resultado</td>
+              </tr>
+              <tr>
+                <td><code>YCA</code> (sufijo)</td>
+                <td>
+                  1 resultado — <strong>matchea substring</strong>, no sólo
+                  prefijo
+                </td>
+              </tr>
+              <tr>
+                <td><code>Dycasa</code>, <code>Telecom</code></td>
+                <td><strong>0 resultados</strong> — sólo matchea ticker</td>
+              </tr>
+              <tr>
+                <td><code>" DYCA "</code></td>
+                <td><strong>0 resultados</strong> — no recorta espacios</td>
+              </tr>
+              <tr>
+                <td><em>sin parámetro</em></td>
+                <td>
+                  <strong>26 resultados</strong> — devuelve todo el catálogo
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>ZZZZ</code>, <code>*</code>, <code>%</code>, inyección
+                  SQL, XSS
+                </td>
+                <td>0 resultados, sin error</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>No hay paginación ni límite de resultados.</p>
+        <h4>Copiar y pegar</h4>
+        <pre><code>curl -s <span class="s">"https://dummy-api-topaz.vercel.app/search?query=DYCA"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> | jq
+
+<span class="c"># Los casos borde de la tabla de arriba, uno por línea</span>
+<span class="c"># (el último no lleva query: devuelve el catálogo entero)</span>
+<span class="k">for</span> q <span class="k">in</span> DYCA dyca DY YCA Dycasa ZZZZ <span class="s">""</span>; <span class="k">do</span>
+  printf <span class="s">"%-8s -> "</span> <span class="s">"$q"</span>
+  curl -s <span class="s">"https://dummy-api-topaz.vercel.app/search?query=$q"</span> \
+    -H <span class="s">"X-Enable-Bugs: off"</span> | jq <span class="s">'length'</span>
+<span class="k">done</span></code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--get">GET</span>
+          <span class="path">/portfolio</span>
+          <span class="needs">requiere candidate-id</span>
+        </div>
+        <p>
+          Estado de la cuenta. Cuenta nueva:
+          <code>{"cash": 1000000, "holdings": []}</code>.
+        </p>
+        <pre><code>{
+  <span class="s">"cash"</span>: <span class="n">999542.8</span>,
+  <span class="s">"holdings"</span>: [
+    {<span class="s">"instrument_id"</span>: <span class="n">1</span>, <span class="s">"ticker"</span>: <span class="s">"DYCA"</span>, <span class="s">"quantity"</span>: <span class="n">10</span>,
+     <span class="s">"last_price"</span>: <span class="n">45.72</span>, <span class="s">"close_price"</span>: <span class="n">50.07</span>,
+     <span class="s">"avg_cost_price"</span>: <span class="n">45.72</span>}
+  ]
+}</code></pre>
+        <p>
+          <code>cash</code> y <code>quantity</code> vienen
+          <strong>netos de las reservas</strong> de las órdenes pendientes.
+        </p>
+        <div class="note">
+          <span class="note__label"
+            >La aserción de más valor de toda la suite</span
+          >
+          <p>
+            No hay saldo almacenado: efectivo y tenencias se
+            <strong>derivan</strong> de las órdenes ejecutadas. Verificar esa
+            derivación contra el historial es lo que más cubre por unidad de
+            esfuerzo.
+          </p>
+        </div>
+        <h4>Copiar y pegar</h4>
+        <pre><code>curl -s <span class="s">"https://dummy-api-topaz.vercel.app/portfolio"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
+
+<span class="c"># Sólo el efectivo, para comparar contra el cálculo esperado</span>
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/portfolio"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq <span class="s">'.cash'</span></code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--get">GET</span>
+          <span class="path">/orders</span>
+          <span class="needs">requiere candidate-id</span>
+        </div>
+        <p>Historial completo de órdenes de la cuenta.</p>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Notas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>id</code></td>
+                <td>number</td>
+                <td>Entero aleatorio, <em>no correlativo</em></td>
+              </tr>
+              <tr>
+                <td><code>candidate_id</code></td>
+                <td>string</td>
+                <td>Eco del header</td>
+              </tr>
+              <tr>
+                <td><code>instrument_id</code></td>
+                <td>number</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>side</code></td>
+                <td>string</td>
+                <td><code>BUY</code> · <code>SELL</code></td>
+              </tr>
+              <tr>
+                <td><code>type</code></td>
+                <td>string</td>
+                <td><code>MARKET</code> · <code>LIMIT</code></td>
+              </tr>
+              <tr>
+                <td><code>quantity</code></td>
+                <td>number</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>price</code></td>
+                <td>number</td>
+                <td>
+                  De ejecución si está ejecutada; el límite si sigue pendiente
+                </td>
+              </tr>
+              <tr>
+                <td><code>status</code></td>
+                <td>string</td>
+                <td>
+                  <code>FILLED</code> · <code>PENDING</code> ·
+                  <code>REJECTED</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>created_at</code></td>
+                <td>string</td>
+                <td>ISO-8601 UTC</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note note--bad">
+          <span class="note__label"
+            >Este endpoint tiene efectos secundarios</span
+          >
+          <p>
+            Leer el historial es lo que dispara la resolución de las órdenes
+            límite pendientes.
+          </p>
+        </div>
+        <h4>Copiar y pegar</h4>
+        <pre><code>curl -s <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
+
+<span class="c"># Cuántas hay de cada estado — ojo que este GET resuelve las pendientes</span>
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq <span class="s">'group_by(.status) | map({estado: .[0].status, n: length})'</span></code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--post">POST</span>
+          <span class="path">/orders</span>
+          <span class="needs">requiere candidate-id</span>
+        </div>
+        <p>
+          Envío de una orden. Responde <code>201</code> con la orden creada.
+        </p>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Obligatorio</th>
+                <th>Reglas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>instrument_id</code></td>
+                <td>sí</td>
+                <td>Debe existir</td>
+              </tr>
+              <tr>
+                <td><code>side</code></td>
+                <td>sí</td>
+                <td>
+                  <code>BUY</code> o <code>SELL</code>, no distingue mayúsculas
+                </td>
+              </tr>
+              <tr>
+                <td><code>type</code></td>
+                <td>sí</td>
+                <td>
+                  <code>MARKET</code> o <code>LIMIT</code>, no distingue
+                  mayúsculas
+                </td>
+              </tr>
+              <tr>
+                <td><code>quantity</code></td>
+                <td>sí</td>
+                <td>Entero positivo</td>
+              </tr>
+              <tr>
+                <td><code>price</code></td>
+                <td>sólo si LIMIT</td>
+                <td>Precio límite</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>{<span class="s">"instrument_id"</span>: <span class="n">1</span>, <span class="s">"side"</span>: <span class="s">"BUY"</span>,  <span class="s">"type"</span>: <span class="s">"MARKET"</span>, <span class="s">"quantity"</span>: <span class="n">10</span>}
+{<span class="s">"instrument_id"</span>: <span class="n">1</span>, <span class="s">"side"</span>: <span class="s">"SELL"</span>, <span class="s">"type"</span>: <span class="s">"LIMIT"</span>,  <span class="s">"quantity"</span>: <span class="n">5</span>, <span class="s">"price"</span>: <span class="n">84.5</span>}</code></pre>
+        <p>
+          En una orden a mercado, el <code>price</code> de la respuesta viene
+          <strong>reescrito con el precio real de ejecución</strong>, aunque el
+          cliente haya mandado otro valor.
+        </p>
+
+        <h4>Catálogo completo de errores 400</h4>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>error</th>
+                <th>Cuándo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>quantity must be a positive number</code></td>
+                <td>Cantidad ausente, cero o negativa</td>
+              </tr>
+              <tr>
+                <td><code>quantity must be a positive integer</code></td>
+                <td>Cantidad con decimales</td>
+              </tr>
+              <tr>
+                <td><code>side must be BUY or SELL</code></td>
+                <td>Lado inválido o cuerpo vacío</td>
+              </tr>
+              <tr>
+                <td><code>type must be MARKET or LIMIT</code></td>
+                <td>Tipo inválido</td>
+              </tr>
+              <tr>
+                <td><code>LIMIT orders require a numeric price</code></td>
+                <td>Límite sin precio</td>
+              </tr>
+              <tr>
+                <td><code>Instrument not found</code></td>
+                <td>Instrumento inexistente o ausente</td>
+              </tr>
+              <tr>
+                <td><code>Insufficient cash</code></td>
+                <td>La compra excede el efectivo disponible</td>
+              </tr>
+              <tr>
+                <td><code>Insufficient shares</code></td>
+                <td>La venta excede la tenencia disponible</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Copiar y pegar</h4>
+        <pre><code><span class="c"># Compra a mercado: nace FILLED al last_price</span>
+curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"instrument_id":1,"side":"BUY","type":"MARKET","quantity":10}'</span> | jq
+
+<span class="c"># Venta límite: nace PENDING, siempre</span>
+curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"instrument_id":1,"side":"SELL","type":"LIMIT","quantity":5,"price":84.5}'</span> | jq
+
+<span class="c"># Un 400: cantidad con decimales</span>
+curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"instrument_id":1,"side":"BUY","type":"MARKET","quantity":1.5}'</span> | jq</code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--post">POST</span>
+          <span class="path">/reset</span>
+          <span class="needs">requiere candidate-id</span>
+        </div>
+        <p>
+          Borra órdenes, efectivo y tenencias. Responde
+          <code>{"ok": true}</code>. Tras el reset: <code>cash = 1000000</code>,
+          sin tenencias, historial vacío. No pide confirmación ni es reversible.
+        </p>
+        <h4>Copiar y pegar</h4>
+        <pre><code><span class="c"># Borra TODO el estado de este candidate id. No pide confirmación.</span>
+curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/reset"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
+
+<span class="c"># Comprobar que quedó limpio: cash 1000000 y holdings vacío</span>
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/portfolio"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq</code></pre>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint__head">
+          <span class="verb verb--get">GET</span>
+          <span class="path">/</span>
+          <span class="needs">health check</span>
+        </div>
+        <p>
+          Responde <code>200</code> con la cadena <code>"OK"</code>. La app no
+          lo consume.
+        </p>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="reglas">3 · Reglas de negocio</h2>
+      <p class="h2sub">Ejecución y ciclo de las reservas de saldo.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Al crearse</th>
+              <th>Precio de ejecución</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>MARKET</code></td>
+              <td><span class="chip chip--ok">FILLED</span> inmediato</td>
+              <td>Último precio del instrumento</td>
+            </tr>
+            <tr>
+              <td><code>LIMIT</code></td>
+              <td>
+                <strong>Siempre</strong>
+                <span class="chip chip--wait">PENDING</span>
+              </td>
+              <td>Se resuelve después</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Ciclo de la reserva</h3>
+      <p>Toda orden aparta saldo en el momento de crearse.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Estado</th>
+              <th>Efecto sobre la reserva</th>
+              <th>Efecto en el portafolio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="chip chip--wait">PENDING</span></td>
+              <td>La mantiene</td>
+              <td>Efectivo o cantidad reducidos</td>
+            </tr>
+            <tr>
+              <td><span class="chip chip--ok">FILLED</span></td>
+              <td>La liquida</td>
+              <td>Se materializa el movimiento</td>
+            </tr>
+            <tr>
+              <td><span class="chip chip--bad">REJECTED</span></td>
+              <td>La libera</td>
+              <td>Vuelve el saldo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul>
+        <li>
+          Una <strong>compra</strong> reserva <code>cantidad × precio</code> de
+          efectivo.
+        </li>
+        <li>
+          Una <strong>venta</strong> reserva <code>cantidad</code> acciones.
+        </li>
+      </ul>
+
+      <p>
+        <em>Observado:</em> con $ 999.542,80 y 10 DYCA, una venta límite de 5
+        DYCA deja el efectivo intacto y baja la tenencia a 5; una compra límite
+        de 10 CAPX a $ 40 baja el efectivo en exactamente $ 400 sin crear
+        ninguna tenencia.
+      </p>
+
+      <!-- ================================================================ -->
+      <h2 id="limite">4 · Resolución de órdenes límite</h2>
+      <p class="h2sub">
+        No determinística y perezosa. Es el comportamiento más importante a la
+        hora de diseñar tests estables.
+      </p>
+
+      <p>
+        <strong>La resolución se dispara al leer el estado de la cuenta</strong
+        >, no por el paso del tiempo <em>(observado)</em>. Creada una orden
+        límite, el primer o segundo read ya la deja resuelta, y a partir de ahí
+        el estado es terminal.
+      </p>
+
+      <pre><code>create           -> PENDING
+GET /orders  #1  -> PENDING
+GET /orders  #2  -> REJECTED   <span class="c">(terminal, no cambia más)</span></code></pre>
+
+      <div class="note note--bad">
+        <span class="note__label">Leer el portafolio también la resuelve</span>
+        <p>
+          Tras crear una compra límite y leer <strong>únicamente</strong>
+          <code>/portfolio</code> seis veces, la orden ya estaba resuelta antes
+          del primer <code>GET /orders</code>: en una corrida ejecutada con la
+          tenencia creada, en dos rechazada con el efectivo devuelto.
+        </p>
+      </div>
+
+      <p>
+        <em>Observado:</em> una compra límite ejecutable de 1 DYCA a $ 60
+        reserva $ 60 al crearse pero
+        <strong>ejecuta al último precio ($ 45,72)</strong> y libera el
+        excedente — el efectivo final fue $ 999.954,28.
+      </p>
+
+      <h3>Distribución medida</h3>
+      <p>
+        60 órdenes límite sobre DYCA con último precio $ 45,72, defectos en
+        <code>off</code>. Se llama <em>ejecutable</em> a una compra con precio ≥
+        último, o a una venta con precio ≤ último.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Caso</th>
+              <th class="num">Ejecutadas</th>
+              <th class="num">Pendientes</th>
+              <th class="num">Rechazadas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Compra ejecutable (precio ≥ último)</td>
+              <td class="num">4</td>
+              <td class="num">0</td>
+              <td class="num">11</td>
+            </tr>
+            <tr>
+              <td>Compra no ejecutable (precio &lt; último)</td>
+              <td class="num"><strong>0</strong></td>
+              <td class="num">2</td>
+              <td class="num">13</td>
+            </tr>
+            <tr>
+              <td>Venta ejecutable (precio ≤ último)</td>
+              <td class="num">6</td>
+              <td class="num">0</td>
+              <td class="num">9</td>
+            </tr>
+            <tr>
+              <td>Venta no ejecutable (precio &gt; último)</td>
+              <td class="num"><strong>0</strong></td>
+              <td class="num">2</td>
+              <td class="num">13</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label">Invariante utilizable en tests</span>
+        <p>
+          Una orden límite <strong>no ejecutable nunca se ejecuta</strong>: 0 de
+          30 observadas. Una ejecutable puede terminar en cualquiera de los tres
+          estados.
+        </p>
+      </div>
+
+      <h3>Consecuencias para la automatización</h3>
+      <ul>
+        <li>
+          Nunca asertar un estado final concreto de una orden límite: asertar
+          <strong>pertenencia a un conjunto</strong> — los tres estados para las
+          ejecutables, sólo pendiente o rechazada para las que no lo son.
+        </li>
+        <li>
+          Cuando se necesita una ejecución determinística, usar una orden a
+          mercado.
+        </li>
+        <li>
+          <strong
+            >No existe forma confiable de observar una orden pendiente "en
+            reposo":</strong
+          >
+          cualquier lectura de la cuenta puede resolverla. La reserva se
+          verifica con la respuesta del propio POST y con una
+          <strong>única</strong> lectura posterior, asertando de forma
+          condicional según el estado que traiga.
+        </li>
+        <li>
+          Asertar <strong>invariantes</strong> —conservación de efectivo,
+          liberación de reservas— en vez de estados puntuales.
+        </li>
+      </ul>
+
+      <!-- ================================================================ -->
+      <h2 id="aislamiento">5 · Aislamiento y persistencia</h2>
+      <p class="h2sub">Cómo hacer que dos corridas de tests no se pisen.</p>
+
+      <ul>
+        <li>
+          El estado <strong>persiste entre corridas</strong>. Dos ejecuciones
+          con el mismo candidate-id interfieren entre sí.
+        </li>
+        <li>
+          El id es arbitrario: se pueden generar ids únicos por corrida o por
+          caso para paralelizar
+          <strong>sin depender del reset</strong>.
+        </li>
+      </ul>
+
+      <div class="note">
+        <span class="note__label">Entornos donde el reset no existe</span>
+        <p>
+          La estrategia pasa a asertar <strong>deltas</strong> en vez de valores
+          absolutos: leer el estado, ejecutar la acción, asertar la diferencia
+          esperada (<code
+            >efectivo_después = efectivo_antes − cantidad × precio</code
+          >). Los ids únicos por corrida son el complemento natural.
+        </p>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="tiers">6 · Niveles de defectos</h2>
+      <p class="h2sub">
+        Diferencias observadas contra <code>off</code> en un sondeo acotado. No
+        es un inventario completo de los defectos inyectados.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comprobación</th>
+              <th>off</th>
+              <th>easy</th>
+              <th>medium</th>
+              <th>hard</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Listado y búsqueda de instrumentos</td>
+              <td><span class="chip chip--ok">ok</span></td>
+              <td><span class="chip chip--ok">ok</span></td>
+              <td><span class="chip chip--ok">ok</span></td>
+              <td><span class="chip chip--ok">ok</span></td>
+            </tr>
+            <tr>
+              <td>Cantidad cero rechazada</td>
+              <td><span class="chip chip--ok">400</span></td>
+              <td><span class="chip chip--ok">400</span></td>
+              <td><span class="chip chip--ok">400</span></td>
+              <td><span class="chip chip--ok">400</span></td>
+            </tr>
+            <tr>
+              <td><strong>Venta sin tenencia suficiente</strong></td>
+              <td><span class="chip chip--ok">rechaza</span></td>
+              <td><span class="chip chip--bad">la acepta</span></td>
+              <td><span class="chip chip--bad">la acepta</span></td>
+              <td><span class="chip chip--bad">la acepta</span></td>
+            </tr>
+            <tr>
+              <td><strong>Código HTTP al crear una orden</strong></td>
+              <td><span class="chip chip--ok">201</span></td>
+              <td><span class="chip chip--ok">201</span></td>
+              <td><span class="chip chip--bad">200</span></td>
+              <td><span class="chip chip--bad">200</span></td>
+            </tr>
+            <tr>
+              <td><strong>Precio de ejecución a mercado</strong></td>
+              <td><span class="chip chip--ok">último</span></td>
+              <td><span class="chip chip--ok">último</span></td>
+              <td><span class="chip chip--ok">último</span></td>
+              <td><span class="chip chip--bad">cierre</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">Cómo autoverificar la suite</span>
+        <p>
+          Una suite bien construida debería fallar al menos en: control de
+          tenencia (desde
+          <code>easy</code>), código de estado de creación (desde
+          <code>medium</code>) y precio de ejecución (en <code>hard</code>).
+          <strong
+            >Si al subir el nivel la suite sigue toda en verde, es que no está
+            asertando comportamiento real.</strong
+          >
+        </p>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="anomalias">7 · Anomalías observadas</h2>
+      <p class="h2sub">
+        Desviaciones respecto de lo documentado o de lo esperable,
+        <strong>todas con los defectos en <code>off</code></strong> — es decir,
+        no son los defectos inyectados.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Anomalía</th>
+              <th>Evidencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="id">A1</td>
+              <td>
+                <strong
+                  >La cantidad se coacciona en vez de validarse por
+                  tipo.</strong
+                >
+                Un cliente con un bug de serialización puede enviar 1000
+                acciones creyendo enviar un texto
+              </td>
+              <td>
+                <code>"10"</code>⇒10 · <code>"1e3"</code>⇒<strong>1000</strong>
+                · <code>" 7 "</code>⇒7 · <code>true</code>⇒<strong>1</strong> ·
+                <code>[5]</code>⇒<strong>5</strong>, todas ejecutadas. Sólo
+                <code>"10abc"</code> y <code>null</code> dan 400
+              </td>
+            </tr>
+            <tr>
+              <td class="id">A9</td>
+              <td>
+                <strong>Los GET mutan estado.</strong> Observar la cuenta altera
+                el resultado y vuelve inobservable una orden pendiente estable
+              </td>
+              <td>
+                Tanto <code>/orders</code> como
+                <code>/portfolio</code> resuelven las límite
+              </td>
+            </tr>
+            <tr>
+              <td class="id">A2</td>
+              <td>
+                Una orden límite con precio <strong>cero o negativo</strong> es
+                aceptada
+              </td>
+              <td><code>price: -10</code> ⇒ 201 pendiente</td>
+            </tr>
+            <tr>
+              <td class="id">A6</td>
+              <td>
+                Se puede <strong>comprar ARS</strong> (la moneda) como si fuera
+                una acción
+              </td>
+              <td><code>instrument_id: 26</code> ⇒ 201 ejecutada a $ 1</td>
+            </tr>
+            <tr>
+              <td class="id">A3</td>
+              <td>
+                La búsqueda sin parámetro devuelve
+                <strong>todo el catálogo</strong>
+              </td>
+              <td><code>GET /search</code> ⇒ 26 items</td>
+            </tr>
+            <tr>
+              <td class="id">A4</td>
+              <td>La búsqueda <strong>no recorta espacios</strong></td>
+              <td><code>" DYCA "</code> ⇒ vacío</td>
+            </tr>
+            <tr>
+              <td class="id">A5</td>
+              <td>
+                Los <strong>404 devuelven HTML</strong>, no JSON: rompe
+                cualquier parser
+              </td>
+              <td><code>GET /nope</code> ⇒ <code>text/html</code></td>
+            </tr>
+            <tr>
+              <td class="id">A7</td>
+              <td>
+                Una orden a mercado con <code>price</code> lo
+                <strong>ignora en silencio</strong>
+              </td>
+              <td><code>price: 9999</code> ⇒ ejecuta a $ 45,72</td>
+            </tr>
+            <tr>
+              <td class="id">A8</td>
+              <td>
+                Sin autenticación: el candidate-id es un identificador
+                adivinable
+              </td>
+              <td>Cualquier id lee y escribe esa cuenta</td>
+            </tr>
+          </tbody>
+        </table>
+        <h4>Copiar y pegar</h4>
+        <pre><code><span class="c"># Devuelve "OK" con 200. Igual necesita el header X-Enable-Bugs:</span>
+<span class="c"># sin él responde 400, como todos los demás.</span>
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> -w <span class="s">" [%{http_code}]\n"</span></code></pre>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="recetas">8 · Recetas de verificación</h2>
+      <p class="h2sub">Para explorar a mano desde la terminal.</p>
+
+      <pre><code>API=https://dummy-api-topaz.vercel.app
+CID=tu-candidate-id
+H=(-H <span class="s">"X-Enable-Bugs: off"</span> -H <span class="s">"X-Candidate-Id: $CID"</span>)
+
+<span class="c"># Estado limpio</span>
+curl -s -X POST <span class="s">"$API/reset"</span> <span class="s">"${H[@]}"</span>
+
+<span class="c"># Catálogo y búsqueda</span>
+curl -s <span class="s">"$API/instruments"</span> -H <span class="s">"X-Enable-Bugs: off"</span>
+curl -s <span class="s">"$API/search?query=DYCA"</span> -H <span class="s">"X-Enable-Bugs: off"</span>
+
+<span class="c"># Portafolio inicial -> {"cash":1000000,"holdings":[]}</span>
+curl -s <span class="s">"$API/portfolio"</span> <span class="s">"${H[@]}"</span>
+
+<span class="c"># Compra a mercado</span>
+curl -s -X POST <span class="s">"$API/orders"</span> <span class="s">"${H[@]}"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"instrument_id":1,"side":"BUY","type":"MARKET","quantity":10}'</span>
+
+<span class="c"># Verificar la derivación: 1000000 - 10*45.72 = 999542.80</span>
+curl -s <span class="s">"$API/portfolio"</span> <span class="s">"${H[@]}"</span>
+
+<span class="c"># Orden límite: siempre nace pendiente</span>
+curl -s -X POST <span class="s">"$API/orders"</span> <span class="s">"${H[@]}"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"instrument_id":1,"side":"SELL","type":"LIMIT","quantity":5,"price":84.5}'</span></code></pre>
+
+      <h3>Reset completo antes de un caso</h3>
+      <p>
+        "Resetear la app" son en realidad dos cosas distintas, y confundirlas
+        hace perder tiempo. El saldo, las órdenes y la tenencia
+        <strong>no viven en el teléfono</strong>: viven en la API, separados por
+        <code>X-Candidate-Id</code>. Borrar los datos locales deja la cuenta
+        exactamente como estaba.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Qué querés borrar</th>
+              <th>Dónde vive</th>
+              <th>Con qué</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Saldo, órdenes, tenencias</td>
+              <td>La API, por candidate id</td>
+              <td><code>POST /reset</code></td>
+            </tr>
+            <tr>
+              <td>Caché de pantallas, estado de navegación</td>
+              <td>El dispositivo</td>
+              <td><code>pm clear</code> · reinstalar</td>
+            </tr>
+            <tr>
+              <td>Empezar como un usuario nuevo</td>
+              <td>Ninguno de los dos</td>
+              <td>Cambiar el candidate id en <code>.env</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Copiar y pegar</h4>
+      <pre><code><span class="c"># 1 · Cuenta a cero en la API</span>
+curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/reset"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
+
+<span class="c"># 2 · Comprobar: cash 1000000, holdings vacío, sin órdenes</span>
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/portfolio"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
+curl -s <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
+  -H <span class="s">"X-Enable-Bugs: off"</span> \
+  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq <span class="s">'length'</span>
+
+<span class="c"># 3 · Estado local del dispositivo (Android)</span>
+adb shell pm clear com.cocos.trading
+
+<span class="c"># 3 · Estado local del dispositivo (iOS)</span>
+xcrun simctl terminate booted com.cocos.trading
+xcrun simctl launch booted com.cocos.trading</code></pre>
+
+      <div class="note note--warn">
+        <span class="note__label"
+          >Si cambiás el candidate id, reiniciá Metro</span
+        >
+        <p>
+          Las variables <code>EXPO_PUBLIC_*</code> quedan escritas adentro del
+          bundle cuando Metro lo arma, no se leen en vivo. Cambiar
+          <code>EXPO_PUBLIC_CANDIDATE_ID</code> en el <code>.env</code> no tiene
+          ningún efecto hasta que reinicies Metro limpiando caché — y la app no
+          avisa nada, sigue operando sobre el inquilino viejo. Lo mismo vale
+          para <code>EXPO_PUBLIC_BUGS_TIER</code> cuando querés activar un nivel
+          de defectos.
+        </p>
+        <pre><code>bunx expo start --clear</code></pre>
+      </div>
+
+      <footer class="footer">
+        Contrato de la API que consume la app Cocos · Relevado el 19/09/2026
+        contra
+        <code>dummy-api-topaz.vercel.app</code> con el nivel de defectos en
+        <code>off</code>. Todo lo marcado como observado se verificó con
+        requests reales.
+      </footer>
+    </main>
+  </body>
+</html>

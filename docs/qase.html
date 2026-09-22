@@ -1,0 +1,1507 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>El catálogo de casos en Qase</title>
+    <meta
+      name="description"
+      content="Qué es Qase, cómo está organizado el proyecto COCOS y el listado completo de los casos de prueba del challenge, con link a cada ficha."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      h3 {
+        font-size: 1.06rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 34px 0 4px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ------------------------------ Pasos ------------------------------ */
+
+      .steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 24px 0;
+        max-width: none;
+        display: grid;
+        gap: 14px;
+      }
+
+      .steps > li {
+        counter-increment: step;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px 18px 60px;
+        position: relative;
+        margin: 0;
+      }
+
+      .steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(45, 212, 191, 0.12);
+        color: var(--primary);
+        border: 1px solid rgba(45, 212, 191, 0.35);
+        font-family: var(--mono);
+        font-size: 12.5px;
+        display: grid;
+        place-items: center;
+      }
+
+      .steps h3 {
+        margin: 0 0 6px;
+      }
+
+      .steps > li > :last-child {
+        margin-bottom: 0;
+      }
+
+      .steps p {
+        max-width: none;
+      }
+
+      /* ----------------------------- Código ------------------------------ */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 16px 0;
+        font-size: 13.5px;
+        line-height: 1.7;
+      }
+
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+        white-space: pre;
+        color: var(--fg);
+      }
+
+      pre .c {
+        color: var(--fg-dim);
+      }
+
+      pre .k {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Tablas ----------------------------- */
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 480px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num,
+      td.ver {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      td.ver {
+        color: var(--primary);
+      }
+
+      tbody tr.sep td {
+        border-top: 1px solid var(--border);
+      }
+
+      /* ------------------------------ Avisos ----------------------------- */
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note--bad {
+        border-left-color: var(--loss);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--ok {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--bad {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+    <style>
+      .chip--warn {
+        color: var(--warning);
+        background: rgba(250, 204, 21, 0.12);
+        border-color: rgba(250, 204, 21, 0.3);
+      }
+
+      .chip--neutral {
+        color: var(--fg-muted);
+        background: rgba(154, 167, 189, 0.1);
+        border-color: rgba(154, 167, 189, 0.28);
+      }
+
+      td .chip {
+        margin-left: 4px;
+        vertical-align: 1px;
+      }
+
+      td.cubre {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        color: var(--fg-muted);
+        white-space: nowrap;
+      }
+
+      td.num a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      td.num a:hover {
+        text-decoration: underline;
+      }
+
+      .hall {
+        color: var(--warning);
+      }
+
+      .count {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        font-weight: 400;
+        color: var(--fg-dim);
+        margin-left: 6px;
+      }
+
+      .muted {
+        color: var(--fg-muted);
+        font-size: 0.86rem;
+      }
+
+      .empty {
+        color: var(--fg-dim);
+        text-align: center;
+        padding-block: 18px;
+      }
+
+      .h3sub {
+        color: var(--fg-muted);
+        font-size: 14.5px;
+        margin: 4px 0 0;
+      }
+
+      .biglink {
+        display: inline-block;
+        margin-top: 20px;
+        font-family: var(--mono);
+        font-size: 13.5px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 12px 16px;
+        text-decoration: none;
+      }
+
+      .biglink:hover {
+        border-color: var(--primary);
+      }
+
+      .biglink span {
+        display: block;
+        font-family: var(--sans);
+        font-size: 11px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 4px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · Gestión de casos</p>
+        <h1>El catálogo de casos en Qase</h1>
+        <p class="standfirst">
+          Los casos de prueba del challenge no viven en este repositorio: viven
+          en Qase, y este documento es el índice para llegar a ellos. Qué es la
+          herramienta, cómo está organizado el proyecto y los 50 casos cargados,
+          cada uno con link a su ficha.
+        </p>
+        <a class="biglink" href="https://app.qase.io/project/COCOS">
+          <span>Proyecto en Qase</span>
+          app.qase.io/project/COCOS
+        </a>
+      </header>
+
+      <nav class="toc" aria-label="Contenido">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#que-es">Qué es Qase y por qué está acá</a></li>
+          <li><a href="#organizacion">Cómo está organizado el proyecto</a></li>
+          <li>
+            <a href="#casos">Los 50 casos</a>
+            <span>— el catálogo completo</span>
+          </li>
+          <li>
+            <a href="#corridas">Corridas</a>
+            <span>— resultados de cada ejecución</span>
+          </li>
+          <li><a href="#alcance">Alcance y estado</a></li>
+          <li><a href="#cambios">Registro de cambios</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="que-es">1 · Qué es Qase y por qué está acá</h2>
+      <p class="h2sub">
+        Qase es un gestor de casos de prueba: un lugar donde cada caso tiene un
+        identificador, una precondición, pasos con su resultado esperado y una
+        postcondición.
+      </p>
+
+      <p>
+        La alternativa era una tabla en Markdown dentro del repositorio. Se
+        eligió Qase por tres cosas concretas:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Identificadores estables.</strong> Un caso es
+          <code>COCOS-7</code> para siempre, y se puede citar desde un hallazgo,
+          un commit o una corrida sin ambigüedad.
+        </li>
+        <li>
+          <strong>Resultado esperado paso a paso.</strong> No es una descripción
+          suelta: cada acción dice qué tiene que pasar, que es lo que hace un
+          caso ejecutable por otra persona.
+        </li>
+        <li>
+          <strong>Lugar donde colgar las corridas.</strong> Cuando se ejecute la
+          suite, los resultados y los defectos quedan atados a estos mismos
+          casos en vez de vivir sueltos.
+        </li>
+      </ul>
+
+      <div class="note">
+        <span class="note__label">Fuente única</span>
+        <p>
+          El catálogo <strong>no se duplica</strong>: los pasos de cada caso
+          están sólo en Qase. Este documento lista qué casos existen y para qué;
+          lo que hay que hacer en cada uno se lee en su ficha. El proyecto es
+          privado, así que los links abren únicamente con acceso al workspace.
+        </p>
+      </div>
+
+      <h2 id="organizacion">2 · Cómo está organizado el proyecto</h2>
+      <p class="h2sub">
+        Cinco suites, una por etapa del recorrido del usuario, ordenadas de lo
+        que mira antes de operar a lo que pasa después.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Suite</th>
+              <th>Casos</th>
+              <th>Qué cubre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mercados y búsqueda</td>
+              <td class="num">8</td>
+              <td>
+                La información sobre la que el usuario decide. Si el precio o la
+                variación están mal, la decisión nace equivocada.
+              </td>
+            </tr>
+            <tr>
+              <td>Armado y validación de la orden</td>
+              <td class="num">11</td>
+              <td>
+                El panel de orden antes de enviar nada. Es la última barrera
+                antes de que el dinero se mueva.
+              </td>
+            </tr>
+            <tr>
+              <td>Ejecución y ciclo de la orden</td>
+              <td class="num">15</td>
+              <td>
+                El núcleo de riesgo: ejecución, órdenes límite, reservas de
+                saldo, rechazos e historial. Acá es donde el usuario pierde
+                plata.
+              </td>
+            </tr>
+            <tr>
+              <td>Portafolio y posiciones</td>
+              <td class="num">8</td>
+              <td>
+                Efectivo, valor, resultado y tenencias. Todo se deriva de las
+                órdenes ejecutadas, así que cada aserción acá lo es sobre esa
+                cadena.
+              </td>
+            </tr>
+            <tr>
+              <td>Cuenta y comportamiento transversal</td>
+              <td class="num">8</td>
+              <td>
+                Estado inicial, reinicio, persistencia, y lo que no pertenece a
+                una pantalla sola: errores, carga, formato de importes.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Las etiquetas</h3>
+      <p>Cada caso lleva tres tipos de etiqueta, y las tres significan algo:</p>
+
+      <ul>
+        <li>
+          <code>tipo:</code> — cómo se verifica.
+          <span class="chip chip--neutral">e2e</span> usando la app (38 casos),
+          <span class="chip chip--ok">api</span> pegándole directo al servicio
+          (7), y <span class="chip chip--warn">visual</span> mirando que nada
+          quede tapado, recortado o superpuesto (5).
+        </li>
+        <li>
+          <code>riesgo:</code> — qué riesgo de la matriz cubre, de
+          <code>R1</code> a <code>R17</code>. Es lo que justifica que el caso
+          exista. La matriz completa, con impacto y probabilidad de cada uno,
+          está en <a href="producto-y-qa.html#riesgo">producto-y-qa.html</a>.
+        </li>
+        <li>
+          <code>hallazgo:</code> — el caso nació de un problema ya observado.
+          Aparecen en la columna <em>Cubre</em> en
+          <span class="hall">amarillo</span> y se detallan en
+          <a href="producto-y-qa.html#hallazgos">los hallazgos</a>.
+        </li>
+      </ul>
+
+      <h2 id="casos">3 · Los 50 casos</h2>
+      <p class="h2sub">
+        El catálogo completo, en el mismo orden en que aparece en Qase —
+        agrupado por tema, no por número. El ID lleva a la ficha con los pasos.
+      </p>
+
+      <h3>Mercados y búsqueda <span class="count">8 casos</span></h3>
+      <p class="h3sub">
+        Dónde el usuario encuentra qué operar: panel de instrumentos, ficha y
+        búsqueda.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Caso</th>
+              <th>Cubre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-3">COCOS-3</a>
+              </td>
+              <td>
+                Abrir un instrumento desde el panel muestra su ficha completa
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R11</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-1">COCOS-1</a>
+              </td>
+              <td>
+                Buscar un instrumento por ticker muestra el resultado
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R12</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-2">COCOS-2</a>
+              </td>
+              <td>
+                El panel muestra el precio y la variación del día de cada
+                instrumento <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R9</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-17">COCOS-17</a>
+              </td>
+              <td>
+                Tocar una sugerencia de &quot;Más movidos&quot; completa la
+                búsqueda <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R12</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-18">COCOS-18</a>
+              </td>
+              <td>
+                Buscar por el nombre de la empresa encuentra el instrumento
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R12 <span class="hall">O3</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-19">COCOS-19</a>
+              </td>
+              <td>
+                El panel de instrumentos se ve correcto en toda la pantalla
+                <span class="chip chip--warn">visual</span>
+              </td>
+              <td class="cubre">R17 <span class="hall">O13</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-20">COCOS-20</a>
+              </td>
+              <td>
+                El servicio de instrumentos devuelve el catálogo completo y bien
+                tipado <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R12</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-43">COCOS-43</a>
+              </td>
+              <td>
+                Los instrumentos que no son acciones se distinguen en los
+                listados <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R16</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>
+        Armado y validación de la orden <span class="count">11 casos</span>
+      </h3>
+      <p class="h3sub">
+        Todo lo que pasa en el panel de orden antes de enviar nada, y lo que la
+        app rechaza por sí misma.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Caso</th>
+              <th>Cubre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-4">COCOS-4</a>
+              </td>
+              <td>
+                El panel de orden abre listo para comprar a precio de mercado
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R5</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-6">COCOS-6</a>
+              </td>
+              <td>
+                No se puede enviar una orden sin una cantidad válida
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R5</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-5">COCOS-5</a>
+              </td>
+              <td>
+                Comprar indicando un importe en pesos calcula cuántas acciones
+                enteras entran <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R4</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-21">COCOS-21</a>
+              </td>
+              <td>
+                El importe estimado de una orden límite usa el precio límite
+                ingresado <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R4 · R5</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-22">COCOS-22</a>
+              </td>
+              <td>
+                El panel de orden abre sobre el instrumento correcto desde los
+                tres accesos <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R1 · R11</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-23">COCOS-23</a>
+              </td>
+              <td>
+                Con el teclado abierto, los campos y el botón de enviar siguen
+                visibles <span class="chip chip--warn">visual</span>
+              </td>
+              <td class="cubre">R17</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-24">COCOS-24</a>
+              </td>
+              <td>
+                El servicio de órdenes rechaza los cuerpos inválidos con el
+                mensaje correcto <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R5</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-41">COCOS-41</a>
+              </td>
+              <td>
+                La moneda ARS no se ofrece como instrumento comprable
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R16 <span class="hall">O8</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-42">COCOS-42</a>
+              </td>
+              <td>
+                El servicio rechaza órdenes sobre instrumentos que no son
+                acciones <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R16 <span class="hall">O8</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-47">COCOS-47</a>
+              </td>
+              <td>
+                Un precio límite de cero o negativo no se puede enviar
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R5</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-49">COCOS-49</a>
+              </td>
+              <td>
+                Un importe en pesos con coma decimal se interpreta correctamente
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R4 · R14</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Ejecución y ciclo de la orden <span class="count">15 casos</span></h3>
+      <p class="h3sub">
+        Qué pasa después de enviar: ejecución, órdenes límite, reservas,
+        rechazos e historial.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Caso</th>
+              <th>Cubre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-7">COCOS-7</a>
+              </td>
+              <td>
+                Una compra a mercado se ejecuta al precio vigente y descuenta el
+                importe del efectivo <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R1 · R2</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-8">COCOS-8</a>
+              </td>
+              <td>
+                Una orden límite por debajo del precio de mercado nunca se
+                ejecuta <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R3 · R6</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-9">COCOS-9</a>
+              </td>
+              <td>
+                No se puede comprar por más dinero del disponible
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R3 <span class="hall">O7</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-10">COCOS-10</a>
+              </td>
+              <td>
+                La orden recién enviada aparece primera en el historial con sus
+                datos <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R8</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-25">COCOS-25</a>
+              </td>
+              <td>
+                Una venta a mercado reduce la tenencia y aumenta el efectivo
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R1 · R2</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-26">COCOS-26</a>
+              </td>
+              <td>
+                El historial muestra cada orden con su estado y su ticker
+                correctos <span class="chip chip--warn">visual</span>
+              </td>
+              <td class="cubre">R8 · R17 <span class="hall">O6</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-27">COCOS-27</a>
+              </td>
+              <td>
+                El servicio ejecuta las órdenes a mercado al instante y devuelve
+                el precio real <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R1 · R6</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-36">COCOS-36</a>
+              </td>
+              <td>
+                Tocar &quot;Enviar orden&quot; dos veces seguidas crea una sola
+                orden <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R15</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-37">COCOS-37</a>
+              </td>
+              <td>
+                Después de enviar, el panel no arrastra la orden anterior
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R15</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-38">COCOS-38</a>
+              </td>
+              <td>
+                Reintentar tras un fallo de conexión no duplica la orden
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R13 · R15</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-39">COCOS-39</a>
+              </td>
+              <td>
+                El servicio no distingue dos envíos idénticos consecutivos
+                <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R15</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-40">COCOS-40</a>
+              </td>
+              <td>
+                Salir del panel y volver a abrirlo no reenvía la última orden
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R15</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-44">COCOS-44</a>
+              </td>
+              <td>
+                El precio confirmado en el panel es el precio al que se ejecuta
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R1</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-45">COCOS-45</a>
+              </td>
+              <td>
+                Dos ventas límite pendientes no pueden comprometer las mismas
+                acciones <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R3 · R6</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-48">COCOS-48</a>
+              </td>
+              <td>
+                Con más de nueve órdenes el historial mantiene el orden
+                cronológico <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R8 <span class="hall">O5</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Portafolio y posiciones <span class="count">8 casos</span></h3>
+      <p class="h3sub">
+        Lo que el usuario tiene y cuánto vale, derivado de las órdenes
+        ejecutadas.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Caso</th>
+              <th>Cubre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-11">COCOS-11</a>
+              </td>
+              <td>
+                El efectivo y las posiciones reflejan las órdenes ya ejecutadas
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R2</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-12">COCOS-12</a>
+              </td>
+              <td>
+                El detalle de una posición muestra los precios de referencia y
+                el resultado <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R7 · R11</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-28">COCOS-28</a>
+              </td>
+              <td>
+                Una venta parcial reduce la cantidad y mantiene el precio
+                promedio de compra <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R2 · R7</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-29">COCOS-29</a>
+              </td>
+              <td>
+                Una orden límite pendiente descuenta el efectivo sin crear
+                ninguna posición <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R3 · R6</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-30">COCOS-30</a>
+              </td>
+              <td>
+                La ganancia y el rendimiento llevan el signo correcto
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R7</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-31">COCOS-31</a>
+              </td>
+              <td>
+                El resumen del portafolio no induce a error sobre cuánto tiene
+                el usuario <span class="chip chip--warn">visual</span>
+              </td>
+              <td class="cubre">R17 <span class="hall">O2</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-32">COCOS-32</a>
+              </td>
+              <td>
+                El servicio de portafolio cuadra con las órdenes ejecutadas
+                <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R2 · R3</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-46">COCOS-46</a>
+              </td>
+              <td>
+                Una venta límite pendiente reduce la cantidad visible de la
+                posición <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R6</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>
+        Cuenta y comportamiento transversal <span class="count">8 casos</span>
+      </h3>
+      <p class="h3sub">
+        Estado inicial, reinicio y lo que no pertenece a una pantalla sola.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Caso</th>
+              <th>Cubre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-16">COCOS-16</a>
+              </td>
+              <td>
+                El botón para operar una posición es alcanzable al final de la
+                pantalla <span class="chip chip--warn">visual</span>
+              </td>
+              <td class="cubre">R17 <span class="hall">O12</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-13">COCOS-13</a>
+              </td>
+              <td>
+                Reiniciar la cuenta deja el saldo inicial, sin posiciones ni
+                historial <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R10</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-14">COCOS-14</a>
+              </td>
+              <td>
+                Si el mercado no carga, la pantalla ofrece reintentar
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R13</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-15">COCOS-15</a>
+              </td>
+              <td>
+                Los importes y porcentajes se muestran en formato argentino
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R14 <span class="hall">O4</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-33">COCOS-33</a>
+              </td>
+              <td>
+                Los mensajes de error se muestran en español
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R14 <span class="hall">O4</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-34">COCOS-34</a>
+              </td>
+              <td>
+                Cambiar entre las pestañas conserva el estado de cada una
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R11 · R13</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-35">COCOS-35</a>
+              </td>
+              <td>
+                El servicio de reinicio deja la cuenta en su estado inicial
+                <span class="chip chip--ok">api</span>
+              </td>
+              <td class="cubre">R10</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
+              </td>
+              <td>
+                Reiniciar la cuenta también borra las órdenes límite pendientes
+                <span class="chip chip--neutral">e2e</span>
+              </td>
+              <td class="cubre">R3 · R10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="corridas">4 · Corridas</h2>
+      <p class="h2sub">
+        Cada vez que se ejecute el catálogo — a mano o desde la suite
+        automatizada — la corrida se crea en Qase y deja su fila acá.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Corrida</th>
+              <th>Fecha</th>
+              <th>Casos</th>
+              <th>Pasaron</th>
+              <th>Fallaron</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="https://app.qase.io/run/COCOS/dashboard/2"
+                  >Manual — iOS 26.5 · iPhone 17 Pro</a
+                ><br /><span class="muted">bugs=off · simulador</span>
+              </td>
+              <td class="num">2026-09-21</td>
+              <td class="num">50</td>
+              <td class="num">32</td>
+              <td class="num">14</td>
+              <td>
+                <span class="chip chip--warn">14 fallados</span> y
+                <span class="chip chip--neutral">4 bloqueados</span> — los
+                bloqueados necesitan cortar la red o ver una orden pendiente,
+                dos cosas que el simulador de iOS no permite
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://app.qase.io/run/COCOS/dashboard/3"
+                  >Manual — Android 16 / API 36 · Pixel 8</a
+                ><br /><span class="muted">bugs=off · emulador</span>
+              </td>
+              <td class="num">2026-09-22</td>
+              <td class="num">50</td>
+              <td class="num">36</td>
+              <td class="num">14</td>
+              <td>
+                <span class="chip chip--warn">14 fallados</span> — ninguno
+                bloqueado: en Android se puede cortar la conexión del
+                dispositivo y el estado pendiente de una orden límite sí llega a
+                verse
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Cuando haya corridas, cada fila va a decir:</p>
+
+      <ul>
+        <li>
+          El <strong>identificador de la corrida</strong> en Qase, enlazado a su
+          reporte.
+        </li>
+        <li>
+          Contra qué <strong>nivel de defectos</strong> se corrió — el header
+          <code>X-Enable-Bugs</code>: <code>off</code> es la línea base, y los
+          niveles superiores tienen que empezar a fallar a propósito.
+        </li>
+        <li>
+          Cuántos casos pasaron, fallaron o quedaron bloqueados, y los
+          <strong>defectos</strong> que salieron de ahí.
+        </li>
+      </ul>
+
+      <h2 id="alcance">5 · Alcance y estado</h2>
+      <p class="h2sub">Qué hay hoy en el proyecto, sin adornos.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Qué</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Casos cargados</td>
+              <td>
+                <span class="chip chip--ok">50</span> con pasos, precondición y
+                postcondición
+              </td>
+            </tr>
+            <tr>
+              <td>Casos automatizados</td>
+              <td>
+                <span class="chip chip--warn">0</span> — todos manuales por
+                ahora
+              </td>
+            </tr>
+            <tr>
+              <td>Corridas</td>
+              <td>
+                <span class="chip chip--ok">2</span> — una por plataforma, el
+                catálogo completo ejecutado a mano contra el golden path
+              </td>
+            </tr>
+            <tr>
+              <td>Defectos abiertos</td>
+              <td>
+                <span class="chip chip--warn">18</span> — 14 funcionales o
+                visuales y 4 de UX, todos con pasos, evidencia y severidad
+              </td>
+            </tr>
+            <tr>
+              <td>Uso de Qase</td>
+              <td>
+                Repositorio de casos <strong>y</strong> registro de ejecución:
+                casos, corridas, resultados con evidencia y defectos
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label"
+          >Qué cambia cuando exista la suite automatizada</span
+        >
+        <p>
+          Los casos marcados <span class="chip chip--ok">api</span> son los
+          primeros candidatos: no dependen del simulador y son estables. Cada
+          ejecución va a crear una corrida en Qase con sus resultados atados a
+          estos mismos IDs, y este documento va a listarlas en la sección
+          anterior.
+        </p>
+      </div>
+
+      <h2 id="cambios">6 · Registro de cambios</h2>
+      <p class="h2sub">
+        Cada movimiento del catálogo o de las corridas deja una línea. Lo más
+        nuevo arriba.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Cambio</th>
+              <th>Por qué</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">2026-09-22</td>
+              <td>
+                Segunda corrida manual, Android 16 / API 36 sobre Pixel 8: 50
+                casos, 36 pasados y 14 fallados.
+              </td>
+              <td>
+                Ejecutar el mismo catálogo en las dos plataformas es lo único
+                que permite separar un defecto del producto de uno de la
+                plataforma. Tres hallazgos sólo aparecen acá: el aviso de orden
+                ejecutada que nunca se muestra, el teclado que tapa el ticket
+                entero y el botón de operar una posición que queda detrás de la
+                barra de pestañas.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-21</td>
+              <td>
+                Primera corrida manual, iOS 26.5 sobre iPhone 17 Pro: 50 casos,
+                32 pasados, 14 fallados y 4 bloqueados.
+              </td>
+              <td>
+                El catálogo estaba escrito pero sin ejecutar. La corrida lo
+                convierte en evidencia: cada caso con su resultado, sus valores
+                reales y una captura cuando falla.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-22</td>
+              <td>
+                18 defectos abiertos: los 4 reportados a mano, ampliados con lo
+                que se vio en cada plataforma, más 14 nuevos. Otros 27 quedaron
+                marcados como inválidos.
+              </td>
+              <td>
+                Un defecto por causa raíz y no por caso fallado, para que el
+                equipo que arregla vea el problema y no la lista de síntomas.
+                Los 27 inválidos son los que Qase crea solo al marcar un
+                resultado como defectuoso: llevan el título del caso y duplican
+                a los redactados, así que se anularon en vez de borrarlos para
+                no romper el vínculo con el resultado que los originó.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-20</td>
+              <td>Catálogo inicial: 50 casos en 5 suites.</td>
+              <td>
+                Cubrir los 17 riesgos de la matriz, con más casos donde el
+                riesgo es alto: 15 en la ejecución de órdenes, 11 en el armado
+                del ticket.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-20</td>
+              <td>Primera versión de este documento.</td>
+              <td>
+                Quien evalúa la entrega abre el repositorio, no Qase: hacía
+                falta un índice que explicara la herramienta y llevara a cada
+                caso.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="footer">
+        Catálogo de casos del challenge de QA de Cocos · Foto del proyecto
+        <a href="https://app.qase.io/project/COCOS">COCOS</a> tomada el
+        20/09/2026: 50 casos, 5 suites, sin corridas. Documento vivo: se
+        actualiza con cada corrida que se ejecute.
+      </footer>
+    </div>
+  </body>
+</html>

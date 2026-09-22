@@ -1,0 +1,1594 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Glosario Cocos</title>
+    <meta
+      name="description"
+      content="Qué significa cada término de la app de trading Cocos, explicado desde cero para alguien que no viene del mundo financiero."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      /* ---------------------------- Portada ---------------------------- */
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      /* ----------------------------- Índice ----------------------------- */
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ---------------------------- Términos ---------------------------- */
+
+      .terms {
+        display: grid;
+        gap: 14px;
+      }
+
+      .term {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+      }
+
+      .term__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 6px 12px;
+        margin-bottom: 8px;
+      }
+
+      .term__name {
+        font-size: 1.06rem;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+
+      .term__api {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--fg-dim);
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 5px;
+        padding: 1px 7px;
+      }
+
+      .term > p {
+        margin: 0;
+        max-width: none;
+        color: var(--fg);
+      }
+
+      .term__meta {
+        margin-top: 14px;
+        padding-top: 13px;
+        border-top: 1px solid var(--border-soft);
+        display: grid;
+        gap: 10px;
+      }
+
+      .term__meta > div {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 12px;
+        align-items: baseline;
+        font-size: 14.5px;
+      }
+
+      @media (max-width: 560px) {
+        .term__meta > div {
+          grid-template-columns: 1fr;
+          gap: 2px;
+        }
+      }
+
+      .term__meta b {
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .term__meta span {
+        color: var(--fg-muted);
+      }
+
+      .term__meta .num {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        color: var(--fg);
+      }
+
+      /* ------------------------------ Varios ----------------------------- */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--profit {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--loss {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .chip--pending {
+        color: var(--secondary);
+        background: rgba(56, 189, 248, 0.12);
+        border-color: rgba(56, 189, 248, 0.3);
+      }
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 460px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · App bajo prueba</p>
+        <h1>Glosario</h1>
+        <p class="standfirst">
+          Qué significa cada palabra que aparece en la app, en la API y en el
+          resto de la documentación de QA. Escrito para alguien que
+          <strong>no viene del mundo financiero</strong>: cada término trae una
+          definición en castellano común, dónde se ve en la app y un ejemplo con
+          datos reales del entorno.
+        </p>
+      </header>
+
+      <nav class="toc" aria-label="Índice">
+        <h2>Contenido</h2>
+        <ol>
+          <li>
+            <a href="#mercado">El mercado y los activos</a>
+            <span>— qué se compra y vende</span>
+          </li>
+          <li>
+            <a href="#ordenes">Las órdenes</a>
+            <span>— cómo se compra y se vende</span>
+          </li>
+          <li>
+            <a href="#portafolio">El portafolio</a>
+            <span>— dónde queda tu plata</span>
+          </li>
+          <li>
+            <a href="#qa">Vocabulario de QA</a>
+            <span>— términos de los otros documentos</span>
+          </li>
+          <li>
+            <a href="#numeros">Cómo leer los números</a>
+            <span>— formato argentino</span>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- ================================================================ -->
+      <h2 id="mercado">1 · El mercado y los activos</h2>
+      <p class="h2sub">
+        Antes de operar hay que entender qué es lo que se opera. Todo esto es
+        información
+        <strong>compartida y de sólo lectura</strong>: ningún usuario la puede
+        modificar.
+      </p>
+
+      <div class="terms">
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Instrumento</h3>
+            <span class="term__api">/instruments</span>
+          </div>
+          <p>
+            Cualquier cosa que se pueda comprar o vender en el mercado. En esta
+            app son casi todas acciones de empresas argentinas. "Instrumento" y
+            "activo" se usan como sinónimos.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Cada fila de la pestaña <em>Mercados</em> es un instrumento.
+                Hay 26.</span
+              >
+            </div>
+            <div><b>Ejemplo</b><span class="num">DYCA — Dycasa S.A.</span></div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Acción</h3>
+            <span class="term__api">type: "ACCIONES"</span>
+          </div>
+          <p>
+            Una porción muy chiquita de la propiedad de una empresa. Si comprás
+            una acción de Dycasa, sos dueño de una fracción mínima de esa
+            empresa. Su precio sube y baja según lo que la gente esté dispuesta
+            a pagar por ella.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >25 de los 26 instrumentos son de tipo
+                <code>ACCIONES</code>.</span
+              >
+            </div>
+            <div>
+              <b>Ojo</b
+              ><span
+                >No se pueden comprar fracciones: o comprás 1 acción entera, o
+                2, nunca 1,5.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Ticker</h3>
+            <span class="term__api">ticker</span>
+          </div>
+          <p>
+            El código corto y único con el que se identifica a un instrumento,
+            como un apodo oficial. Es más práctico que el nombre completo de la
+            empresa y es lo que se usa para buscar y para operar.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Es el texto grande en negrita de cada fila, y lo único por lo
+                que se puede buscar.</span
+              >
+            </div>
+            <div>
+              <b>Ejemplo</b
+              ><span
+                ><span class="num">TECO2</span> es el ticker de la empresa
+                <em>Telecom</em>.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Moneda</h3>
+            <span class="term__api">type: "MONEDA"</span>
+          </div>
+          <p>
+            Un instrumento que no es una empresa sino dinero en sí mismo. En
+            este entorno hay uno solo: el peso argentino, con ticker
+            <code>ARS</code> y precio fijo en 1.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Aparece en la lista de Mercados como si fuera una acción más, y
+                el ticket permite comprarlo.</span
+              >
+            </div>
+            <div>
+              <b>Por qué importa</b
+              ><span
+                >"Comprar pesos con pesos" no es una operación con sentido: es
+                una de las cosas que se marcó como hallazgo.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Último precio</h3>
+            <span class="term__api">last_price</span>
+          </div>
+          <p>
+            El precio al que se operó el instrumento por última vez. Es el
+            precio "de ahora" y es el que se usa para valuar tus tenencias y
+            para ejecutar las órdenes a mercado.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >El precio en pesos que se ve a la derecha de cada fila.</span
+              >
+            </div>
+            <div><b>Ejemplo</b><span class="num">DYCA: $ 45,72</span></div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Precio de cierre</h3>
+            <span class="term__api">close_price</span>
+          </div>
+          <p>
+            El precio al que quedó el instrumento cuando cerró la rueda del día
+            anterior. Sirve únicamente como punto de comparación: contra él se
+            mide si hoy el papel sube o baja.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >No se muestra como número suelto; se usa para calcular el
+                retorno diario y en el gráfico ("Cierre").</span
+              >
+            </div>
+            <div>
+              <b>Ejemplo</b><span class="num">DYCA cerró ayer en $ 50,07</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Retorno diario</h3>
+            <span class="term__api">calculado en la app</span>
+          </div>
+          <p>
+            Cuánto cambió el precio en lo que va del día, expresado en
+            porcentaje. Positivo y verde = subió; negativo y rojo = bajó. La
+            fórmula es
+            <code>(último − cierre) ÷ cierre × 100</code>.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >La pastilla de color al lado del precio, con signo y dos
+                decimales.</span
+              >
+            </div>
+            <div>
+              <b>Ejemplo</b>
+              <span>
+                DYCA:
+                <span class="num">(45,72 − 50,07) ÷ 50,07 × 100 = −8,69 %</span>
+                <span class="chip chip--loss">−8,69%</span>
+              </span>
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Peso argentino</h3>
+            <span class="term__api">ARS</span>
+          </div>
+          <p>
+            La moneda en la que está todo en esta app: los precios, el efectivo
+            y los montos de las órdenes. No hay dólares ni conversiones en
+            ningún lado.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Todos los importes se muestran con el símbolo <code>$</code> y
+                formato argentino.</span
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="ordenes">2 · Las órdenes</h2>
+      <p class="h2sub">
+        Una orden es el mecanismo por el que se compra o se vende. Esta es la
+        parte donde se mueve dinero, así que es donde más importa que todo esté
+        bien.
+      </p>
+
+      <div class="terms">
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Orden</h3>
+            <span class="term__api">/orders</span>
+          </div>
+          <p>
+            La instrucción que le das al mercado:
+            <em>"quiero comprar 21 acciones de DYCA"</em>. Una orden es un
+            pedido, no un hecho consumado: puede cumplirse, quedar esperando o
+            ser rechazada.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Se crea desde el <em>Ticket de trading</em> y queda registrada
+                en la pestaña <em>Órdenes</em>.</span
+              >
+            </div>
+            <div>
+              <b>Se define por</b
+              ><span
+                >lado + tipo + instrumento + cantidad (+ precio, si es
+                límite).</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Lado: compra y venta</h3>
+            <span class="term__api">side: BUY | SELL</span>
+          </div>
+          <p>
+            <strong>Compra (BUY)</strong>: entregás pesos y recibís acciones.
+            <strong>Venta (SELL)</strong>: entregás acciones y recibís pesos.
+            Sólo podés vender lo que ya tenés.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >El selector <em>Lado</em> del ticket, con <em>Comprar</em> /
+                <em>Vender</em>. Por defecto viene en Comprar.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Orden a mercado</h3>
+            <span class="term__api">type: "MARKET"</span>
+          </div>
+          <p>
+            "Comprame esto ya, al precio que esté". No elegís precio: aceptás el
+            último precio vigente. A cambio de resignar el control del precio,
+            ganás certeza: se ejecuta en el acto.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Botón <em>Market</em> del selector <em>Tipo</em>. Es el
+                default.</span
+              >
+            </div>
+            <div>
+              <b>Resultado</b
+              ><span
+                >Siempre queda
+                <span class="chip chip--profit">Ejecutada</span> al instante (o
+                rechazada si no te alcanza la plata).</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Orden límite</h3>
+            <span class="term__api">type: "LIMIT"</span>
+          </div>
+          <p>
+            "Comprame esto, pero sólo si consigo este precio o mejor". Vos ponés
+            el precio máximo que estás dispuesto a pagar (o el mínimo que
+            aceptás cobrar). Ganás control del precio y resignás certeza: puede
+            no ejecutarse nunca.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Botón <em>Limit</em>; al elegirlo aparece el campo
+                <em>Precio límite</em>.</span
+              >
+            </div>
+            <div>
+              <b>Resultado</b
+              ><span
+                >Siempre nace
+                <span class="chip chip--pending">Pendiente</span> y después se
+                resuelve, con un componente de azar.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Precio límite</h3>
+            <span class="term__api">price</span>
+          </div>
+          <p>
+            El precio que vos ponés en una orden límite. En una compra es el
+            <em>techo</em>: no pagás más que eso. En una venta es el
+            <em>piso</em>: no cobrás menos que eso.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ejemplo</b
+              ><span
+                >Poner límite de compra en <span class="num">$ 20</span> cuando
+                el papel vale <span class="num">$ 45,72</span> es pedir una
+                ganga: no se va a ejecutar.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">
+              Ejecutable
+              <span style="font-weight: 400; color: var(--fg-dim)"
+                >(marketable)</span
+              >
+            </h3>
+            <span class="term__api">término propio</span>
+          </div>
+          <p>
+            Palabra que uso en la documentación de QA para una orden límite cuyo
+            precio
+            <em>sí</em> tiene sentido ejecutar ahora mismo: una compra con
+            límite igual o mayor al último precio, o una venta con límite igual
+            o menor. Una orden que no es ejecutable nunca se llena.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Por qué importa</b
+              ><span
+                >Es el invariante que permite escribir tests estables sobre un
+                comportamiento aleatorio.</span
+              >
+            </div>
+            <div>
+              <b>Medido</b
+              ><span
+                >0 de 30 órdenes no ejecutables terminaron ejecutadas.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Cantidad</h3>
+            <span class="term__api">quantity</span>
+          </div>
+          <p>
+            Cuántas acciones querés operar. Tiene que ser un número entero y
+            positivo: no existen media acción ni cantidades negativas.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Campo <em>Cantidad de acciones</em>, o calculado a partir del
+                monto en pesos.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Comprar por monto</h3>
+            <span class="term__api">modo "Pesos"</span>
+          </div>
+          <p>
+            En vez de decir "quiero 21 acciones", decís "quiero gastar $1.000".
+            La app divide el monto por el último precio y
+            <strong>redondea para abajo</strong>, porque no puede comprar
+            fracciones. Lo que sobra queda sin usar.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span>Selector <em>Cantidad por</em> → <em>Pesos</em>.</span>
+            </div>
+            <div>
+              <b>Ejemplo</b>
+              <span class="num"
+                >$ 1.000 ÷ $ 45,72 = 21,87 → 21 acciones ($ 960,12)</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Monto de la operación</h3>
+            <span class="term__api">notional</span>
+          </div>
+          <p>
+            La plata total que mueve una orden: <code>cantidad × precio</code>.
+            Es el número grande que se ve a la derecha de cada fila del
+            historial.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ejemplo</b><span class="num">21 × $ 45,72 = $ 960,12</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Ejecutada</h3>
+            <span class="term__api">status: "FILLED"</span>
+          </div>
+          <p>
+            La orden se cumplió: el intercambio ocurrió de verdad. La plata y
+            las acciones ya cambiaron de mano, y eso se refleja en tu
+            portafolio. Es un estado final.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                ><span class="chip chip--profit">Ejecutada</span> en verde, en
+                la fila del historial.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Pendiente</h3>
+            <span class="term__api">status: "PENDING"</span>
+          </div>
+          <p>
+            La orden está viva pero todavía no se cumplió: sigue esperando que
+            el mercado la acepte. Mientras tanto, la plata (o las acciones)
+            quedan <em>reservadas</em>.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                ><span class="chip chip--pending">Pendiente</span> en
+                celeste.</span
+              >
+            </div>
+            <div>
+              <b>Ojo</b
+              ><span
+                >En este entorno es casi imposible verla: leer tu cuenta es lo
+                que dispara la resolución de la orden.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Rechazada</h3>
+            <span class="term__api">status: "REJECTED"</span>
+          </div>
+          <p>
+            La orden no se va a cumplir. Puede ser porque el mercado no la
+            aceptó, o porque nunca fue viable. Lo importante: la reserva se
+            libera y la plata vuelve a estar disponible. También es un estado
+            final.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                ><span class="chip chip--loss">Rechazada</span> en rojo.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Ticket de trading</h3>
+            <span class="term__api">bottom sheet</span>
+          </div>
+          <p>
+            El formulario desde el que se envía una orden. En la app es un panel
+            que sube desde abajo de la pantalla. Se abre desde el detalle de un
+            instrumento, el detalle de una posición o un resultado de búsqueda.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Contiene</b
+              ><span
+                >lado, tipo, modo de cantidad, cantidad (o monto), precio límite
+                y una estimación.</span
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="portafolio">3 · El portafolio</h2>
+      <p class="h2sub">
+        Tu cuenta: la plata que te queda y las acciones que tenés. Cada usuario
+        arranca con
+        <strong>$ 1.000.000</strong> y sin ninguna acción.
+      </p>
+
+      <div class="terms">
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Portafolio</h3>
+            <span class="term__api">/portfolio</span>
+          </div>
+          <p>
+            El conjunto de todo lo que tenés: efectivo más acciones. También se
+            le dice "cartera". No es un dato guardado aparte:
+            <strong>se calcula a partir de tus órdenes ejecutadas</strong>.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b><span>La pestaña <em>Portafolio</em>.</span>
+            </div>
+            <div>
+              <b>Por qué importa</b
+              ><span
+                >Si el historial de órdenes está bien, el portafolio tiene que
+                estar bien. Son el mismo dato visto de dos formas.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Posición o tenencia</h3>
+            <span class="term__api">holdings[]</span>
+          </div>
+          <p>
+            Las acciones que tenés de un instrumento puntual. "Tengo una
+            posición en DYCA" = "tengo acciones de DYCA". Una posición aparece
+            cuando comprás por primera vez y desaparece cuando vendés todo.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span>Cada fila bajo el título <em>Posiciones</em>.</span>
+            </div>
+            <div><b>Ejemplo</b><span class="num">DYCA — 21 acciones</span></div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Efectivo</h3>
+            <span class="term__api">cash</span>
+          </div>
+          <p>
+            Los pesos sin invertir que tenés disponibles para comprar. Baja
+            cuando comprás y sube cuando vendés.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span>Campo <em>Efectivo</em> en la tarjeta de resumen.</span>
+            </div>
+            <div>
+              <b>Ejemplo</b
+              ><span class="num">$ 1.000.000 − $ 960,12 = $ 999.039,88</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Precio promedio de compra</h3>
+            <span class="term__api">avg_cost_price · PPP</span>
+          </div>
+          <p>
+            A cuánto te salió, en promedio, cada acción que tenés. Si comprás en
+            varias tandas a precios distintos, es el promedio ponderado por
+            cantidad. Es la referencia contra la que se mide si ganás o perdés.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Aparece como <em>PPP</em> en el detalle de la posición.</span
+              >
+            </div>
+            <div>
+              <b>Ejemplo</b>
+              <span
+                >Comprás 10 a <span class="num">$ 40</span> y 10 a
+                <span class="num">$ 50</span> → tu PPP es
+                <span class="num">$ 45</span>.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Valor de mercado</h3>
+            <span class="term__api">calculado en la app</span>
+          </div>
+          <p>
+            Cuánto valen hoy tus acciones si las vendieras al precio actual:
+            <code>cantidad × último precio</code>. Cambia solo, sin que vos
+            hagas nada, porque el precio se mueve.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ejemplo</b><span class="num">21 × $ 45,72 = $ 960,12</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Costo invertido</h3>
+            <span class="term__api">calculado en la app</span>
+          </div>
+          <p>
+            Cuánta plata pusiste para armar la posición:
+            <code>cantidad × PPP</code>. A diferencia del valor de mercado, este
+            número no se mueve solo — sólo cambia si comprás o vendés.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Campo <em>Costo invertido</em> del resumen y <em>Costo</em> en
+                el detalle.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Ganancia o pérdida</h3>
+            <span class="term__api">calculado en la app</span>
+          </div>
+          <p>
+            La diferencia entre lo que valen hoy tus acciones y lo que te
+            costaron:
+            <code>cantidad × (último precio − PPP)</code>. Se le dice "no
+            realizada" porque mientras no vendas es una ganancia en el papel:
+            puede evaporarse.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Campo <em>Ganancia</em>, en verde si es positiva y rojo si es
+                negativa.</span
+              >
+            </div>
+            <div>
+              <b>Ejemplo</b
+              ><span
+                >Recién comprado a mercado, la ganancia es exactamente
+                <span class="num">$ 0,00</span>: compraste al precio que vale
+                ahora.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Rendimiento</h3>
+            <span class="term__api">calculado en la app</span>
+          </div>
+          <p>
+            La misma ganancia, pero en porcentaje sobre lo que invertiste:
+            <code>ganancia ÷ costo invertido × 100</code>. Sirve para comparar
+            posiciones de tamaños distintos.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ejemplo</b
+              ><span
+                >Ganar <span class="num">$ 100</span> sobre
+                <span class="num">$ 1.000</span> (10 %) es mejor que ganar
+                <span class="num">$ 150</span> sobre
+                <span class="num">$ 5.000</span> (3 %).</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Reserva de saldo</h3>
+            <span class="term__api">regla de negocio</span>
+          </div>
+          <p>
+            Cuando enviás una orden, el sistema <strong>aparta</strong> lo que
+            hace falta para cumplirla, aunque todavía no se haya cumplido. Una
+            compra aparta pesos; una venta aparta acciones. Así no podés gastar
+            dos veces la misma plata.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ciclo</b
+              ><span
+                >Pendiente = sigue apartado · Ejecutada = se gasta de verdad ·
+                Rechazada = se devuelve.</span
+              >
+            </div>
+            <div>
+              <b>Ejemplo</b>
+              <span
+                >Orden límite de compra por <span class="num">$ 200</span>: el
+                efectivo baja $200 al enviarla, aunque no tengas ninguna acción
+                nueva.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Reiniciar cuenta</h3>
+            <span class="term__api">POST /reset</span>
+          </div>
+          <p>
+            Borra todas tus órdenes y te devuelve al punto de partida: $
+            1.000.000 y ninguna posición. No se puede deshacer.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>En la app</b
+              ><span
+                >Botón <em>Reiniciar</em> en la pestaña Órdenes, con
+                confirmación.</span
+              >
+            </div>
+            <div>
+              <b>Para QA</b
+              ><span
+                >Es la herramienta que permite que cada test arranque desde un
+                estado conocido.</span
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="qa">4 · Vocabulario de QA</h2>
+      <p class="h2sub">
+        Términos que no son del mundo financiero sino del de testing, y que
+        aparecen en el resto de la documentación.
+      </p>
+
+      <div class="terms">
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Candidate ID</h3>
+            <span class="term__api">X-Candidate-Id</span>
+          </div>
+          <p>
+            El identificador que hace las veces de "usuario". La API guarda un
+            portafolio y un historial separado por cada valor distinto de este
+            header. No hay contraseña: quien sepa el id, entra.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Para QA</b
+              ><span
+                >Es lo que permite que dos corridas de tests no se pisen: basta
+                con usar ids distintos.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Aislamiento</h3>
+            <span class="term__api">práctica</span>
+          </div>
+          <p>
+            Que un test no dependa de lo que hizo otro ni le arruine el estado.
+            Sin aislamiento, un test pasa cuando corre solo y falla cuando corre
+            con los demás.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Acá</b
+              ><span
+                >Se consigue con un Candidate ID distinto por corrida, o
+                reiniciando la cuenta antes de cada caso.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Golden path</h3>
+            <span class="term__api">X-Enable-Bugs: off</span>
+          </div>
+          <p>
+            El camino "sano": el comportamiento correcto del sistema, sin
+            defectos inyectados. Es la línea base contra la que se escriben las
+            verificaciones.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Acá</b
+              ><span
+                >Se activa mandando <code>off</code> en el header de bugs.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Nivel de defectos</h3>
+            <span class="term__api">easy · medium · hard</span>
+          </div>
+          <p>
+            La API puede romperse a propósito en tres intensidades crecientes.
+            Sirve para poner a prueba la propia suite de tests: si al subir el
+            nivel la suite sigue toda en verde, es que no está verificando de
+            verdad.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ejemplo</b
+              ><span
+                >En <code>easy</code> la API deja vender acciones que no tenés;
+                en <code>hard</code> ejecuta a un precio equivocado.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Determinístico</h3>
+            <span class="term__api">concepto</span>
+          </div>
+          <p>
+            Que ante la misma entrada siempre da el mismo resultado. Lo
+            contrario —no determinístico— es lo que pasa con las órdenes límite:
+            la misma orden a veces se ejecuta y a veces se rechaza.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Consecuencia</b
+              ><span
+                >Sobre lo no determinístico no se puede afirmar un resultado
+                exacto, sólo un conjunto de resultados posibles.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">
+              Test intermitente
+              <span style="font-weight: 400; color: var(--fg-dim)"
+                >(flaky)</span
+              >
+            </h3>
+            <span class="term__api">problema</span>
+          </div>
+          <p>
+            Un test que a veces pasa y a veces falla sin que haya cambiado nada.
+            Es peor que un test que falla siempre, porque entrena al equipo a
+            ignorar las fallas.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Riesgo acá</b
+              ><span
+                >Afirmar que una orden límite "queda pendiente" es la receta
+                garantizada para un test intermitente.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Invariante</h3>
+            <span class="term__api">técnica</span>
+          </div>
+          <p>
+            Algo que tiene que ser cierto <em>siempre</em>, pase lo que pase.
+            Verificar invariantes es la forma de testear con solidez un sistema
+            con componentes aleatorios.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Ejemplo</b
+              ><span
+                >"Una orden rechazada siempre devuelve la plata reservada" es
+                cierto sin importar cómo caiga el azar.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Delta</h3>
+            <span class="term__api">técnica</span>
+          </div>
+          <p>
+            Verificar el <em>cambio</em> entre dos mediciones en vez del valor
+            absoluto. En lugar de "el efectivo tiene que ser $999.039,88", se
+            afirma "el efectivo bajó exactamente $960,12".
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Para qué</b
+              ><span
+                >Permite testear sin poder reiniciar la cuenta, partiendo de
+                cualquier estado previo.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Contrato</h3>
+            <span class="term__api">esquema</span>
+          </div>
+          <p>
+            El acuerdo sobre la forma de los datos: qué campos trae una
+            respuesta, de qué tipo y cuáles son obligatorios. Un test de
+            contrato verifica la forma, no los valores.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Acá</b
+              ><span
+                >La app ya valida los contratos con Zod y rechaza respuestas con
+                forma inesperada.</span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="term">
+          <div class="term__head">
+            <h3 class="term__name">Severidad</h3>
+            <span class="term__api">clasificación</span>
+          </div>
+          <p>
+            Cuánto daño hace un defecto, independientemente de lo fácil que sea
+            arreglarlo. Un error de cálculo de plata es crítico; un texto mal
+            puesto es menor, aunque ambos se arreglen en una línea.
+          </p>
+          <div class="term__meta">
+            <div>
+              <b>Criterio acá</b
+              ><span
+                >Lo que afecta dinero o induce a una decisión equivocada pesa
+                más que lo visual.</span
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- ================================================================ -->
+      <h2 id="numeros">5 · Cómo leer los números</h2>
+      <p class="h2sub">
+        La app usa formato argentino, que es al revés del inglés. Si venís de
+        leer documentación en inglés, esto se presta a confusión.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Concepto</th>
+              <th>Formato argentino</th>
+              <th>Equivalente en inglés</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Separador de miles</td>
+              <td class="num">1.000.000</td>
+              <td class="num">1,000,000</td>
+            </tr>
+            <tr>
+              <td>Separador decimal</td>
+              <td class="num">45,72</td>
+              <td class="num">45.72</td>
+            </tr>
+            <tr>
+              <td>Importe completo</td>
+              <td class="num">$ 999.039,88</td>
+              <td class="num">$999,039.88</td>
+            </tr>
+            <tr>
+              <td>Porcentaje</td>
+              <td class="num">−8,69 %</td>
+              <td class="num">-8.69%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">Cuidado al automatizar</span>
+        <p>
+          La
+          <strong>API siempre habla en formato inglés</strong>
+          (<code>45.72</code>) y la
+          <strong>app muestra formato argentino</strong> (<code>45,72</code>).
+          Cualquier comparación entre lo que se ve en pantalla y lo que devuelve
+          la API tiene que normalizar el formato primero, o va a fallar por una
+          coma.
+        </p>
+      </div>
+
+      <h3 style="font-size: 1.05rem; font-weight: 600; margin: 34px 0 4px">
+        Un recorrido completo, con números reales
+      </h3>
+      <p>
+        Para atar todo: esto es lo que pasó al comprar por monto en el entorno
+        real, paso a paso.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Paso</th>
+              <th>Qué pasa</th>
+              <th class="num">Efectivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cuenta nueva</td>
+              <td>Sin posiciones</td>
+              <td class="num">$ 1.000.000,00</td>
+            </tr>
+            <tr>
+              <td>Elegís DYCA</td>
+              <td>Último precio $ 45,72</td>
+              <td class="num">$ 1.000.000,00</td>
+            </tr>
+            <tr>
+              <td>Pedís $ 1.000</td>
+              <td>1.000 ÷ 45,72 = 21,87 → <strong>21 acciones</strong></td>
+              <td class="num">$ 1.000.000,00</td>
+            </tr>
+            <tr>
+              <td>Enviás a mercado</td>
+              <td>
+                21 × 45,72 = $ 960,12 ·
+                <span class="chip chip--profit">Ejecutada</span>
+              </td>
+              <td class="num">$ 999.039,88</td>
+            </tr>
+            <tr>
+              <td>Mirás el portafolio</td>
+              <td>21 DYCA · PPP $ 45,72 · valor $ 960,12 · ganancia $ 0,00</td>
+              <td class="num">$ 999.039,88</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        La ganancia da cero porque compraste al mismo precio al que vale ahora.
+        En cuanto el último precio se mueva, ese número deja de ser cero sin que
+        vos hagas nada.
+      </p>
+
+      <footer class="footer">
+        Glosario de la app Cocos bajo prueba · Los ejemplos usan datos reales
+        del entorno
+        <code>dummy-api-topaz.vercel.app</code> relevados el 19/09/2026 con el
+        nivel de defectos en <code>off</code>.
+      </footer>
+    </main>
+  </body>
+</html>

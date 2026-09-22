@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Tecnologías del proyecto</title>
+    <meta
+      name="description"
+      content="Qué tecnología usa el proyecto Cocos, para qué sirve cada pieza y con qué versión se verificó. Documento vivo: se actualiza a medida que avanza el trabajo de QA."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      h3 {
+        font-size: 1.06rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 34px 0 4px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ------------------------------ Pasos ------------------------------ */
+
+      .steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 24px 0;
+        max-width: none;
+        display: grid;
+        gap: 14px;
+      }
+
+      .steps > li {
+        counter-increment: step;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px 18px 60px;
+        position: relative;
+        margin: 0;
+      }
+
+      .steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(45, 212, 191, 0.12);
+        color: var(--primary);
+        border: 1px solid rgba(45, 212, 191, 0.35);
+        font-family: var(--mono);
+        font-size: 12.5px;
+        display: grid;
+        place-items: center;
+      }
+
+      .steps h3 {
+        margin: 0 0 6px;
+      }
+
+      .steps > li > :last-child {
+        margin-bottom: 0;
+      }
+
+      .steps p {
+        max-width: none;
+      }
+
+      /* ----------------------------- Código ------------------------------ */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 16px 0;
+        font-size: 13.5px;
+        line-height: 1.7;
+      }
+
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+        white-space: pre;
+        color: var(--fg);
+      }
+
+      pre .c {
+        color: var(--fg-dim);
+      }
+
+      pre .k {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Tablas ----------------------------- */
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 480px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num,
+      td.ver {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      td.ver {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Avisos ----------------------------- */
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note--bad {
+        border-left-color: var(--loss);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--ok {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--bad {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+    <style>
+      .chip--warn {
+        color: var(--warning);
+        background: rgba(250, 204, 21, 0.12);
+        border-color: rgba(250, 204, 21, 0.3);
+      }
+
+      .chip--neutral {
+        color: var(--fg-muted);
+        background: rgba(154, 167, 189, 0.1);
+        border-color: rgba(154, 167, 189, 0.28);
+      }
+
+      td .chip {
+        margin-right: 4px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · Documento vivo</p>
+        <h1>Tecnologías del proyecto</h1>
+        <p class="standfirst">
+          Qué hay instalado, para qué sirve cada pieza y con qué versión se
+          verificó. Cubre dos stacks distintos: el de la
+          <strong>app bajo prueba</strong>, que no elegimos nosotros, y el de
+          <strong>QA</strong>, que sí. Se actualiza a medida que avanza el
+          trabajo.
+        </p>
+      </header>
+
+      <nav class="toc" aria-label="Contenido">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#leer">Cómo leer este documento</a></li>
+          <li>
+            <a href="#base">Base de la app</a>
+            <span>— Expo, React Native, TypeScript</span>
+          </li>
+          <li>
+            <a href="#datos">Datos, red y formularios</a>
+            <span>— TanStack Query, axios, zod</span>
+          </li>
+          <li>
+            <a href="#interfaz">Interfaz y estilos</a>
+            <span>— Uniwind, Tailwind, listas</span>
+          </li>
+          <li><a href="#graficos">Gráficos, gestos y animación</a></li>
+          <li><a href="#expo-modules">Módulos de Expo</a></li>
+          <li>
+            <a href="#dev">Herramientas de desarrollo</a>
+            <span>— build, formato, tipos</span>
+          </li>
+          <li>
+            <a href="#qa">Herramientas de QA</a>
+            <span>— lo que usamos nosotros</span>
+          </li>
+          <li><a href="#externo">Servicios externos</a></li>
+          <li><a href="#cambios">Registro de cambios</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="leer">1 · Cómo leer este documento</h2>
+      <p class="h2sub">
+        Tres reglas que explican qué entra acá y qué no, para que el documento
+        no se desactualice solo.
+      </p>
+
+      <ul>
+        <li>
+          <strong>Las versiones son las instaladas, no las declaradas.</strong>
+          Están leídas de <code>node_modules</code>, no del rango de
+          <code>package.json</code>. Por eso podés ver <code>2.31.2</code> donde
+          el manifiesto dice <code>~2.31.1</code>.
+        </li>
+        <li>
+          <strong>Sólo entran las piezas que se usan.</strong> Si una
+          dependencia está instalada pero ninguna pantalla la toca, se aclara en
+          su fila.
+        </li>
+        <li>
+          <strong>Cada cambio de stack deja una línea</strong> en el
+          <a href="#cambios">registro del final</a>: qué se sumó o se sacó,
+          cuándo y por qué.
+        </li>
+      </ul>
+
+      <div class="note">
+        <span class="note__label">Dónde encaja</span>
+        <p>
+          Este documento responde <em>qué es cada cosa</em>. Para levantar la
+          app paso a paso está
+          <a href="puesta-en-marcha.html">puesta-en-marcha.html</a>; para qué
+          significa cada término del dominio,
+          <a href="glosario.html">glosario.html</a>; para el contrato de la API,
+          <a href="api.html">api.html</a>; para el trabajo de QA en sí,
+          <a href="producto-y-qa.html">producto-y-qa.html</a>.
+        </p>
+      </div>
+
+      <h2 id="base">2 · Base de la app</h2>
+      <p class="h2sub">
+        El esqueleto: sobre qué corre la app y cómo se navega entre pantallas.
+        Nada de esto lo elegimos nosotros — viene dado por el challenge.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Versión</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>expo</code></td>
+              <td class="ver">56.0.18</td>
+              <td>
+                SDK que envuelve React Native: aporta los módulos nativos ya
+                integrados y genera el proyecto de Xcode con
+                <code>expo prebuild</code>, así no hay que tocar Xcode a mano.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-native</code></td>
+              <td class="ver">0.85.3</td>
+              <td>
+                El framework que convierte componentes de React en vistas
+                nativas de iOS y Android. Es la razón por la que la app no se
+                puede probar en un navegador.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react</code></td>
+              <td class="ver">19.2.3</td>
+              <td>
+                La librería de interfaz: componentes, estado y renderizado.
+              </td>
+            </tr>
+            <tr>
+              <td><code>expo-router</code></td>
+              <td class="ver">56.2.17</td>
+              <td>
+                Navegación basada en archivos: cada archivo de
+                <code>src/app/</code> es una ruta. Los tabs son nativos, no
+                dibujados en JavaScript.
+              </td>
+            </tr>
+            <tr>
+              <td><code>typescript</code></td>
+              <td class="ver">6.0.3</td>
+              <td>
+                Tipado estático. También habilita rutas tipadas
+                (<code>experiments.typedRoutes</code>): un link a una pantalla
+                que no existe no compila.
+              </td>
+            </tr>
+            <tr>
+              <td>React Compiler</td>
+              <td class="ver">1.0.0</td>
+              <td>
+                Activado en <code>app.config.ts</code>. Memoiza componentes
+                automáticamente en tiempo de build; hace que muchos
+                <code>useMemo</code> manuales sobren.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="datos">3 · Datos, red y formularios</h2>
+      <p class="h2sub">
+        Todo lo que va y viene entre la app y la API. Es la capa más relevante
+        para QA: acá viven el caché, los timeouts y la validación de respuestas.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Versión</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@tanstack/react-query</code></td>
+              <td class="ver">5.100.14</td>
+              <td>
+                Caché y estado del servidor: decide cuándo un dato está viejo y
+                hay que volver a pedirlo. Datos vigentes 30 s, en memoria 5 min.
+                Después de crear una orden, es lo que invalida portafolio y
+                órdenes.
+              </td>
+            </tr>
+            <tr>
+              <td><code>axios</code></td>
+              <td class="ver">1.16.1</td>
+              <td>
+                Cliente HTTP. Centraliza la URL base y los headers obligatorios
+                (<code>X-Candidate-Id</code>, <code>X-Enable-Bugs</code>) en
+                <code>src/config/api.config.ts</code>, y corta toda request a
+                los 12 segundos.
+              </td>
+            </tr>
+            <tr>
+              <td><code>zod</code></td>
+              <td class="ver">4.4.3</td>
+              <td>
+                Valida la forma de cada respuesta antes de que la use la
+                interfaz. Si la API devuelve algo distinto a lo esperado, falla
+                acá y no tres pantallas después.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-hook-form</code></td>
+              <td class="ver">7.76.1</td>
+              <td>
+                Maneja el formulario del ticket de órdenes sin re-renderizar en
+                cada tecla. Valida al enviar, no mientras se tipea.
+              </td>
+            </tr>
+            <tr>
+              <td><code>@hookform/resolvers</code></td>
+              <td class="ver">5.4.0</td>
+              <td>
+                El puente que le permite al formulario validar con los esquemas
+                de zod.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">Por qué importa para QA</span>
+        <p>
+          El caché de 30 segundos y los reintentos de TanStack Query hacen que
+          la pantalla pueda mostrar un dato que la API ya cambió. Cualquier
+          aserción sobre saldo o tenencias tiene que contemplar ese desfasaje, o
+          va a ser intermitente.
+        </p>
+      </div>
+
+      <h2 id="interfaz">4 · Interfaz y estilos</h2>
+      <p class="h2sub">
+        Cómo se ve la app y con qué se escriben los estilos. La app es
+        <strong>dark-only</strong>: tema claro y oscuro tienen los mismos
+        valores.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Versión</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>uniwind</code></td>
+              <td class="ver">1.7.0</td>
+              <td>
+                Tailwind para React Native: permite escribir estilos como
+                <code>className="..."</code> en componentes nativos. Se engancha
+                en <code>metro.config.js</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>tailwindcss</code></td>
+              <td class="ver">4.1.18</td>
+              <td>
+                El sistema de estilos y los tokens de color. La paleta vive en
+                <code>src/global.css</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>class-variance-authority</code></td>
+              <td class="ver">0.7.1</td>
+              <td>
+                Declara variantes de un componente (tamaño, tono, estado) sin
+                armar strings de clases a mano.
+              </td>
+            </tr>
+            <tr>
+              <td><code>clsx</code> · <code>tailwind-merge</code></td>
+              <td class="ver">2.1.1 · 3.6.0</td>
+              <td>
+                Combinan clases condicionales y resuelven conflictos entre ellas
+                (si llegan dos colores de fondo, gana el último). Se usan juntos
+                en <code>src/lib/utils</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>@shopify/flash-list</code></td>
+              <td class="ver">2.0.2</td>
+              <td>
+                Listas virtualizadas para mercados, órdenes y búsqueda: lo que
+                no está en pantalla no existe en el árbol de componentes.
+              </td>
+            </tr>
+            <tr>
+              <td><code>@rn-primitives/select</code> · <code>slot</code></td>
+              <td class="ver">1.4.0</td>
+              <td>
+                Primitivas accesibles sin estilo propio: el selector de tipo de
+                orden se construye encima de ellas.
+              </td>
+            </tr>
+            <tr>
+              <td><code>lucide-react-native</code></td>
+              <td class="ver">1.16.0</td>
+              <td>Set de íconos de la app.</td>
+            </tr>
+            <tr>
+              <td><code>expo-image</code></td>
+              <td class="ver">56.0.11</td>
+              <td>Componente de imagen con caché en disco y transiciones.</td>
+            </tr>
+            <tr>
+              <td><code>sonner-native</code></td>
+              <td class="ver">0.25.1</td>
+              <td>
+                Los avisos flotantes (toasts) de orden enviada, ejecutada o
+                rechazada. Visibles 6 segundos — una ventana corta para capturar
+                evidencia.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-native-safe-area-context</code></td>
+              <td class="ver">5.7.0</td>
+              <td>
+                Evita que el contenido quede debajo del notch o del indicador de
+                inicio.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-native-keyboard-controller</code></td>
+              <td class="ver">1.21.6</td>
+              <td>
+                Controla cómo se acomoda la pantalla cuando aparece el teclado,
+                clave en el ticket de órdenes.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="graficos">5 · Gráficos, gestos y animación</h2>
+      <p class="h2sub">
+        La parte visualmente pesada. También la más difícil de inspeccionar: lo
+        dibujado en canvas no aparece en el árbol de accesibilidad.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pieza</th>
+              <th>Versión</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>@shopify/react-native-skia</code></td>
+              <td class="ver">2.6.2</td>
+              <td>
+                Motor de dibujo de los gráficos. Es la dependencia nativa más
+                pesada del proyecto y buena parte de los 8 minutos de
+                <code>pod install</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>victory-native</code></td>
+              <td class="ver">41.20.3</td>
+              <td>Los gráficos de precios, dibujados sobre Skia.</td>
+            </tr>
+            <tr>
+              <td><code>react-native-svg</code></td>
+              <td class="ver">15.15.4</td>
+              <td>Vectores: íconos y formas que no pasan por Skia.</td>
+            </tr>
+            <tr>
+              <td><code>@gorhom/bottom-sheet</code></td>
+              <td class="ver">5.2.14</td>
+              <td>El panel deslizante desde abajo donde se carga la orden.</td>
+            </tr>
+            <tr>
+              <td><code>react-native-gesture-handler</code></td>
+              <td class="ver">2.31.2</td>
+              <td>
+                Gestos nativos (arrastrar el panel, deslizar en listas)
+                manejados fuera del hilo de JavaScript.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-native-reanimated</code></td>
+              <td class="ver">4.3.1</td>
+              <td>
+                Animaciones que corren en el hilo de UI y no se traban aunque JS
+                esté ocupado.
+              </td>
+            </tr>
+            <tr>
+              <td><code>react-native-worklets</code></td>
+              <td class="ver">0.8.3</td>
+              <td>
+                Infraestructura que usan Reanimated y Gesture Handler para
+                ejecutar código fuera del hilo de JavaScript.
+              </td>
+            </tr>
+            <tr>
+              <td><code>tailwindcss-animate</code></td>
+              <td class="ver">1.0.7</td>
+              <td>
+                Utilidades de animación por clase, heredadas del preset de
+                estilos.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--bad">
+        <span class="note__label">Limitación de testabilidad</span>
+        <p>
+          Lo que dibuja Skia es un canvas: no tiene nodos individuales ni labels
+          de accesibilidad. Los valores del gráfico no se pueden afirmar desde
+          una herramienta de UI — hay que validarlos contra la API, o por
+          captura.
+        </p>
+      </div>
+
+      <h2 id="expo-modules">6 · Módulos de Expo</h2>
+      <p class="h2sub">
+        Piezas chicas del SDK que resuelven una sola cosa cada una. Van todas
+        declaradas como plugins en <code>app.config.ts</code> cuando tocan el
+        build nativo.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Módulo</th>
+              <th>Versión</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>expo-font</code></td>
+              <td class="ver">56.0.7</td>
+              <td>
+                Carga la tipografía Plus Jakarta Sans antes de mostrar la
+                interfaz.
+              </td>
+            </tr>
+            <tr>
+              <td><code>expo-status-bar</code></td>
+              <td class="ver">56.0.4</td>
+              <td>Controla el color de la barra de estado del sistema.</td>
+            </tr>
+            <tr>
+              <td><code>expo-system-ui</code></td>
+              <td class="ver">56.0.5</td>
+              <td>
+                Fija el color de fondo de la ventana nativa, para que no
+                parpadee en blanco.
+              </td>
+            </tr>
+            <tr>
+              <td><code>expo-network</code></td>
+              <td class="ver">56.0.5</td>
+              <td>
+                Detecta si hay conexión. Relevante para probar el modo sin red.
+              </td>
+            </tr>
+            <tr>
+              <td><code>expo-device</code> · <code>expo-application</code></td>
+              <td class="ver">56.0.4 · 56.0.3</td>
+              <td>
+                Datos del dispositivo y de la instalación (modelo, versión de la
+                app).
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="dev">7 · Herramientas de desarrollo</h2>
+      <p class="h2sub">
+        Lo que hace falta para compilar, formatear y revisar el código. Varias
+        aparecen en los comandos de verificación del README.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Herramienta</th>
+              <th>Versión</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bun</td>
+              <td class="ver">1.4.2</td>
+              <td>
+                Instala dependencias, corre los scripts y ejecuta los tests
+                unitarios (<code>bun test</code>). Reemplaza a npm en este
+                proyecto.
+              </td>
+            </tr>
+            <tr>
+              <td>Metro</td>
+              <td class="ver">vía Expo 56</td>
+              <td>
+                El empaquetador de React Native: sirve el bundle de JavaScript
+                al simulador en el puerto <code>8081</code> y recarga en
+                caliente.
+              </td>
+            </tr>
+            <tr>
+              <td>Babel</td>
+              <td class="ver">babel-preset-expo 56.0.12</td>
+              <td>
+                Traduce el código moderno y TypeScript a lo que entiende el
+                motor Hermes.
+              </td>
+            </tr>
+            <tr>
+              <td>ESLint</td>
+              <td class="ver">9.39.4</td>
+              <td>
+                Reglas de código. Incluye el plugin de TanStack Query, que
+                detecta claves de caché mal armadas — un error que se paga en
+                datos desactualizados.
+              </td>
+            </tr>
+            <tr>
+              <td>Prettier</td>
+              <td class="ver">3.8.3</td>
+              <td>
+                Formato automático, con
+                <code>prettier-plugin-tailwindcss</code> para ordenar las
+                clases. Lo dispara
+                <code>scripts/format-after-edit.mjs</code> después de cada
+                edición de un agente.
+              </td>
+            </tr>
+            <tr>
+              <td>Xcode · CocoaPods</td>
+              <td class="ver">26.6 · 1.17.0</td>
+              <td>
+                Compilan la app nativa de iOS y resuelven sus dependencias
+                nativas (1,1 GB de pods).
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="qa">8 · Herramientas de QA</h2>
+      <p class="h2sub">
+        Este es el stack que sí elegimos nosotros. Incluye el estado real de
+        cada pieza en esta máquina, porque dos están bloqueadas y eso condiciona
+        cómo se verifica la UI.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Herramienta</th>
+              <th>Estado</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Qase</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Gestor de casos de prueba (TMS), proyecto <code>COCOS</code>. Es
+                el <strong>único</strong> lugar donde viven los casos: no se
+                duplican en Markdown. Se opera por MCP con credenciales locales,
+                nunca versionadas en el repo.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>bun test</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Corre los 43 tests unitarios que ya trae el proyecto sobre
+                cálculos de órdenes, portafolio y búsqueda. Es la red de
+                seguridad más barata que hay.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>xcrun simctl</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Manejo del simulador desde la terminal: bootear, lanzar la app y
+                sacar capturas para la evidencia de <code>docs/evidence/</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>adb + Android Emulator</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                El equivalente de <code>xcrun simctl</code> del lado de Android:
+                bootear el AVD, lanzar la app, capturas y <code>logcat</code>.
+                Es también la vía de interacción en Android, porque el panel
+                integrado es sólo de iOS. Para no adivinar coordenadas desde una
+                captura se usa <code>uiautomator dump</code>, que devuelve el
+                árbol de vistas con los límites reales de cada elemento.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Android SDK 36 + JDK 17</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                El toolchain que compila la app de Android:
+                <code>cmdline-tools</code>, <code>platform-tools</code>,
+                <code>build-tools 36.0.0</code>, el emulador y la imagen
+                <code>arm64-v8a</code>, sobre OpenJDK 17. Se instaló
+                <strong>sin Android Studio</strong>, que no hace falta ni para
+                testear a mano ni para Appium.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Documentos HTML</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                La entrega se documenta en HTML autocontenido en
+                <code>docs/</code>: se abre en cualquier navegador sin servidor
+                ni build.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Argent MCP</strong></td>
+              <td><span class="chip chip--bad">bloqueado</span></td>
+              <td>
+                Es el camino que exigen las reglas del repo para verificar UI
+                nativa: descubrir elementos y tapear por coordenadas reales en
+                vez de adivinarlas desde una captura. Hoy
+                <strong>no conecta</strong>: el binario <code>argent</code> no
+                está en el <code>$PATH</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Panel de simulador integrado</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                La alternativa a Argent para tapear y tipear en iOS.
+                <strong>Se desbloqueó</strong>: antes devolvía
+                <em>“Xcode is installed but not selected”</em> y hacía falta un
+                <code>sudo xcode-select</code>. Hoy responden
+                <code>attach</code>, <code>launch</code>, los gestos y las
+                capturas sobre el iPhone 17 Pro, así que la interacción con la
+                app en iOS ya no es sólo manual.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Playwright MCP</strong></td>
+              <td>
+                <span class="chip chip--neutral"
+                  >disponible, fuera de alcance</span
+                >
+              </td>
+              <td>
+                Automatización de navegador. Está configurado, pero las reglas
+                del repo lo descartan como vía principal para flujos nativos.
+                Queda como opción para tocar la API o la documentación, no la
+                app.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Suite automatizada de la entrega</strong></td>
+              <td><span class="chip chip--warn">por definir</span></td>
+              <td>
+                El challenge pide una suite reproducible con reporte legible.
+                Lenguaje y framework todavía no están decididos; cuando se
+                elijan, se documenta acá con la justificación.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="externo">9 · Servicios externos</h2>
+      <p class="h2sub">
+        Lo que no corre en esta máquina y por lo tanto no controlamos.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Servicio</th>
+              <th>Dónde</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dummy Trading API</td>
+              <td class="num">dummy-api-topaz.vercel.app</td>
+              <td>
+                El backend bajo prueba. Es multi-tenant:
+                <code>X-Candidate-Id</code> aísla el estado de cada candidato, y
+                el estado <strong>persiste entre corridas</strong> hasta que se
+                llama a <code>POST /reset</code>.
+              </td>
+            </tr>
+            <tr>
+              <td>Inyector de defectos</td>
+              <td class="num">header X-Enable-Bugs</td>
+              <td>
+                No es una herramienta aparte, es un modo de la misma API:
+                <code>off</code>, <code>easy</code>, <code>medium</code>,
+                <code>hard</code>. La suite tiene que pasar en
+                <code>off</code> y empezar a fallar al subir el nivel.
+              </td>
+            </tr>
+            <tr>
+              <td>Google Fonts</td>
+              <td class="num">fonts.googleapis.com</td>
+              <td>
+                Sirve la tipografía de estos documentos HTML. Es la única
+                dependencia de red que tienen: sin internet se ven con la fuente
+                del sistema, pero se leen igual.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="cambios">10 · Registro de cambios</h2>
+      <p class="h2sub">
+        Cada vez que el stack se mueva, una línea acá. Lo más nuevo arriba.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Cambio</th>
+              <th>Por qué</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">2026-09-20</td>
+              <td>Primera versión del documento.</td>
+              <td>
+                Inventario inicial del stack de la app y del de QA, con el
+                estado real de las herramientas de verificación de UI.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-20</td>
+              <td>Qase adoptado como repositorio de casos.</td>
+              <td>
+                Para que el catálogo viva en un solo lugar y la documentación de
+                casos se vea profesional en la entrega.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-20</td>
+              <td>
+                Se sumó el toolchain de Android: OpenJDK 17, SDK 36, emulador y
+                un AVD Pixel 8 <code>arm64-v8a</code>.
+              </td>
+              <td>
+                Para poder ejecutar los casos funcionales en las dos
+                plataformas, y porque es el mismo toolchain que va a necesitar
+                Appium cuando se arme la suite automatizada. Se eligió el SDK
+                por línea de comandos en vez de Android Studio: Appium sólo pide
+                <code>ANDROID_HOME</code>, <code>adb</code> y un JDK.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-20</td>
+              <td>
+                El panel de simulador integrado pasó de
+                <em>bloqueado</em> a <em>en uso</em>.
+              </td>
+              <td>
+                Dejó de fallar con “Xcode is installed but not selected”.
+                Verificado levantando la app y respondiendo a
+                <code>attach</code>, <code>launch</code> y capturas. Con esto la
+                interacción en iOS deja de depender de que Argent se destrabe.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label">Cómo agregar una fila</span>
+        <p>
+          Sumá la pieza a la sección que corresponda con su versión instalada y
+          una línea de para qué sirve, y agregá la entrada en este registro con
+          la fecha y el motivo. Si una pieza se da de baja, no se borra su fila
+          del registro: se aclara ahí que salió.
+        </p>
+      </div>
+
+      <footer class="footer">
+        Tecnologías del proyecto Cocos · Versiones leídas de
+        <code>node_modules</code> el 20/09/2026, en macOS 26.6.2 arm64 con Bun
+        1.4.2. Documento vivo: se actualiza a medida que avanza el trabajo de
+        QA.
+      </footer>
+    </div>
+  </body>
+</html>
