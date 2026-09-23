@@ -46,3 +46,7 @@ __pycache__/
 *.tsbuildinfo
 
 app-example
+
+# E2E (Appium + WebdriverIO)
+e2e/.build-info.*.json
+e2e/reports/

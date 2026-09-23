@@ -1018,6 +1018,56 @@
               </td>
             </tr>
             <tr>
+              <td><strong>Appium 3.7</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                El motor de la suite automatizada. Habla W3C WebDriver contra
+                las dos plataformas con los drivers
+                <code>uiautomator2 8.7</code> (Android) y
+                <code>xcuitest 12.13</code> (iOS), que es lo que permite que un
+                mismo test en TypeScript corra en las dos.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>WebdriverIO 9.32</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                El runner sobre Appium: levanta el servidor, maneja la sesión,
+                ordena los specs y engancha los reporters. Con Mocha como
+                framework de aserciones. Se instala con Bun pero se
+                <strong>lanza con Node</strong>: WDIO forkea workers y habla por
+                IPC de Node, y Appium 3 declara <code>engines.node</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>wdio-qase-reporter 1.6</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Publica el resultado de cada test automatizado en el caso de
+                Qase que le corresponde, y reproduce los pasos del caso manual
+                como pasos del reporte. Apagado por defecto en local.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Allure + JUnit</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Reporte HTML con captura de pantalla automática en cada fallo, y
+                XML de JUnit para el resumen de la corrida en GitHub Actions.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>GitHub Actions</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Corre la suite: Android en cada push sobre runner Linux, iOS por
+                cron nocturno y a pedido sobre runner macOS. El build y la suite
+                de iOS van en el mismo job, porque separarlos cuesta un segundo
+                <code>bun install</code> de 4,1 GB y una compilación de
+                WebDriverAgent en frío.
+              </td>
+            </tr>
+            <tr>
               <td><strong>bun test</strong></td>
               <td><span class="chip chip--ok">en uso</span></td>
               <td>
@@ -1181,6 +1231,21 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-23</td>
+              <td>
+                Se sumó la suite E2E automatizada: Appium 3.7 + WebdriverIO 9.32
+                + Mocha en TypeScript, con reporters de Qase, Allure y JUnit, y
+                un workflow de GitHub Actions.
+              </td>
+              <td>
+                Es el entregable automatizado del challenge. Se eligió Appium
+                sobre Maestro y Detox porque es el único que corre el mismo test
+                en las dos plataformas con un POM compartido, y porque los casos
+                de conversión de pesos a acciones exigen aritmética dentro del
+                test, cosa que un YAML declarativo no puede hacer.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-20</td>
               <td>Primera versión del documento.</td>

@@ -541,6 +541,10 @@
             <span>— el catálogo completo</span>
           </li>
           <li>
+            <a href="#automatizacion">Automatización</a>
+            <span>— qué cubre la suite E2E</span>
+          </li>
+          <li>
             <a href="#corridas">Corridas</a>
             <span>— resultados de cada ejecución</span>
           </li>
@@ -1276,7 +1280,125 @@
         </table>
       </div>
 
-      <h2 id="corridas">4 · Corridas</h2>
+      <h2 id="automatizacion">4 · Qué quedó automatizado</h2>
+      <p class="h2sub">
+        La suite E2E vive en <code>e2e/</code> y corre sobre Appium +
+        WebdriverIO en iOS y Android. Cada test declara su caso con
+        <code>qase(id, …)</code>, así que la corrida automática escribe el
+        resultado en la misma ficha que usa la corrida manual.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Caso</th>
+              <th>Spec</th>
+              <th>Qué protege</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-7">COCOS-7</a>
+              </td>
+              <td><code>01-market-buy</code></td>
+              <td>
+                Compra a mercado de punta a punta: estimado, ejecución al precio
+                vigente, efectivo y posición.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-5">COCOS-5</a>,
+                <a href="https://app.qase.io/case/COCOS-49">COCOS-49</a>
+              </td>
+              <td><code>02-amount-pesos</code></td>
+              <td>
+                Conversión de pesos a acciones enteras: nunca redondea hacia
+                arriba, acepta coma decimal.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-6">COCOS-6</a>,
+                <a href="https://app.qase.io/case/COCOS-47">COCOS-47</a>
+              </td>
+              <td><code>03-ticket-validation</code></td>
+              <td>
+                Los tres mensajes de validación del ticket, sin que se cree
+                ninguna orden.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-25">COCOS-25</a>,
+                <a href="https://app.qase.io/case/COCOS-28">COCOS-28</a>
+              </td>
+              <td><code>04-sell-partial</code></td>
+              <td>
+                Venta a mercado y venta parcial: el precio promedio de compra no
+                cambia al vender.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-10">COCOS-10</a>
+              </td>
+              <td><code>05-order-history</code></td>
+              <td>
+                La orden recién enviada aparece primera en el historial con sus
+                datos.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Qué quedó afuera, y por qué</h3>
+      <p class="h3sub">
+        No es lo que sobró: es lo que se decidió no automatizar, con el motivo
+        anotado.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Casos</th>
+              <th>Motivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">COCOS-8, 29, 45, 46, 48</td>
+              <td>
+                Órdenes límite. La API las resuelve con un factor aleatorio ante
+                cualquier request posterior: son flaky por diseño del servicio,
+                no del test.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">COCOS-16, 19, 23, 26, 31</td>
+              <td>
+                Casos <span class="chip chip--warn">visual</span>:
+                superposiciones y recortes. Appium valida la jerarquía de
+                vistas, no píxeles.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">COCOS-14, 33, 38</td>
+              <td>
+                Necesitan cortar la red. En Android se haría con
+                <code>adb shell svc wifi disable</code>, pero en el simulador de
+                iOS no hay equivalente. Sin paridad entre plataformas, no
+                entran.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="corridas">5 · Corridas</h2>
       <p class="h2sub">
         Cada vez que se ejecute el catálogo — a mano o desde la suite
         automatizada — la corrida se crea en Qase y deja su fila acá.
@@ -1351,7 +1473,7 @@
         </li>
       </ul>
 
-      <h2 id="alcance">5 · Alcance y estado</h2>
+      <h2 id="alcance">6 · Alcance y estado</h2>
       <p class="h2sub">Qué hay hoy en el proyecto, sin adornos.</p>
 
       <div class="tablewrap">
@@ -1415,7 +1537,7 @@
         </p>
       </div>
 
-      <h2 id="cambios">6 · Registro de cambios</h2>
+      <h2 id="cambios">7 · Registro de cambios</h2>
       <p class="h2sub">
         Cada movimiento del catálogo o de las corridas deja una línea. Lo más
         nuevo arriba.

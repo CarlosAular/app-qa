@@ -16,6 +16,7 @@ module.exports = defineConfig([
     "expo-env.d.ts",
     "src/uniwind-types.d.ts",
     "**/*.test.ts",
+    "e2e/reports/*",
   ]),
   expoConfig,
   eslintPluginPrettierRecommended,
@@ -98,6 +99,30 @@ module.exports = defineConfig([
           args: "all",
         },
       ],
+    },
+  },
+  // La suite E2E: su propio tsconfig, y la consola ES su canal de reporte.
+  {
+    files: [ "e2e/**/*.ts" ],
+    languageOptions: {
+      parserOptions: {
+        project: [ "./e2e/tsconfig.json" ],
+      },
+    },
+    rules: {
+      "no-console": "off",
+    },
+  },
+  // Scripts de build y utilidades: ESM de Node, no código de la app.
+  {
+    files: [ "scripts/**/*.mjs" ],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+    },
+    rules: {
+      "no-console": "off",
+      "import/no-unresolved": "off",
     },
   },
   // TypeScript-specific config that only applies to TS files

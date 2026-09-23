@@ -1,0 +1,24 @@
+{
+  "mode": "off",
+  "fallback": "report",
+  "debug": false,
+  "testops": {
+    "project": "COCOS",
+    "run": {
+      "title": "Appium E2E",
+      "complete": true
+    },
+    "batch": {
+      "size": 100
+    }
+  },
+  "report": {
+    "driver": "local",
+    "connection": {
+      "local": {
+        "path": "./e2e/reports/qase-report",
+        "format": "json"
+      }
+    }
+  }
+}

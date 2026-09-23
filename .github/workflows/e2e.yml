@@ -1,0 +1,322 @@
+name: E2E (Appium)
+
+# Android corre en cada push: el runner de Linux es 4 vCPU / 16 GB y barato.
+# iOS corre de noche y a pedido: el de macOS es 3 vCPU / 7 GB y se factura 10x,
+# y un build de release en frío son 30-45 minutos.
+on:
+  push:
+    branches: [main, "ca/**"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Plataforma a correr
+        type: choice
+        default: both
+        options: [both, android, ios]
+      qase:
+        description: Publicar resultados en Qase
+        type: boolean
+        default: true
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  JAVA_VERSION: "17"
+  EXPO_PUBLIC_API_URL: https://dummy-api-topaz.vercel.app
+  EXPO_PUBLIC_BUGS_TIER: "off"
+
+jobs:
+  # ---------------------------------------------------------------- Android --
+  android-build:
+    name: Android · build
+    if: >-
+      github.event_name != 'workflow_dispatch' ||
+      contains(fromJSON('["both","android"]'), inputs.platform)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      candidate-id: ${{ steps.build.outputs.candidate-id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # El orden importa: Gradle invoca `node` por Runtime.exec, que no pasa por
+      # un shell y resuelve el PATH que heredó la JVM.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Cachear el store de Bun
+        uses: actions/cache@v4
+        with:
+          # El store, NO node_modules: pesa 4,1 GB y se comería la cuota de 10 GB.
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+
+      - name: Liberar espacio
+        run: rm -rf node_modules/react-native-skia-apple-ios node_modules/react-native-skia-apple-tvos node_modules/react-native-skia-apple-macos || true
+
+      # Sin --clean: el checkout ya es limpio y --clean borraría cachés.
+      - run: bunx expo prebuild -p android --no-install
+
+      - name: Compilar el APK de release
+        id: build
+        env:
+          # RN pinea 27.1.x; el runner trae otros. Se usa el que ya está.
+          E2E_ANDROID_NDK: "27.3.13750724"
+          E2E_ANDROID_ABI: x86_64
+        run: |
+          node scripts/e2e-build.mjs android
+          echo "candidate-id=$(jq -r .candidateId e2e/.build-info.android.json)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-app
+          path: |
+            android/app/build/outputs/apk/release/app-release.apk
+            e2e/.build-info.android.json
+          retention-days: 5
+
+  android-test:
+    name: Android · suite
+    needs: android-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: android-app
+          path: artifacts
+
+      - name: Reubicar el binario y su build-info
+        run: |
+          mkdir -p android/app/build/outputs/apk/release e2e
+          cp artifacts/android/app/build/outputs/apk/release/app-release.apk \
+             android/app/build/outputs/apk/release/app-release.apk
+          cp artifacts/e2e/.build-info.android.json e2e/.build-info.android.json
+          # El build-info guarda rutas absolutas del runner que compiló.
+          node -e '
+            const fs = require("fs");
+            const path = "e2e/.build-info.android.json";
+            const info = JSON.parse(fs.readFileSync(path, "utf8"));
+            info.appPath = require("path").resolve("android/app/build/outputs/apk/release/app-release.apk");
+            fs.writeFileSync(path, JSON.stringify(info, null, 2));
+          '
+          test "$(jq -r .candidateId e2e/.build-info.android.json)" = "${{ needs.android-build.outputs.candidate-id }}" \
+            || { echo "::error::El candidate id del binario no coincide con el del job de build"; exit 1; }
+
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Cachear la AVD
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb_keys
+          key: avd-36-google_apis-x86_64
+
+      - name: Correr la suite en el emulador
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && !inputs.qase) && 'off' || 'testops' }}
+          QASE_TESTOPS_PROJECT: COCOS
+          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+          QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · Android"
+          QASE_TESTOPS_RUN_DESCRIPTION: "${{ github.sha }} · ${{ github.ref_name }}"
+          QASE_TESTOPS_RUN_COMPLETE: "true"
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bun run e2e:android
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-results
+          path: e2e/reports
+          retention-days: 10
+
+  # -------------------------------------------------------------------- iOS --
+  # Build y suite en el MISMO job a propósito: separarlos obliga a un segundo
+  # checkout, un segundo bun install de 4,1 GB, un round-trip de artifact que le
+  # saca el bit de ejecución al .app, y una compilación de WebDriverAgent en
+  # frío. Juntos se ahorran 8-15 minutos y cuatro modos de falla.
+  ios:
+    name: iOS · build + suite
+    if: >-
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' &&
+       contains(fromJSON('["both","ios"]'), inputs.platform))
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+
+      # El runner documenta 14 GB de disco. node_modules pesa 4,1 GB (Skia solo
+      # son 1,4 GB con binarios de cuatro plataformas) y los Pods otros 1,1 GB.
+      - name: Liberar espacio
+        run: |
+          df -h /
+          sudo rm -rf /Applications/Xcode_26.0.1.app /Applications/Xcode_26.1.1.app \
+                      /Applications/Xcode_26.2.app /Applications/Xcode_26.3.app || true
+          rm -rf node_modules/react-native-skia-android node_modules/react-native-skia-apple-tvos \
+                 node_modules/react-native-skia-apple-macos || true
+          df -h /
+
+      - run: bunx expo prebuild -p ios --no-install
+
+      # Después del prebuild: sin --clean no se borra, pero el orden deja claro
+      # que la caché no puede restaurarse antes de que exista el proyecto.
+      - name: Cachear los Pods
+        uses: actions/cache@v4
+        with:
+          path: |
+            ios/Pods
+            ~/Library/Caches/CocoaPods
+          key: pods-${{ hashFiles('bun.lock', 'app.config.ts') }}
+
+      - name: Compilar el .app de simulador
+        run: node scripts/e2e-build.mjs ios
+
+      - name: Bootear un simulador
+        run: |
+          UDID=$(xcrun simctl list devices available --json | node -e '
+            let raw = "";
+            process.stdin.on("data", chunk => raw += chunk).on("end", () => {
+              const {devices} = JSON.parse(raw);
+              const candidates = Object.entries(devices)
+                .filter(([runtime]) => runtime.includes("SimRuntime.iOS-"))
+                .flatMap(([runtime, list]) => list
+                  .filter(d => d.name.startsWith("iPhone") && d.isAvailable !== false)
+                  .map(d => ({...d, rt: runtime.replace(/.*iOS-/, "").replace(/-/g, ".")})));
+              candidates.sort((a, b) => a.rt.localeCompare(b.rt, undefined, {numeric: true}) || a.name.localeCompare(b.name));
+              process.stdout.write(candidates.at(-1).udid);
+            });
+          ')
+          echo "Simulador elegido: $UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          echo "E2E_IOS_UDID=$UDID" >> "$GITHUB_ENV"
+
+      - name: Correr la suite
+        env:
+          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && !inputs.qase) && 'off' || 'testops' }}
+          QASE_TESTOPS_PROJECT: COCOS
+          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+          QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · iOS"
+          QASE_TESTOPS_RUN_DESCRIPTION: "${{ github.sha }} · ${{ github.ref_name }}"
+          QASE_TESTOPS_RUN_COMPLETE: "true"
+        run: bun run e2e:ios
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-results
+          # e2e/reports lleva el DerivedData de WDA y del build: se excluye.
+          path: |
+            e2e/reports/allure-results
+            e2e/reports/junit
+            e2e/reports/*.log
+          retention-days: 10
+
+  # ----------------------------------------------------------------- reporte --
+  report:
+    name: Reporte HTML
+    needs: [android-test, ios]
+    if: always() && (needs.android-test.result != 'skipped' || needs.ios.result != 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: downloaded
+          pattern: "*-results"
+          merge-multiple: true
+
+      - name: Generar el HTML de Allure
+        run: |
+          mkdir -p merged
+          find downloaded -type d -name allure-results -exec cp -r {}/. merged/ \; || true
+          if [ -z "$(ls -A merged 2>/dev/null)" ]; then
+            echo "No hay resultados que reportar."; exit 0
+          fi
+          # El paquete allure-commandline expone el binario `allure`.
+          node_modules/.bin/allure generate merged --clean -o allure-report
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 30
