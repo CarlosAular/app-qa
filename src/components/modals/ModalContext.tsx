@@ -117,6 +117,7 @@ export const ModalProvider = ({children}: PropsWithChildren) => {
       <BottomSheetModal
         ref={bottomSheetRef}
         index={0}
+        accessible={false}
         android_keyboardInputMode="adjustResize"
         backdropComponent={renderBackdrop}
         backgroundStyle={getBottomSheetBackgroundStyle()}
