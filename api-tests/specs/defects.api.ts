@@ -1,6 +1,6 @@
 import {qase} from "playwright-qase-reporter"
 
-import {expect, tag, test} from "../fixtures"
+import {expect, money, tag, test} from "../fixtures"
 
 /*
  * Defectos conocidos del servicio, en tier `off`. Cada test afirma el
@@ -80,6 +80,84 @@ test(
         quantity: 1,
       })
       expect(order.status).toBe("FILLED")
+    })
+  }
+)
+
+test(
+  qase(
+    53,
+    "COCOS-53 · La posición sigue visible mientras una venta límite reserva todas sus acciones @defecto"
+  ),
+  async ({api}) => {
+    await tag("Defectos conocidos", "normal")
+    const instrument = await api.tradable()
+    const quantity = 10
+    const held = async () =>
+      (await api.portfolio()).holdings.find(h => h.ticker === instrument.ticker)
+
+    await test.step(`POST /orders BUY MARKET quantity ${quantity} y GET /portfolio`, async () => {
+      const buy = await api.createOrder({
+        instrument_id: instrument.id,
+        side: "BUY",
+        type: "MARKET",
+        quantity,
+      })
+      expect(buy.status).toBe("FILLED")
+      expect((await held())?.quantity).toBe(quantity)
+    })
+
+    /*
+     * La orden límite se resuelve al LEER la cuenta, con un factor aleatorio: si
+     * para cuando se lee el portafolio ya se resolvió, la lectura no dice nada
+     * de la reserva. Solo cuenta si GET /orders la sigue mostrando PENDING, y
+     * como una orden nunca vuelve a PENDING, entonces también lo estaba cuando
+     * se leyó el portafolio. Si no, se repite con una orden nueva.
+     */
+    let orderId: number | undefined
+    let observed: string[] = []
+
+    for (let attempt = 1; attempt <= 5 && orderId === undefined; attempt += 1) {
+      await test.step(`Intento ${attempt}: POST /orders SELL LIMIT quantity ${quantity} muy por encima del mercado`, async () => {
+        const sell = await api.createOrder({
+          instrument_id: instrument.id,
+          side: "SELL",
+          type: "LIMIT",
+          quantity,
+          price: money(instrument.last_price * 3),
+        })
+        expect(sell.status).toBe("PENDING")
+
+        observed = (await api.portfolio()).holdings.map(h => h.ticker)
+
+        const current = (await api.orders()).find(o => o.id === sell.id)
+        if (current?.status === "PENDING") {
+          orderId = sell.id
+        }
+      })
+    }
+
+    test.skip(
+      orderId === undefined,
+      "No se llegó a observar el portafolio con la venta pendiente en cinco intentos: resultado no concluyente"
+    )
+
+    await test.step("Con la venta pendiente, GET /portfolio sigue incluyendo el instrumento", async () => {
+      expect
+        .soft(
+          observed,
+          "el servicio omite la tenencia cuando la reserva iguala a las acciones que hay"
+        )
+        .toContain(instrument.ticker)
+    })
+
+    await test.step("Al resolverse la orden, la posición vuelve con todas las acciones", async () => {
+      let status = "PENDING"
+      for (let read = 0; read < 40 && status === "PENDING"; read += 1) {
+        status = (await api.orders()).find(o => o.id === orderId)!.status
+      }
+      expect(status).toBe("REJECTED")
+      expect((await held())?.quantity).toBe(quantity)
     })
   }
 )
