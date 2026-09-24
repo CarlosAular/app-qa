@@ -21,7 +21,7 @@ navegador, no necesitan servidor ni build.
   tecnología usa la app, qué usamos nosotros para QA, para qué sirve cada pieza y
   con qué versión se verificó.
 - [`docs/qase.html`](docs/qase.html) — el catálogo de casos de prueba: qué es Qase,
-  cómo está organizado el proyecto `COCOS`, los 50 casos con link a cada ficha y las
+  cómo está organizado el proyecto `COCOS`, los 51 casos con link a cada ficha y las
   corridas registradas, manuales y automatizadas.
 - [`docs/api.html`](docs/api.html) — contrato de la API observado con requests
   reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
@@ -268,7 +268,8 @@ viviendo en Qase y no se codifican como fallas esperadas.
 - En iOS **un rechazo del servicio no muestra nada**: el rechazo por acciones
   insuficientes se verifica por estado (no se creó orden, la tenencia no se
   movió), no por mensaje.
-- **El ticket era inoperable con VoiceOver en iOS** (`COCOS-46`, corregido).
+- **El ticket era inoperable con VoiceOver en iOS** (defecto #46 de Qase,
+  corregido en el código).
   `@gorhom/bottom-sheet` pone `accessible={true}` por defecto en el contenedor
   del sheet, y en iOS eso COLAPSA todo el subárbol en un solo elemento sin
   hijos: ni los toggles, ni el campo de cantidad, ni "Enviar orden", ni los
@@ -346,7 +347,8 @@ bun run test:api:report     # genera y abre el reporte de Allure
 
 - **Un test por caso de Qase:** cada test declara su caso con
   `qase(id, "COCOS-N · ...")` y cada paso del caso es un `test.step`, igual que
-  los E2E. Cubren COCOS-20, 24, 27, 32, 35, 39 y 51.
+  los E2E. Cubren COCOS-20, 24, 27, 32, 35, 39 y 51, más COCOS-42, que va como defecto
+  (`@defecto`, falla a propósito): 8 casos de Qase.
 - **Tiers como proyectos:** cada valor de `X-Enable-Bugs` es un proyecto de
   Playwright. La misma suite pasa en `off` y va fallando al subir el tier
   (en `easy` ya falla el catálogo y el saldo). `API_TIERS=off,hard bun run test:api`
