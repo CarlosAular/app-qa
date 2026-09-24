@@ -6,9 +6,9 @@ import {PORTFOLIO} from "../data/messages"
 import {marketsScreen} from "../screens/MarketsScreen"
 import {portfolioScreen} from "../screens/PortfolioScreen"
 import {readTextNodes, valueUnderLabel} from "../support/pageMap"
-import {byLabelContains} from "../support/selectors"
+import {byLabelContains, byTextContains} from "../support/selectors"
 import {step} from "../support/steps"
-import {isVisible} from "../support/waits"
+import {isVisible, waitForVisible} from "../support/waits"
 
 describe("Comportamiento transversal de la cuenta", () => {
   it(
@@ -17,7 +17,7 @@ describe("Comportamiento transversal de la cuenta", () => {
       "COCOS-34 · Cambiar entre las pestañas conserva el estado de cada una"
     ),
     async () => {
-      const marker = INSTRUMENTS.SAMI.ticker
+      const marker = INSTRUMENTS.LEDE.ticker
 
       await step(
         "Ir a Mercados y bajar hasta un instrumento al final de la lista",
@@ -32,16 +32,37 @@ describe("Comportamiento transversal de la cuenta", () => {
 
       await step("Cambiar a Portafolio y volver a Mercados", async () => {
         await tabBar.portfolio()
-        await portfolioScreen.waitUntilLoaded()
+
+        /*
+         * No se usa `portfolioScreen.waitUntilLoaded()`: hace `scrollToTop()`, y
+         * en iOS ese toque en la barra de estado también sube la lista de la
+         * pestaña que quedó atrás. Destruiría justo el estado que este caso
+         * verifica. Alcanza con esperar el encabezado, sin scrollear.
+         */
+        await waitForVisible(byTextContains("Tenencias valorizadas en pesos"), {
+          message: "No cargó el listado del Portafolio.",
+        })
+
         await tabBar.markets()
       })
 
+      /*
+       * Prueba de que el estado se conservó: la lista NO volvió al tope, o sea
+       * que el primer instrumento sigue fuera de pantalla. No se pide que el
+       * marcador siga exactamente en el mismo lugar: en iOS 26 la barra se
+       * colapsa al scrollear (`minimizeBehavior="onScrollDown"`) y para tocar
+       * otra pestaña hay que expandirla con un flick hacia arriba, que corre la
+       * lista unos renglones.
+       */
       await step(
-        "El scroll de Mercados se conservó: el instrumento sigue visible sin volver a scrollear",
+        "El scroll de Mercados se conservó: la lista no volvió al tope",
         async () => {
-          expect(await isVisible(byLabelContains(`${marker}, `), 2_000)).toBe(
-            true
-          )
+          expect(
+            await isVisible(
+              byLabelContains(`${INSTRUMENTS.DYCA.ticker}, `),
+              1_500
+            )
+          ).toBe(false)
         }
       )
 

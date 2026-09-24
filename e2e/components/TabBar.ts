@@ -8,6 +8,8 @@ export type TabName = "Mercados" | "Portafolio" | "Órdenes" | "Buscar"
 const TAB_ORDER: TabName[] = ["Mercados", "Portafolio", "Órdenes", "Buscar"]
 
 const IOS_TAB_BAR = "-ios class chain:**/XCUIElementTypeTabBar"
+const IOS_TAB_BUTTONS =
+  "-ios class chain:**/XCUIElementTypeTabBar/**/XCUIElementTypeButton[`visible == 1`]"
 
 /**
  * La barra de pestañas es NativeTabs de expo-router: UITabBar en iOS y
@@ -93,10 +95,37 @@ class TabBar {
     await browser.pause(900)
   }
 
+  /**
+   * La app declara `minimizeBehavior="onScrollDown"` (src/app/(tabs)/_layout.tsx):
+   * en iOS 26 la barra se COLAPSA a dos círculos (la pestaña activa y Buscar) en
+   * cuanto una lista scrollea hacia abajo. Con la barra colapsada, dividir su
+   * ancho en cuatro partes iguales (`tapByGeometry`) cae sobre una fila de la
+   * lista: se abría la ficha de un instrumento en vez de cambiar de pestaña.
+   *
+   * Colapsada = hay menos de cuatro botones visibles. Se expande tocando el
+   * círculo de la pestaña activa, como haría una persona. NO se expande
+   * scrolleando hacia arriba: eso mueve la lista de la pestaña que se está
+   * dejando, y COCOS-34 verifica justamente que esa posición se conserve.
+   */
+  private async expandIfCollapsed() {
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const buttons = await $$(IOS_TAB_BUTTONS).getElements()
+
+      if (buttons.length >= TAB_ORDER.length) {
+        return
+      }
+
+      // El primer círculo es la pestaña activa; el segundo, Buscar.
+      await buttons[0]?.click()
+      await browser.pause(800)
+    }
+  }
+
   async open(tab: TabName) {
     await this.ensureVisible()
 
     if (driver.isIOS) {
+      await this.expandIfCollapsed()
       await this.tapByGeometry(tab)
       return
     }
