@@ -1748,27 +1748,29 @@
             </tr>
             <tr>
               <td>
-                Automatizada — iOS 26.5 · iPhone 17 Pro (Appium, 22 casos
+                Automatizada — iOS 26.5 · iPhone 17 Pro (Appium, 26 casos
                 nuevos)<br /><span class="muted"
                   >bugs=off · simulador · local, spec por spec,
                   QASE_MODE=off</span
                 >
               </td>
-              <td class="num">2026-09-23</td>
+              <td class="num">2026-09-24</td>
+              <td class="num">26</td>
               <td class="num">22</td>
-              <td class="num">14</td>
-              <td class="num">8</td>
+              <td class="num">4</td>
               <td>
-                <span class="chip chip--ok">14 verdes</span>, dos rojos a
-                propósito confirmados (COCOS-18 por O3 y COCOS-41 por O8) y
-                <span class="chip chip--warn">6 sin resolver</span>: COCOS-22 se
-                cuelga al leer la ficha de la posición (el scroll de WDA no
-                llega a la etiqueta), COCOS-34 y COCOS-15 no llegaron a cargar
-                el listado del Portafolio, y el spec 13 (COCOS-11, 12 y 30) no
-                se llegó a completar. Ninguno está verificado como defecto de la
-                app: en iOS quedan pendientes de reproducir. Los 4 casos que se
-                sumaron después (COCOS-48, 8, 29 y 46) todavía no se probaron en
-                iOS.
+                <span class="chip chip--ok">22 verdes</span> y
+                <span class="chip chip--warn">4 rojos a propósito</span>, los
+                mismos que en Android: COCOS-18 (O3), COCOS-41 (O8), COCOS-15 y
+                COCOS-30 (formato de porcentaje, O4). Los fallos que había en
+                iOS eran de la suite y ya se corrigieron: la barra de pestañas
+                colapsada de iOS 26 (el toque caía sobre una fila), la ficha de
+                la posición (el scroll de WDA no converge y el botón "Operar
+                esta posición" figura invisible aunque esté libre) y el refresco
+                de Órdenes con filas nuevas. Se verificó por spec, no en una
+                sola corrida. En iOS la venta límite (COCOS-46) cierra el ticket
+                sola tras enviarse: comportamiento observado, causa sin
+                confirmar (detalle en el README).
               </td>
             </tr>
             <tr>
@@ -1840,9 +1842,9 @@
                 <span class="chip chip--ok">6</span> — 2 manuales (catálogo
                 completo, una por plataforma) y 4 automatizadas: Appium en
                 Android (34 casos: 30 verdes y 4 rojos a propósito), Appium en
-                iOS (los 8 originales, 4/8, y los 22 nuevos verificados spec por
-                spec: 14 verdes, 2 rojos a propósito y 6 sin resolver) y la de
-                API con Playwright, la única publicada en Qase
+                iOS (los 8 originales, 4/8, y los 26 nuevos verificados spec por
+                spec: 22 verdes y 4 rojos a propósito) y la de API con
+                Playwright, la única publicada en Qase
               </td>
             </tr>
             <tr>
@@ -1894,6 +1896,24 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-24</td>
+              <td>
+                Los 26 casos nuevos quedaron verificados en iOS: 22 verdes y 4
+                rojos a propósito (COCOS-15, 18, 30 y 41), los mismos que en
+                Android. Los seis que estaban sin resolver (COCOS-22, 34, 15,
+                11, 12 y 30) se diagnosticaron: cuatro eran defectos de la suite
+                y ya pasan, y los otros dos son rojos a propósito por el formato
+                de porcentaje (defecto #25).
+              </td>
+              <td>
+                Se corrigieron tres problemas de la suite en iOS: la barra de
+                pestañas colapsada de iOS 26, la ficha de la posición y el
+                refresco de Órdenes con filas nuevas. Ninguno era del simulador.
+                La venta límite cierra el ticket sola en iOS: se anotó como
+                comportamiento observado, sin causa confirmada.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-24</td>
               <td>

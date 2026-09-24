@@ -156,22 +156,44 @@ estabilizaron y pasan en verde por separado, y los cuatro casos siguientes
 (`COCOS-48`, `8`, `29` y `46`) también se verificaron por spec. No se repitió la
 corrida completa de los 34, que ronda los 45 minutos.
 
-**iOS** (iPhone 17 Pro, iOS 26.5): los 22 casos nuevos se verificaron spec por
-spec, no en una sola corrida.
+**iOS** (iPhone 17 Pro, iOS 26.5): los 26 casos nuevos se verificaron spec por
+spec, no en una sola corrida, y dan lo mismo que en Android.
 
-- Verdes: `COCOS-1, 2, 3, 4, 9, 13, 17, 21, 36, 37, 40, 43, 44, 50`.
-- Rojos a propósito, confirmados: `COCOS-18` y `COCOS-41`.
-- Sin resolver, hay que reproducirlos antes de decidir si son de la suite o del
-  simulador: `COCOS-22` se cuelga al leer la ficha de la posición (WDA responde
-  "max scroll count reached"), `COCOS-34` y `COCOS-15` no llegan a cargar el
-  listado del Portafolio, y el spec `13` (`COCOS-11, 12, 30`) no se llegó a
-  completar.
-- `COCOS-48`, `8`, `29` y `46` se sumaron después y todavía no se probaron en
-  iOS.
-- Los 4 fallos originales de iOS se atribuyeron al desajuste entre Xcode y el
-  runtime. En esta ronda apareció además un defecto propio, ya corregido: dos
-  scrolls simultáneos al leer la ficha de la posición. No se re-verificó si eso
-  cambia esos fallos.
+- Verdes (22): `COCOS-1, 2, 3, 4, 8, 9, 11, 12, 13, 17, 21, 22, 29, 34, 36, 37,
+40, 43, 44, 46, 48, 50`.
+- Rojos a propósito (4), los mismos que en Android: `COCOS-15`, `18`, `30` y `41`.
+- Los 8 casos originales no se volvieron a correr en esta ronda. Sus 4 fallos se
+  habían atribuido al desajuste entre Xcode y el runtime; puede que los arreglos
+  de abajo también cambien ese resultado, pero no está verificado.
+
+Qué costó llegar ahí en iOS, para no redescubrirlo. Todos fueron defectos de la
+suite, no del simulador:
+
+- **La barra de pestañas se colapsa** (`minimizeBehavior="onScrollDown"`, iOS 26):
+  tras scrollear una lista queda en dos círculos y el toque por geometría caía
+  sobre una fila. `TabBar` la expande tocando el círculo de la pestaña activa.
+  Expandirla scrolleando hacia arriba movía la lista y rompía `COCOS-34`.
+- **La ficha de la posición colgaba la suite minutos**: `mobile: scroll` no
+  converge en esa pantalla y XCUITest marca "Operar esta posición" como
+  `visible="false"` mientras el frame de la barra lo cubra, aunque el botón esté
+  libre. Se scrollea con swipes desde el margen izquierdo (el gráfico de Skia se
+  come los del centro), se busca el botón por presencia y se toca por
+  coordenadas con la barra colapsada.
+- **Refrescar Órdenes con filas nuevas** las inserta arriba y el encabezado queda
+  fuera de pantalla (`COCOS-48`).
+- **La venta límite cierra el ticket sola** en iOS unos segundos después de
+  enviarse y muestra el toast "Orden enviada" (la compra límite deja el ticket
+  abierto en "Enviar otra orden"). La orden llega: el servicio la muestra
+  pendiente. Los flujos límite aceptan el sheet cerrado como "procesada" y lo
+  demás se verifica contra la API. No se confirmó la causa; queda como
+  comportamiento observado, no como defecto abierto.
+
+En Android apareció un problema parecido de temporización: cambiar de pestaña
+justo después de cerrar el ticket y salir de la ficha del instrumento dejaba a la
+app en Mercados, porque el backdrop del sheet todavía estaba atenuando la
+pantalla y recibía el clic. `TabBar` ahora verifica que la pestaña quedó
+seleccionada y reintenta. Sólo se veía corriendo el spec `16` completo (`COCOS-46`,
+el tercero), no cada caso por separado.
 
 La config elige el simulador que ya esté booteado; si hay varios, se fija con
 `E2E_IOS_UDID` (más `E2E_IOS_DEVICE_NAME` y `E2E_IOS_RUNTIME`).
