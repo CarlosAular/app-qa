@@ -139,10 +139,11 @@ No son bugs de la suite.
 - `COCOS-41`: ARS se puede comprar, la API la ejecuta como cualquier acción
   (hallazgo O8).
 - `COCOS-15`: el retorno diario se muestra con punto decimal en vez de coma
-  (hallazgo O4).
-- `COCOS-30`: el rendimiento del portafolio tiene el mismo problema de formato.
-  El signo de la ganancia sólo se verifica en cero, porque la API dummy nunca
-  mueve los precios.
+  (hallazgo O4, defecto #25 en Qase).
+- `COCOS-30`: el rendimiento del portafolio tiene el mismo problema de formato,
+  ya incluido en ese defecto #25 (lista Mercados, Portafolio y el detalle de la
+  posición). El signo de la ganancia sólo se verifica en cero, porque la API
+  dummy nunca mueve los precios.
 
 ### Estado por plataforma
 
