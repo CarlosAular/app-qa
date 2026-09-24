@@ -81,6 +81,102 @@ export const INSTRUMENTS = {
     lastPrice: 1,
     closePrice: 1,
   },
+  PGR: {
+    id: 3,
+    ticker: "PGR",
+    name: "Phoenix Global Resources",
+    type: "ACCIONES",
+    lastPrice: 31.95,
+    closePrice: 28.57,
+  },
+  MOLA: {
+    id: 4,
+    ticker: "MOLA",
+    name: "Molinos Agro S.A.",
+    type: "ACCIONES",
+    lastPrice: 92.15,
+    closePrice: 84.13,
+  },
+  IRCP: {
+    id: 10,
+    ticker: "IRCP",
+    name: "IRSA Propiedades Comerciales S.A.",
+    type: "ACCIONES",
+    lastPrice: 61.45,
+    closePrice: 55.77,
+  },
+  GAMI: {
+    id: 11,
+    ticker: "GAMI",
+    name: "Boldt Gaming S.A.",
+    type: "ACCIONES",
+    lastPrice: 97.56,
+    closePrice: 88.31,
+  },
+  INTR: {
+    id: 13,
+    ticker: "INTR",
+    name: "Compañía Introductora de Buenos Aires S.A.",
+    type: "ACCIONES",
+    lastPrice: 84.27,
+    closePrice: 76.57,
+  },
+  MTR: {
+    id: 14,
+    ticker: "MTR",
+    name: "Matba Rofex S.A.",
+    type: "ACCIONES",
+    lastPrice: 65.23,
+    closePrice: 59.3,
+  },
+  FIPL: {
+    id: 15,
+    ticker: "FIPL",
+    name: "Fiplasto",
+    type: "ACCIONES",
+    lastPrice: 85.96,
+    closePrice: 78.15,
+  },
+  GARO: {
+    id: 16,
+    ticker: "GARO",
+    name: "Garovaglio Y Zorraquín",
+    type: "ACCIONES",
+    lastPrice: 27.12,
+    closePrice: 24.44,
+  },
+  SEMI: {
+    id: 17,
+    ticker: "SEMI",
+    name: "Molinos Juan Semino",
+    type: "ACCIONES",
+    lastPrice: 59.99,
+    closePrice: 54.54,
+  },
+  BPAT: {
+    id: 19,
+    ticker: "BPAT",
+    name: "Banco Patagonia",
+    type: "ACCIONES",
+    lastPrice: 56.64,
+    closePrice: 51.49,
+  },
+  BBAR: {
+    id: 22,
+    ticker: "BBAR",
+    name: "Banco Frances",
+    type: "ACCIONES",
+    lastPrice: 79.36,
+    closePrice: 71.67,
+  },
+  LEDE: {
+    id: 23,
+    ticker: "LEDE",
+    name: "Ledesma",
+    type: "ACCIONES",
+    lastPrice: 41.61,
+    closePrice: 37.79,
+  },
 } as const satisfies Record<string, InstrumentFixture>
 
 export const INITIAL_CASH = 1_000_000
@@ -108,4 +204,28 @@ export const CASE_INSTRUMENT = {
   partialSell: INSTRUMENTS.FERR,
   /** COCOS-10 · historial */
   history: INSTRUMENTS.SAMI,
+  /** COCOS-4 · el panel de orden abre listo para comprar a mercado */
+  ticketDefaults: INSTRUMENTS.PGR,
+  /** COCOS-22 · mismo instrumento desde los tres accesos (posición sembrada) */
+  threeEntryPoints: INSTRUMENTS.MOLA,
+  /** COCOS-21 · estimado con precio límite */
+  limitEstimate: INSTRUMENTS.IRCP,
+  /** COCOS-9 · no comprar por más dinero del disponible */
+  insufficientCash: INSTRUMENTS.GAMI,
+  /** COCOS-44 · precio confirmado = precio de ejecución */
+  confirmedPrice: INSTRUMENTS.INTR,
+  /** COCOS-36 · doble toque en "Enviar orden" */
+  doubleSubmit: INSTRUMENTS.MTR,
+  /** COCOS-37 · el panel no arrastra la orden anterior (primer instrumento) */
+  noCarryOverFirst: INSTRUMENTS.FIPL,
+  /** COCOS-37 · segundo instrumento, abierto justo después del primero */
+  noCarryOverSecond: INSTRUMENTS.GARO,
+  /** COCOS-40 · reabrir el panel no reenvía la última orden */
+  noResubmitOnReopen: INSTRUMENTS.SEMI,
+  /** COCOS-11, COCOS-12, COCOS-30 · posición compartida de solo lectura */
+  portfolioReadOnly: INSTRUMENTS.BPAT,
+  /** COCOS-13 · reset deja el saldo inicial */
+  resetBaseline: INSTRUMENTS.BBAR,
+  /** COCOS-50 · reset borra órdenes límite pendientes */
+  resetClearsLimit: INSTRUMENTS.LEDE,
 } as const

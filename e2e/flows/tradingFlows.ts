@@ -6,6 +6,7 @@ import {instrumentDetailScreen} from "../screens/InstrumentDetailScreen"
 import {marketsScreen} from "../screens/MarketsScreen"
 import {portfolioScreen} from "../screens/PortfolioScreen"
 import {positionDetailScreen} from "../screens/PositionDetailScreen"
+import {searchScreen} from "../screens/SearchScreen"
 
 /**
  * Métodos compartidos de negocio.
@@ -26,6 +27,21 @@ export const openTicketFromMarkets = async (
   await marketsScreen.openInstrument(ticker)
   await instrumentDetailScreen.waitUntilLoaded()
   await instrumentDetailScreen.openTicket()
+  await orderTicket.waitUntilOpen()
+
+  return lastPrice
+}
+
+/** Buscar -> resultado -> ticket abierto (sin ficha intermedia). */
+export const openTicketFromSearch = async (ticker: string): Promise<number> => {
+  await tabBar.search()
+  await searchScreen.waitUntilLoaded()
+  await searchScreen.typeQuery(ticker)
+  await searchScreen.waitForResult(ticker)
+
+  const lastPrice = await searchScreen.readLastPrice(ticker)
+
+  await searchScreen.openResult(ticker)
   await orderTicket.waitUntilOpen()
 
   return lastPrice

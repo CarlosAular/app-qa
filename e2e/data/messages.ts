@@ -79,6 +79,14 @@ export const PORTFOLIO = {
   emptyTitle: "No hay posiciones en el portfolio",
 } as const
 
+/** Etiquetas de la pestaña Buscar (src/features/search/components/). */
+export const SEARCH = {
+  inputLabel: "Buscar ticker",
+  clearLabel: "Borrar búsqueda",
+  /** Debounce real de la app (SEARCH_DEBOUNCE_MS en src/app/(tabs)/search/index.tsx). */
+  debounceMs: 350,
+} as const
+
 /** Vocabulario del historial de órdenes (src/features/orders/orderFormatters.ts). */
 export const ORDER_LABELS = {
   statusFilled: "Ejecutada",
