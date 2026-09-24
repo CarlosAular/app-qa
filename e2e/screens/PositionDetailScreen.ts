@@ -45,12 +45,15 @@ class PositionDetailScreen {
   /**
    * La ficha no muestra el último precio con una etiqueta al lado, pero sí el
    * valor de mercado y la cantidad: el precio es el cociente.
+   *
+   * Las dos lecturas van SECUENCIALES, no en `Promise.all`: cada una scrollea
+   * (un solo driver, una sola sesión). Dos scrolls a la vez confunden a WDA en
+   * iOS —cada uno reinicia el progreso del otro— y la sesión queda scrolleando
+   * sin encontrar nunca ninguna de las dos etiquetas.
    */
   async readLastPrice(): Promise<number> {
-    const [marketValue, quantity] = await Promise.all([
-      this.readMarketValue(),
-      this.readQuantity(),
-    ])
+    const marketValue = await this.readMarketValue()
+    const quantity = await this.readQuantity()
 
     if (quantity === 0) {
       throw new Error(

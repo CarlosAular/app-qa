@@ -79,6 +79,15 @@ export const openTicketFromPosition = async (
 ): Promise<number> => {
   await tabBar.portfolio()
   await portfolioScreen.waitUntilLoaded()
+
+  /*
+   * Sin esto, la PRIMERA visita a Portafolio en la sesión puede ganarle la
+   * carrera a la query: `waitUntilLoaded` sólo espera el encabezado
+   * estático, no a que la lista haya resuelto. En iOS, más lento para
+   * arrancar que Android, la posición recién sembrada por API a veces
+   * todavía no está pintada cuando `openPosition` empieza a buscarla.
+   */
+  await portfolioScreen.refresh()
   await portfolioScreen.openPosition(ticker)
   await positionDetailScreen.waitUntilLoaded()
 

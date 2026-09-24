@@ -4,6 +4,7 @@ import {
   pullToRefresh,
   scrollToLabelContains,
   scrollToTop,
+  tapElement,
 } from "../support/gestures"
 import {extractArs, parseQuantity} from "../support/money"
 import {readTextNodes, valueUnderLabel} from "../support/pageMap"
@@ -132,9 +133,16 @@ class PortfolioScreen {
     return extractArs(match[1])
   }
 
+  /**
+   * Defecto conocido: la última fila de toda lista queda TAPADA por la barra
+   * de pestañas (ver support/gestures.ts). Con más de 4 posiciones, la última
+   * fila deja de ser tocable con un click de elemento común. `tapElement`
+   * calcula la franja alcanzable por encima de la barra, igual que hace
+   * `PositionDetailScreen.openTicket` para "Operar esta posición".
+   */
   async openPosition(ticker: string) {
     const row = await this.rowFor(ticker)
-    await row.click()
+    await tapElement(row, `la fila de ${ticker}`)
 
     await waitForVisible(byTextContains("Composición de la posición"), {
       message: `Abrí la posición de ${ticker} pero no cargó su ficha.`,
