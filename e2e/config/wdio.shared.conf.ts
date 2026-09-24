@@ -30,6 +30,17 @@ export const SPECS = [
   resolve(E2E_ROOT, "specs/03-ticket-validation.e2e.ts"),
   resolve(E2E_ROOT, "specs/04-sell-partial.e2e.ts"),
   resolve(E2E_ROOT, "specs/05-order-history.e2e.ts"),
+  resolve(E2E_ROOT, "specs/06-search.e2e.ts"),
+  resolve(E2E_ROOT, "specs/07-market-catalog.e2e.ts"),
+  resolve(E2E_ROOT, "specs/08-ticket-setup.e2e.ts"),
+  resolve(E2E_ROOT, "specs/09-ticket-limit-pricing.e2e.ts"),
+  resolve(E2E_ROOT, "specs/10-ticket-non-stock.e2e.ts"),
+  resolve(E2E_ROOT, "specs/11-order-integrity.e2e.ts"),
+  resolve(E2E_ROOT, "specs/12-order-resubmission.e2e.ts"),
+  resolve(E2E_ROOT, "specs/13-portfolio-derived.e2e.ts"),
+  resolve(E2E_ROOT, "specs/14-account-behavior.e2e.ts"),
+  // Último, a propósito: reinicia la cuenta compartida por toda la corrida.
+  resolve(E2E_ROOT, "specs/15-account-reset.e2e.ts"),
 ]
 
 export const sharedConfig = (platform: E2ePlatform) => {
