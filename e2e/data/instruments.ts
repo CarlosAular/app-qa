@@ -177,6 +177,38 @@ export const INSTRUMENTS = {
     lastPrice: 41.61,
     closePrice: 37.79,
   },
+  DOME: {
+    id: 12,
+    ticker: "DOME",
+    name: "Domec",
+    type: "ACCIONES",
+    lastPrice: 38.89,
+    closePrice: 35.36,
+  },
+  HARG: {
+    id: 18,
+    ticker: "HARG",
+    name: "Holcim (Argentina) S.A.",
+    type: "ACCIONES",
+    lastPrice: 78.25,
+    closePrice: 71.13,
+  },
+  RIGO: {
+    id: 20,
+    ticker: "RIGO",
+    name: "Rigolleau S.A.",
+    type: "ACCIONES",
+    lastPrice: 93.47,
+    closePrice: 85.58,
+  },
+  CVH: {
+    id: 21,
+    ticker: "CVH",
+    name: "Cablevision Holding",
+    type: "ACCIONES",
+    lastPrice: 36.22,
+    closePrice: 32.84,
+  },
 } as const satisfies Record<string, InstrumentFixture>
 
 export const INITIAL_CASH = 1_000_000
@@ -228,4 +260,12 @@ export const CASE_INSTRUMENT = {
   resetBaseline: INSTRUMENTS.BBAR,
   /** COCOS-50 · reset borra órdenes límite pendientes */
   resetClearsLimit: INSTRUMENTS.LEDE,
+  /** COCOS-48 · doce órdenes a mercado seguidas */
+  historyOrder: INSTRUMENTS.DOME,
+  /** COCOS-8 · compra límite por debajo del mercado nunca se ejecuta */
+  limitBelowMarket: INSTRUMENTS.HARG,
+  /** COCOS-29 · compra límite pendiente reserva efectivo, no crea posición */
+  limitReservesCash: INSTRUMENTS.RIGO,
+  /** COCOS-46 · venta límite pendiente reserva acciones, no efectivo */
+  limitReservesShares: INSTRUMENTS.CVH,
 } as const

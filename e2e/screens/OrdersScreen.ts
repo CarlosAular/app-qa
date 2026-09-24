@@ -2,7 +2,9 @@ import {
   pullToRefresh,
   scrollToTextContains,
   scrollToTop,
+  swipeUp,
 } from "../support/gestures"
+import {readTextNodes} from "../support/pageMap"
 import {
   byLabel,
   byText,
@@ -12,6 +14,15 @@ import {
 import {isVisible, waitForGone, waitForVisible} from "../support/waits"
 
 const COUNT_PATTERN = /^(\d+)\s+(orden|órdenes)$/i
+
+export type OrderStatusLabel = "Ejecutada" | "Pendiente" | "Rechazada"
+
+const STATUS_LABELS: OrderStatusLabel[] = [
+  "Ejecutada",
+  "Pendiente",
+  "Rechazada",
+]
+const ORDER_ID_PATTERN = /#(\d+)/
 
 /**
  * El botón y el título del diálogo nativo comparten el MISMO texto
@@ -88,6 +99,81 @@ class OrdersScreen {
   async rowShows(orderId: number | string, fragment: string): Promise<boolean> {
     await this.findRowById(orderId)
     return isVisible(byTextContains(fragment), 2_500)
+  }
+
+  /**
+   * El estado (chip) de UNA orden.
+   *
+   * `rowShows` no sirve para esto: busca el texto en toda la pantalla, así que
+   * el "Ejecutada" de otra fila lo daría por bueno. Acá se lee el chip más
+   * cercano en vertical al texto "· #<id>" de la fila pedida.
+   */
+  async readRowStatus(orderId: number | string): Promise<OrderStatusLabel> {
+    await this.findRowById(orderId)
+
+    const nodes = await readTextNodes()
+    const idNode = nodes.find(node => node.text.includes(`#${orderId}`))
+
+    if (!idNode) {
+      throw new Error(`No encontré la fila de la orden #${orderId}.`)
+    }
+
+    const {height} = await driver.getWindowSize()
+
+    const [closest] = nodes
+      .filter(node => STATUS_LABELS.includes(node.text.trim() as never))
+      .map(node => ({node, distance: Math.abs(node.y - idNode.y)}))
+      .filter(candidate => candidate.distance < height * 0.04)
+      .sort((left, right) => left.distance - right.distance)
+
+    if (!closest) {
+      throw new Error(
+        `No encontré el estado de la orden #${orderId} junto a su fila.`
+      )
+    }
+
+    return closest.node.text.trim() as OrderStatusLabel
+  }
+
+  /**
+   * Los números de orden de arriba hacia abajo, scrolleando hasta juntar
+   * `count`. La lista es virtualizada: sólo existen las filas dibujadas, así que
+   * se acumulan de a una pantalla y se corta si dos scrolls seguidos no traen
+   * ninguna nueva.
+   */
+  async readOrderIdsTopToBottom(count: number): Promise<string[]> {
+    await scrollToTop()
+
+    const seen: string[] = []
+    let idleScrolls = 0
+
+    for (let attempt = 0; attempt < 14 && seen.length < count; attempt += 1) {
+      const nodes = await readTextNodes()
+
+      const visible = nodes
+        .map(node => ({y: node.y, match: node.text.match(ORDER_ID_PATTERN)}))
+        .filter(item => item.match !== null)
+        .sort((left, right) => left.y - right.y)
+        .map(item => item.match![1]!)
+
+      const before = seen.length
+
+      for (const id of visible) {
+        if (!seen.includes(id)) {
+          seen.push(id)
+        }
+      }
+
+      idleScrolls = seen.length === before ? idleScrolls + 1 : 0
+
+      if (idleScrolls >= 2) {
+        break
+      }
+
+      await swipeUp(0.4)
+    }
+
+    return seen
   }
 
   async isEmpty(): Promise<boolean> {
