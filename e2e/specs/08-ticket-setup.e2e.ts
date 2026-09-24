@@ -3,7 +3,7 @@ import {qase} from "wdio-qase-reporter"
 import {captureAccount, expectNoNewOrders, seedPosition} from "../api/snapshot"
 import {orderTicket} from "../components/OrderTicket"
 import {CASE_INSTRUMENT} from "../data/instruments"
-import {NAV, TICKET} from "../data/messages"
+import {TICKET} from "../data/messages"
 import {
   openTicketFromMarkets,
   openTicketFromPosition,
@@ -12,7 +12,7 @@ import {
 import {instrumentDetailScreen} from "../screens/InstrumentDetailScreen"
 import {positionDetailScreen} from "../screens/PositionDetailScreen"
 import {estimatedTotal, expectSameMoney} from "../support/money"
-import {byText, byTextContains, inputByLabel} from "../support/selectors"
+import {byTextContains, inputByLabel} from "../support/selectors"
 import {step} from "../support/steps"
 import {isVisible} from "../support/waits"
 
@@ -115,7 +115,7 @@ describe("Armado del ticket", () => {
            * acceso legítimo sin volver a tocar una pestaña: se reabre desde
            * la que esté realmente en pantalla.
            */
-          if (await isVisible(byText(NAV.tradeFromPosition), 1_500)) {
+          if (await positionDetailScreen.isShown()) {
             await positionDetailScreen.openTicket()
           } else {
             await instrumentDetailScreen.openTicket()

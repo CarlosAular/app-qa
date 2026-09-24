@@ -1,9 +1,16 @@
+import {tabBar} from "../components/TabBar"
 import {NAV} from "../data/messages"
-import {scrollToText, scrollToTop, tapElement} from "../support/gestures"
+import {
+  scrollToText,
+  scrollToTop,
+  swipeUp,
+  tapAt,
+  tapElement,
+} from "../support/gestures"
 import {extractArs, parseQuantity} from "../support/money"
 import {readTextNodes, readValueUnderLabel} from "../support/pageMap"
-import {byText} from "../support/selectors"
-import {waitForVisible} from "../support/waits"
+import {byText, byTextIgnoringVisibility} from "../support/selectors"
+import {isVisible, waitForVisible} from "../support/waits"
 
 class PositionDetailScreen {
   async waitUntilLoaded() {
@@ -21,7 +28,7 @@ class PositionDetailScreen {
    * scrollear da "no encontré la etiqueta" aunque la pantalla sea la correcta.
    */
   private async readMetric(label: string): Promise<string> {
-    await scrollToText(label)
+    await scrollToText(label, 8, true)
     return readValueUnderLabel(label)
   }
 
@@ -55,7 +62,7 @@ class PositionDetailScreen {
    * `readTextNodes` sólo trae StaticText realmente dibujado.
    */
   async readReturnRatioText(): Promise<string> {
-    await scrollToText("Resultado de la posición")
+    await scrollToText("Resultado de la posición", 8, true)
 
     const nodes = await readTextNodes()
     const node = nodes.find(candidate => candidate.text.includes("%"))
@@ -98,8 +105,68 @@ class PositionDetailScreen {
    * reporta visible aunque la barra se esté comiendo el tap.
    */
   async openTicket() {
+    if (driver.isIOS) {
+      await this.openTicketOnIos()
+      return
+    }
+
     const button = await scrollToText(NAV.tradeFromPosition)
     await tapElement(button, NAV.tradeFromPosition)
+  }
+
+  /**
+   * En iOS 26 el botón NO es inalcanzable: con la barra expandida queda debajo
+   * de ella, pero un scroll más hacia abajo la colapsa a dos círculos en los
+   * extremos y el centro del botón queda libre. Es lo que hace una persona.
+   *
+   * Ni `scrollToText` ni `tapElement` sirven acá. XCUITest marca el botón
+   * `visible="false"` mientras el frame de la barra lo cubra, colapsada o no, así
+   * que se lo busca sin filtrar por visibilidad y se lo toca por coordenadas
+   * cuando está entero en pantalla y la barra ya se colapsó.
+   */
+  private async openTicketOnIos() {
+    const selector = byTextIgnoringVisibility(NAV.tradeFromPosition)
+    const {height: windowHeight} = await driver.getWindowSize()
+
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const [button] = await $$(selector).getElements()
+
+      if (button) {
+        const [{x, y}, {width, height}] = await Promise.all([
+          button.getLocation(),
+          button.getSize(),
+        ])
+
+        if (y + height <= windowHeight && (await tabBar.isCollapsed())) {
+          await tapAt(x + width / 2, y + height / 2)
+          return
+        }
+      }
+
+      await swipeUp(0.3, true)
+    }
+
+    throw new Error(
+      `No pude dejar "${NAV.tradeFromPosition}" a la vista con la barra colapsada.`
+    )
+  }
+
+  /**
+   * ¿Está abierta la ficha de la posición? Se decide por su botón "Operar esta
+   * posición", que sólo existe ahí. En iOS se pregunta por su presencia en el
+   * árbol, no por su visibilidad: XCUITest lo marca `visible="false"` mientras
+   * el frame de la barra de pestañas lo cubra (ver `openTicketOnIos`).
+   */
+  async isShown() {
+    if (driver.isIOS) {
+      const matches = await $$(
+        byTextIgnoringVisibility(NAV.tradeFromPosition)
+      ).getElements()
+
+      return matches.length > 0
+    }
+
+    return isVisible(byText(NAV.tradeFromPosition), 1_500)
   }
 
   async goBack() {

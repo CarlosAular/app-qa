@@ -107,6 +107,17 @@ class TabBar {
    * scrolleando hacia arriba: eso mueve la lista de la pestaña que se está
    * dejando, y COCOS-34 verifica justamente que esa posición se conserve.
    */
+  /** Sólo iOS 26: la barra minimizada muestra menos de cuatro botones. */
+  async isCollapsed() {
+    if (!driver.isIOS) {
+      return false
+    }
+
+    const buttons = await $$(IOS_TAB_BUTTONS).getElements()
+
+    return buttons.length < TAB_ORDER.length
+  }
+
   private async expandIfCollapsed() {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const buttons = await $$(IOS_TAB_BUTTONS).getElements()

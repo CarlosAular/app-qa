@@ -37,10 +37,17 @@ const swipe = async (
  * (ver iosScrollToVisible), que es donde el swipe a ciegas falla.
  */
 
+/**
+ * Margen izquierdo, fuera de las tarjetas. En la ficha de una posición el
+ * gráfico de Skia del medio se come el gesto, y un swipe vertical que arranca
+ * acá lo esquiva: es contenido del ScrollView, no de la tarjeta.
+ */
+const EDGE_X = 8
+
 /** Un scroll hacia abajo (el contenido sube). */
-export const swipeUp = async (fraction = 0.45) => {
+export const swipeUp = async (fraction = 0.45, fromEdge = false) => {
   const {width, height} = await windowSize()
-  const x = width / 2
+  const x = fromEdge ? EDGE_X : width / 2
 
   await swipe({x, y: height * 0.72}, {x, y: height * (0.72 - fraction)})
 }
@@ -178,23 +185,38 @@ const scrollUntilVisible = async (
   selector: string,
   maxSwipes: number,
   label: string,
-  exactText?: string
+  exactText?: string,
+  fromEdge = false
 ) => {
+  /*
+   * `fromEdge` es sólo iOS: la ficha de una posición. Ahí `mobile: scroll` no
+   * converge (WDA agota su tope de scrolls tras 70-120 segundos por etiqueta y
+   * los reintentos suman minutos) y `liftAboveTabBar` empuja desde el centro, o
+   * sea sobre el gráfico. Se scrollea desde el margen y se devuelve el elemento
+   * tal cual: cómo esquivar la barra lo resuelve quien llama.
+   */
+  const edge = fromEdge && driver.isIOS
+
   if (await isVisible(selector, SHORT_TIMEOUT)) {
-    return liftAboveTabBar(selector)
+    return edge ? $(selector) : liftAboveTabBar(selector)
   }
 
-  if (driver.isIOS && exactText && (await iosScrollToVisible(exactText))) {
+  if (
+    !edge &&
+    driver.isIOS &&
+    exactText &&
+    (await iosScrollToVisible(exactText))
+  ) {
     if (await isVisible(selector, 1_500)) {
       return liftAboveTabBar(selector)
     }
   }
 
   for (let attempt = 0; attempt < maxSwipes; attempt += 1) {
-    await swipeUp()
+    await swipeUp(0.45, edge)
 
     if (await isVisible(selector, 800)) {
-      return liftAboveTabBar(selector)
+      return edge ? $(selector) : liftAboveTabBar(selector)
     }
   }
 
@@ -208,8 +230,18 @@ const scrollUntilVisible = async (
  * Las listas son @shopify/flash-list v2, o sea virtualizadas: las filas fuera de
  * pantalla NO existen en la jerarquía. Buscar sin scrollear da falsos negativos.
  */
-export const scrollToText = async (text: string, maxSwipes = 8) =>
-  scrollUntilVisible(byText(text), maxSwipes, `el texto "${text}"`, text)
+export const scrollToText = async (
+  text: string,
+  maxSwipes = 8,
+  fromEdge = false
+) =>
+  scrollUntilVisible(
+    byText(text),
+    maxSwipes,
+    `el texto "${text}"`,
+    text,
+    fromEdge
+  )
 
 export const scrollToTextContains = async (text: string, maxSwipes = 8) =>
   scrollUntilVisible(
@@ -330,6 +362,19 @@ export const scrollToTop = async (swipes = 4) => {
   }
 }
 
+/** Un toque en coordenadas de pantalla. */
+export const tapAt = async (x: number, y: number) => {
+  await driver
+    .action("pointer", {parameters: {pointerType: "touch"}})
+    .move({duration: 0, x: Math.round(x), y: Math.round(y)})
+    .down()
+    .pause(80)
+    .up()
+    .perform()
+
+  await browser.pause(700)
+}
+
 /**
  * Toca un elemento respetando la barra de pestañas.
  *
@@ -367,13 +412,5 @@ export const tapElement = async (element: Positioned, what: string) => {
     targetY = reachable
   }
 
-  await driver
-    .action("pointer", {parameters: {pointerType: "touch"}})
-    .move({duration: 0, x: Math.round(centerX), y: Math.round(targetY)})
-    .down()
-    .pause(80)
-    .up()
-    .perform()
-
-  await browser.pause(700)
+  await tapAt(centerX, targetY)
 }

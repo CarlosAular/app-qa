@@ -83,6 +83,20 @@ export const byText = (text: string): string => {
   return `-ios predicate string:visible == 1 AND (name ==[cd] "${quote(text)}" OR label ==[cd] "${quote(text)}" OR value ==[cd] "${quote(text)}")`
 }
 
+/**
+ * Sólo iOS: el elemento aunque XCUITest lo marque `visible="false"`.
+ *
+ * La barra de pestañas minimizada conserva su frame de 402x83, así que WDA da
+ * por tapado todo lo que queda debajo aunque los círculos sólo ocupen los
+ * extremos. Con `visible == 1` el botón "Operar esta posición" no aparece
+ * nunca, pese a estar entero y tocable en pantalla.
+ */
+export const byTextIgnoringVisibility = (text: string): string => {
+  const fragment = asciiFragment(text)
+
+  return `-ios predicate string:name CONTAINS "${quote(fragment)}" OR label CONTAINS "${quote(fragment)}"`
+}
+
 /** Elemento cuyo texto o label CONTIENE el fragmento. */
 export const byTextContains = (text: string): string =>
   driver.isAndroid
