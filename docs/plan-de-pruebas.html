@@ -9,7 +9,7 @@
     <title>Plan de pruebas</title>
     <meta
       name="description"
-      content="Plan de pruebas del challenge de QA de Cocos: alcance, fuera de alcance, estrategia por niveles, priorización por riesgo, trazabilidad de los 52 casos, resultados y pendientes."
+      content="Plan de pruebas del challenge de QA de Cocos: alcance, fuera de alcance, estrategia por niveles, priorización por riesgo, trazabilidad de los 53 casos, resultados y pendientes."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -631,7 +631,7 @@
             <a href="#riesgo">Priorización por riesgo</a>
             <span>— y cobertura de cada riesgo</span>
           </li>
-          <li><a href="#trazabilidad">Trazabilidad de los 52 casos</a></li>
+          <li><a href="#trazabilidad">Trazabilidad de los 53 casos</a></li>
           <li>
             <a href="#decisiones">Decisiones de automatización</a>
             <span>— incluye cómo se trabaja sin <code>POST /reset</code></span>
@@ -652,9 +652,9 @@
       <p class="h2sub">La lectura de un minuto.</p>
 
       <div class="kpis">
-        <div class="kpi"><b>52</b><span>casos en Qase, en 5 suites</span></div>
+        <div class="kpi"><b>53</b><span>casos en Qase, en 5 suites</span></div>
         <div class="kpi">
-          <b>42</b><span>automatizados: 34 de UI y 8 de API</span>
+          <b>43</b><span>automatizados: 34 de UI y 9 de API</span>
         </div>
         <div class="kpi">
           <b>17</b><span>riesgos, todos con cobertura mínima cumplida</span>
@@ -683,7 +683,7 @@
         </li>
         <li>
           <strong>Las suites no esconden defectos.</strong> Cuatro casos de UI y
-          uno de API fallan porque la app o el servicio no cumple lo que
+          dos de API fallan porque la app o el servicio no cumple lo que
           afirman, un defecto real de la app; no se silencian ni se marcan como
           esperados.
         </li>
@@ -770,7 +770,7 @@
             </tr>
             <tr>
               <td>Portafolio y posiciones</td>
-              <td class="num">8</td>
+              <td class="num">9</td>
               <td>
                 Efectivo, valor, costo, resultado y detalle de cada tenencia,
                 derivados de las órdenes ejecutadas.
@@ -938,7 +938,7 @@
             <tr>
               <td>Contrato y API</td>
               <td>Playwright Test (solo el cliente HTTP), zod, Allure</td>
-              <td class="num">8 casos</td>
+              <td class="num">9 casos</td>
               <td>
                 El núcleo determinístico: reservas, validación de órdenes,
                 ejecución a mercado, portafolio derivado y aislamiento. Corre
@@ -1031,8 +1031,8 @@
               <td>Crítico — se opera sobre datos falsos</td>
               <td><span class="chip chip--bad">Alto</span></td>
               <td class="num">5</td>
-              <td class="num"><span class="chip chip--ok">5</span></td>
-              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">6</span></td>
+              <td class="num">6</td>
               <td class="wrapnum"><span class="muted">—</span></td>
             </tr>
             <tr>
@@ -1081,8 +1081,8 @@
               <td>Alto</td>
               <td><span class="chip chip--bad">Alto</span></td>
               <td class="num">5</td>
-              <td class="num"><span class="chip chip--ok">5</span></td>
-              <td class="num">4</td>
+              <td class="num"><span class="chip chip--ok">6</span></td>
+              <td class="num">5</td>
               <td class="wrapnum">
                 <a href="https://app.qase.io/case/COCOS-45">45</a>
               </td>
@@ -1230,12 +1230,12 @@
       <ul>
         <li>
           <strong>Los 17 riesgos cumplen el objetivo mínimo.</strong> Un caso
-          puede cubrir más de un riesgo, por eso la suma de la columna no da 52.
+          puede cubrir más de un riesgo, por eso la suma de la columna no da 53.
         </li>
         <li>
-          <strong>R3, R11, R12 y R17 superan el objetivo</strong> (7, 4, 4 y 6
-          casos). En R17 son los cinco casos visuales y la prueba con VoiceOver
-          (COCOS-52).
+          <strong>R2, R3, R6, R11, R12 y R17 superan el objetivo</strong> (6, 7,
+          6, 4, 4 y 6 casos). En R17 son los cinco casos visuales y la prueba
+          con VoiceOver (COCOS-52); en R2 y R6 se suma COCOS-53.
         </li>
         <li>
           <strong>Los huecos de automatización son deliberados.</strong> R17
@@ -1253,7 +1253,7 @@
         </li>
       </ul>
 
-      <h2 id="trazabilidad">6 · Trazabilidad de los 52 casos</h2>
+      <h2 id="trazabilidad">6 · Trazabilidad de los 53 casos</h2>
       <p class="h2sub">
         Un caso por fila: qué riesgo cubre, cómo se ejecutó y qué resultó en
         cada corrida. Los pasos de cada caso viven solo en Qase; ver
@@ -1960,7 +1960,7 @@
             <tr class="sep">
               <td colspan="10">
                 <strong>Portafolio y posiciones</strong>
-                <span class="count">8 casos</span>
+                <span class="count">9 casos</span>
               </td>
             </tr>
             <tr>
@@ -2108,6 +2108,28 @@
               <td class="r ok">✓</td>
               <td class="r ok">✓</td>
               <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-53">COCOS-53</a>
+              </td>
+              <td>
+                La posición sigue visible mientras una venta límite reserva
+                todas sus acciones
+              </td>
+              <td class="riesgos">R2, R6</td>
+              <td>Alta</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td
+                class="r rp"
+                title="Falla por un defecto de la app: el test afirma lo correcto"
+              >
+                ▲
+              </td>
             </tr>
             <tr class="sep">
               <td colspan="10">
@@ -2266,10 +2288,10 @@
           7, 10, 25, 28, 47 y 49) dieron 4 de 8 en su corrida, y no se volvieron
           a correr tras los arreglos de esta ronda; se marcan con «?». COCOS-52
           (VoiceOver) está documentado y todavía sin ejecutar: no figura en
-          ninguna corrida. COCOS-42 corre en la suite de API como test de
-          defecto (<code>@defecto</code>) y falla porque el servicio no lo
-          cumple; COCOS-24 tiene además un test de defecto propio que queda
-          fuera de la corrida base.
+          ninguna corrida. COCOS-42 y COCOS-53 corren en la suite de API como
+          tests de defecto (<code>@defecto</code>) y fallan porque el servicio
+          no los cumple; COCOS-24 tiene además un test de defecto propio que
+          queda fuera de la corrida base.
         </p>
       </div>
 
@@ -2426,8 +2448,8 @@
 
       <h3>7.5 Casos que fallan por un defecto de la app</h3>
       <p>
-        Cuatro casos de UI (COCOS-15, 18, 30 y 41) y el test de defecto de API
-        de COCOS-42
+        Cuatro casos de UI (COCOS-15, 18, 30 y 41) y los tests de defecto de API
+        de COCOS-42 y COCOS-53
         <strong
           >fallan porque la app o el servicio no cumple lo que el caso
           afirma</strong
@@ -2477,9 +2499,12 @@
           una variable y un token que va en un archivo ignorado por git.
         </li>
         <li>
-          <strong>CI:</strong> Android en cada push y iOS de noche y a pedido.
-          El workflow está escrito y revisado pero
-          <strong>todavía no corrió en GitHub</strong> (sección 12).
+          <strong>CI:</strong> dos workflows. <code>api.yml</code> corre lint,
+          formato, tipos, tests unitarios y la suite de API en cada push y PR, y
+          de noche los niveles con defectos y los tests <code>@defecto</code>.
+          <code>e2e.yml</code> corre Android en cada push y iOS de noche y a
+          pedido. Los dos están escritos y validados en su estructura, pero
+          <strong>todavía no corrieron en GitHub</strong> (sección 12).
         </li>
       </ul>
 
@@ -2732,7 +2757,9 @@
       <p class="h2sub">
         19 defectos en Qase: 18 abiertos (1 crítico, 9 mayores, 1 normal, 6
         menores y 1 trivial) y 1 resuelto (#46). Cada ficha documenta qué pasa,
-        cómo reproducirlo o dónde se notó, la plataforma y el impacto.
+        cómo reproducirlo o dónde se notó, la plataforma y el impacto. El
+        detalle completo de cada uno, con la configuración en que se corrió la
+        app, está en <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>.
       </p>
 
       <div class="tablewrap dense">
@@ -2900,7 +2927,9 @@
               </td>
               <td>Android, API</td>
               <td class="riesgos">R2, R6</td>
-              <td class="wrapnum"><span class="muted">ninguno</span></td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-53">53</a>
+              </td>
             </tr>
             <tr>
               <td class="num">#24</td>
@@ -3031,8 +3060,10 @@
         </li>
         <li>
           El defecto #45 (la posición desaparece con una venta límite que
-          reserva todo) <strong>no lo destapó ningún caso</strong>: COCOS-46
-          cubre la reserva parcial. Conviene agregar un caso para ese borde.
+          reserva todo) lo destapó la exploración manual y
+          <strong>ningún caso lo cubría</strong>: COCOS-46 cubre la reserva
+          parcial. COCOS-53 lo cubre ahora a nivel API, como test
+          <code>@defecto</code>.
         </li>
         <li>
           Los defectos #2, #3 y #23 comparten causa raíz: superficies flotantes
@@ -3135,8 +3166,10 @@
           y los ocho originales no se re-corrieron tras los arreglos.
         </li>
         <li>
-          <strong>El CI nunca corrió en GitHub.</strong> El workflow está
-          escrito, pero no se probó hasta que el repositorio se publique.
+          <strong>El CI nunca corrió en GitHub.</strong> Los dos workflows
+          (<code>api.yml</code> y <code>e2e.yml</code>) están escritos, pero no
+          se probaron hasta que el repositorio se publique. Los comandos que
+          ejecutan sí se corrieron en local.
         </li>
         <li>
           <strong>En iOS la venta límite cierra el ticket sola</strong> unos
@@ -3164,6 +3197,12 @@
 
       <h2 id="ejecutar">13 · Cómo ejecutar todo</h2>
       <pre><code>bun install
+
+# Todo en un comando: calidad, API y UI (compila los binarios que falten)
+bun run qa
+
+# Lo mismo sin dispositivos: unos 20 segundos
+bun run qa:rapido
 
 # UI · Android (compila el APK de release y hornea el identificador)
 bun run e2e:build:android
@@ -3214,8 +3253,11 @@ bun run format:check</code></pre>
             <tr>
               <td>Reporte de bugs</td>
               <td>
-                Los 19 defectos de Qase, 18 abiertos y 1 resuelto (sección 11) y
-                los hallazgos con evidencia en
+                <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 19
+                defectos de Qase (18 abiertos y 1 resuelto), cada uno con pasos,
+                obtenido, esperado, severidad, evidencia y la configuración en
+                que se observó. Resumen en la sección 11 y hallazgos iniciales
+                en
                 <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
               </td>
             </tr>
@@ -3255,7 +3297,7 @@ bun run format:check</code></pre>
       <footer class="footer">
         Plan de pruebas del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
-        con las suites del repositorio al 24/09/2026: 52 casos, 42
+        con las suites del repositorio al 24/09/2026: 53 casos, 43
         automatizados, 18 defectos abiertos. Documento vivo: se actualiza cuando
         cambian el alcance o los resultados.
       </footer>

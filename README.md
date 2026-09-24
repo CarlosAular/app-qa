@@ -5,12 +5,16 @@ Query, and a multi-tenant dummy trading API.
 
 ## Documentación QA
 
-Siete documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
+Ocho documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
 navegador, no necesitan servidor ni build.
 
+- [`docs/reporte-de-bugs.html`](docs/reporte-de-bugs.html) — los mismos defectos
+  que están en Qase, para leerlos sin acceso al proyecto: pasos para reproducir,
+  obtenido y esperado, severidad, evidencia y la configuración en que se corrió
+  la app cuando se observó cada uno.
 - [`docs/plan-de-pruebas.html`](docs/plan-de-pruebas.html) — el plan de pruebas:
   alcance y fuera de alcance, estrategia por niveles, priorización por riesgo,
-  trazabilidad de los 52 casos con sus resultados, decisiones de automatización
+  trazabilidad de los 53 casos con sus resultados, decisiones de automatización
   (incluye cómo se trabaja sin `POST /reset`), defectos y pendientes.
 - [`docs/glosario.html`](docs/glosario.html) — qué significa cada término de la
   app, la API y el resto de la documentación. Escrito desde cero, sin asumir
@@ -25,7 +29,7 @@ navegador, no necesitan servidor ni build.
   tecnología usa la app, qué usamos nosotros para QA, para qué sirve cada pieza y
   con qué versión se verificó.
 - [`docs/qase.html`](docs/qase.html) — el catálogo de casos de prueba: qué es Qase,
-  cómo está organizado el proyecto `COCOS`, los 52 casos con link a cada ficha y las
+  cómo está organizado el proyecto `COCOS`, los 53 casos con link a cada ficha y las
   corridas registradas, manuales y automatizadas.
 - [`docs/api.html`](docs/api.html) — contrato de la API observado con requests
   reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
@@ -386,8 +390,7 @@ bun run test:api:report     # genera y abre el reporte de Allure
 
 - **Un test por caso de Qase:** cada test declara su caso con
   `qase(id, "COCOS-N · ...")` y cada paso del caso es un `test.step`, igual que
-  los E2E. Cubren COCOS-20, 24, 27, 32, 35, 39 y 51, más COCOS-42, que va como defecto
-  (`@defecto`, falla porque el servicio no lo cumple): 8 casos de Qase.
+  los E2E. Cubren COCOS-20, 24, 27, 32, 35, 39 y 51, más COCOS-42 y COCOS-53, que van como defecto (`@defecto`, fallan porque el servicio no los cumple): 9 casos de Qase.
 - **Tiers como proyectos:** cada valor de `X-Enable-Bugs` es un proyecto de
   Playwright. La misma suite pasa en `off` y va fallando al subir el tier
   (en `easy` ya falla el catálogo y el saldo). `API_TIERS=off,hard bun run test:api`
@@ -400,9 +403,10 @@ bun run test:api:report     # genera y abre el reporte de Allure
   relee con reintentos hasta que deje de estar PENDING.
 - **Contrato:** cada respuesta se valida con `zod` (`api-tests/schemas.ts`).
 - **Defectos conocidos en `off`** (tests `@defecto`, fuera de la corrida base):
-  cantidad `"1e3"`/`true` coaccionada, `LIMIT` con `price` ≤ 0 aceptado y orden
-  sobre ARS aceptada. Se corren con `test:api:defectos` y en Qase quedan como
-  _failed_ hasta que el servicio se corrija.
+  cantidad `"1e3"`/`true` coaccionada, `LIMIT` con `price` ≤ 0 aceptado, orden
+  sobre ARS aceptada y la tenencia que desaparece del portafolio cuando una
+  venta límite reserva todas las acciones. Se corren con `test:api:defectos` y en
+  Qase quedan como _failed_ hasta que el servicio se corrija.
 - `API_URL` cambia la URL base (por defecto `https://dummy-api-topaz.vercel.app`).
 
 ### Publicar en Qase

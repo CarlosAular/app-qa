@@ -522,7 +522,7 @@
         <p class="standfirst">
           Los casos de prueba del challenge no viven en este repositorio: viven
           en Qase, y este documento es el índice para llegar a ellos. Qué es la
-          herramienta, cómo está organizado el proyecto y los 52 casos cargados,
+          herramienta, cómo está organizado el proyecto y los 53 casos cargados,
           cada uno con link a su ficha.
         </p>
         <a class="biglink" href="https://app.qase.io/project/COCOS">
@@ -537,7 +537,7 @@
           <li><a href="#que-es">Qué es Qase y por qué está acá</a></li>
           <li><a href="#organizacion">Cómo está organizado el proyecto</a></li>
           <li>
-            <a href="#casos">Los 52 casos</a>
+            <a href="#casos">Los 53 casos</a>
             <span>— el catálogo completo</span>
           </li>
           <li>
@@ -663,7 +663,7 @@
           <code>tipo:</code> — cómo se verifica.
           <span class="chip chip--neutral">e2e</span> usando la app (39 casos),
           <span class="chip chip--ok">api</span> pegándole directo al servicio
-          (8), y <span class="chip chip--warn">visual</span> mirando que nada
+          (9), y <span class="chip chip--warn">visual</span> mirando que nada
           quede tapado, recortado o superpuesto (5).
         </li>
         <li>
@@ -680,13 +680,13 @@
         </li>
         <li>
           <code>automatizado:</code> — qué herramienta lo automatiza:
-          <code>appium</code> (34 casos) o <code>playwright</code> (8). Va junto
+          <code>appium</code> (34 casos) o <code>playwright</code> (9). Va junto
           con el campo de automatización del caso, que pasa a «Automated». Los
           10 restantes siguen manuales, cada uno con su motivo.
         </li>
       </ul>
 
-      <h2 id="casos">3 · Los 52 casos</h2>
+      <h2 id="casos">3 · Los 53 casos</h2>
       <p class="h2sub">
         El catálogo completo, en el mismo orden en que aparece en Qase —
         agrupado por tema, no por número. El ID lleva a la ficha con los pasos.
@@ -1113,7 +1113,7 @@
           </tbody>
         </table>
       </div>
-      <h3>Portafolio y posiciones <span class="count">8 casos</span></h3>
+      <h3>Portafolio y posiciones <span class="count">9 casos</span></h3>
       <p class="h3sub">
         Lo que el usuario tiene y cuánto vale, derivado de las órdenes
         ejecutadas.
@@ -1207,6 +1207,17 @@
                 posición <span class="chip chip--neutral">e2e</span>
               </td>
               <td class="cubre">R6</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-53">COCOS-53</a>
+              </td>
+              <td>
+                La posición sigue visible mientras una venta límite reserva
+                todas sus acciones <span class="chip chip--ok">api</span>
+                <span class="muted">automatizado · @defecto</span>
+              </td>
+              <td class="cubre">R2 R6</td>
             </tr>
           </tbody>
         </table>
@@ -1534,9 +1545,9 @@
         Vive en <code>api-tests/</code> y corre sin simulador. Cada test declara
         su caso con <code>qase(id, …)</code> y cada paso del caso es un
         <code>test.step</code>. Los 7 casos <code>tipo:api</code> se
-        reescribieron para reflejar exactamente lo que se automatizó, y se sumó
-        COCOS-51. Sin <code>POST /reset</code>: cada test usa un identificador
-        de cuenta nuevo.
+        reescribieron para reflejar exactamente lo que se automatizó, y se
+        sumaron COCOS-51 y COCOS-53. Sin <code>POST /reset</code>: cada test usa
+        un identificador de cuenta nuevo.
       </p>
 
       <div class="tablewrap">
@@ -1613,7 +1624,8 @@
             <tr>
               <td class="num">
                 <a href="https://app.qase.io/case/COCOS-24">COCOS-24</a>,
-                <a href="https://app.qase.io/case/COCOS-42">COCOS-42</a>
+                <a href="https://app.qase.io/case/COCOS-42">COCOS-42</a>,
+                <a href="https://app.qase.io/case/COCOS-53">COCOS-53</a>
               </td>
               <td><code>defects</code></td>
               <td>
@@ -1855,19 +1867,19 @@
             <tr>
               <td>Casos cargados</td>
               <td>
-                <span class="chip chip--ok">52</span> (los 50 originales,
-                COCOS-51, de API, y COCOS-52, la prueba con VoiceOver,
-                documentada y sin ejecutar) con pasos, precondición y
+                <span class="chip chip--ok">53</span> (los 50 originales,
+                COCOS-51 y COCOS-53, de API, y COCOS-52, la prueba con
+                VoiceOver, documentada y sin ejecutar) con pasos, precondición y
                 postcondición
               </td>
             </tr>
             <tr>
               <td>Casos automatizados</td>
               <td>
-                <span class="chip chip--ok">42</span> — 34 por la suite Appium y
-                8 por la de API con Playwright (sección 4, COCOS-42 corre como
-                defecto y falla porque el servicio no lo cumple); los 10
-                restantes quedan manuales, cada uno con su motivo
+                <span class="chip chip--ok">43</span> — 34 por la suite Appium y
+                9 por la de API con Playwright (sección 4; COCOS-42 y COCOS-53
+                corren como defecto y fallan porque el servicio no los cumple);
+                los 10 restantes quedan manuales, cada uno con su motivo
               </td>
             </tr>
             <tr>
@@ -1904,7 +1916,7 @@
       <div class="note">
         <span class="note__label">Qué cambió con la suite automatizada</span>
         <p>
-          42 de los 52 casos (sección 4) ya corren solos: 34 vía Appium y 8 vía
+          43 de los 53 casos (sección 4) ya corren solos: 34 vía Appium y 9 vía
           Playwright (API), con su resultado atado al mismo ID de Qase que usa
           la corrida manual. Cuatro de los 34 de Appium fallan por un defecto de
           la app (COCOS-15, 18, 30 y 41): automatizan el comportamiento correcto
@@ -1932,6 +1944,23 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-24</td>
+              <td>
+                Se agregó COCOS-53: la posición sigue visible mientras una venta
+                límite reserva todas sus acciones. Es un caso de API, con su
+                test
+                <code>@defecto</code> en la suite de Playwright, que cubre el
+                defecto #45. El catálogo pasa a 53 casos: 43 automatizados y 10
+                manuales.
+              </td>
+              <td>
+                Ningún caso cubría el borde de la reserva total: COCOS-46 cubre
+                la parcial. El test falla hoy porque el servicio omite la
+                tenencia mientras la venta está pendiente, y se vuelve verde
+                cuando se corrija.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-24</td>
               <td>
@@ -2127,7 +2156,7 @@
       <footer class="footer">
         Catálogo de casos del challenge de QA de Cocos · Foto del proyecto
         <a href="https://app.qase.io/project/COCOS">COCOS</a> tomada el
-        24/09/2026: 52 casos, 5 suites, 42 automatizados, 6 corridas. Documento
+        24/09/2026: 53 casos, 5 suites, 43 automatizados, 6 corridas. Documento
         vivo: se actualiza con cada corrida que se ejecute.
       </footer>
     </div>
