@@ -641,8 +641,9 @@ xcrun simctl launch booted com.cocos.trading</code></pre>
 
       <p>
         Esta vía no usa Android Studio. Todo se hace por terminal con el SDK de
-        línea de comandos, que es además lo único que pide Appium si más
-        adelante querés automatizar.
+        línea de comandos, que es además lo único que pide Appium para la suite
+        E2E automatizada (ver README, sección "Suite E2E automatizada
+        (Appium)").
       </p>
 
       <ol class="steps">
@@ -870,11 +871,34 @@ uname -m   <span class="c"># arm64 = Apple Silicon</span></code></pre>
                 Nivel de defectos inyectados en la API: <code>off</code>,
                 <code>easy</code>, <code>medium</code> o <code>hard</code>.
                 Cualquier otro valor cae a <code>off</code>. Para uso normal,
-                dejalo en <code>off</code>.
+                dejalo en <code>off</code>. Hay un script por nivel:
+                <code>bun run start:easy</code>, <code>ios:hard</code>,
+                <code>android:medium</code> y <code>test:api:easy</code>.
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label"
+          >Opcional: token de Qase para publicar corridas</span
+        >
+        <p>
+          Sólo hace falta si vas a publicar resultados en Qase; para levantar la
+          app y correr las suites en local no se necesita. Generalo en
+          <a href="https://app.qase.io/user/api/token"
+            >app.qase.io/user/api/token</a
+          >
+          y guardalo en el <code>.env</code> (está ignorado por git):
+          <code>QASE_TESTOPS_API_TOKEN=&lt;token&gt;</code>. Después, los
+          scripts <code>bun run publish:api</code> (y
+          <code>publish:api:easy</code>, <code>:medium</code>,
+          <code>:hard</code>, <code>:defectos</code>) publican la corrida de la
+          API en el proyecto <code>COCOS</code>; los <code>test:api*</code>
+          corren sólo en local. Es un secreto: no lo compartas ni lo subas al
+          repositorio.
+        </p>
       </div>
 
       <!-- ================================================================ -->

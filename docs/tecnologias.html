@@ -1049,6 +1049,23 @@
               </td>
             </tr>
             <tr>
+              <td><strong>Playwright Test</strong></td>
+              <td><span class="chip chip--ok">en uso</span></td>
+              <td>
+                Corre la suite de API, separada de la de UI: sólo usa el cliente
+                HTTP (sin navegador), un proyecto por tier de
+                <code>X-Enable-Bugs</code> y un candidato nuevo por test. Valida
+                el contrato con <code>zod</code> y reporta a Allure, JUnit y
+                Qase (<code>playwright-qase-reporter</code>, apagado por
+                defecto). Los scripts <code>start:&lt;tier&gt;</code>,
+                <code>ios:&lt;tier&gt;</code>,
+                <code>android:&lt;tier&gt;</code> y
+                <code>test:api:&lt;tier&gt;</code> corren app y API con cada
+                nivel de bugs, y <code>publish:api*</code> es lo único que
+                publica la corrida en Qase.
+              </td>
+            </tr>
+            <tr>
               <td><strong>Allure + JUnit</strong></td>
               <td><span class="chip chip--ok">en uso</span></td>
               <td>
@@ -1157,11 +1174,17 @@
             </tr>
             <tr>
               <td><strong>Suite automatizada de la entrega</strong></td>
-              <td><span class="chip chip--warn">por definir</span></td>
+              <td><span class="chip chip--ok">en uso</span></td>
               <td>
-                El challenge pide una suite reproducible con reporte legible.
-                Lenguaje y framework todavía no están decididos; cuando se
-                elijan, se documenta acá con la justificación.
+                Entregada: Appium + WebdriverIO + Mocha sobre las dos
+                plataformas (piezas detalladas arriba), 30 casos de UI más los 7
+                de API con Playwright. Resultado en esta máquina: en Android, 26
+                casos verdes y 4 rojos a propósito (defectos O3, O4 y O8 de la
+                app). En iOS, los 8 casos originales dan 4/8 por un desajuste de
+                Xcode/runtime del simulador local (ver README), y de los 22
+                nuevos 14 están verdes, 2 en rojo a propósito y 6 quedaron sin
+                resolver. Detalle de casos y corridas en
+                <code>docs/qase.html</code>.
               </td>
             </tr>
           </tbody>
@@ -1231,6 +1254,21 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-23</td>
+              <td>
+                Se sumó la suite de API: Playwright Test + allure-playwright +
+                playwright-qase-reporter, en <code>api-tests/</code>, con su
+                propio comando y reporte, un test por caso de Qase, y un script
+                por nivel de bugs para la app y la API.
+              </td>
+              <td>
+                Probar la API no necesita simulador: corre en segundos y sin
+                flakiness de UI. Playwright da proyectos por tier, fixtures con
+                headers y reporters listos, lo que Mocha + axios obligaba a
+                armar a mano.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-23</td>
               <td>

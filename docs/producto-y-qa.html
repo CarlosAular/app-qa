@@ -2494,7 +2494,9 @@ Modal transversal: Ticket de orden (panel deslizante)
           <strong>Entornos sin reset:</strong> si el reinicio no está
           disponible, la estrategia pasa a verificar <em>deltas</em> en vez de
           valores absolutos: leer el estado, ejecutar la acción, asertar la
-          diferencia esperada.
+          diferencia esperada. La suite de API (Playwright) resuelve lo mismo de
+          otra forma: cada test usa un <code>X-Candidate-Id</code> nuevo, es
+          decir una cuenta virgen, y nunca llama a <code>POST /reset</code>.
         </li>
       </ol>
 
@@ -2542,14 +2544,17 @@ Modal transversal: Ticket de orden (panel deslizante)
       <div class="note note--warn">
         <span class="note__label">El hueco que hay que llenar</span>
         <p>
-          Los 43 tests cubren únicamente <strong>lógica pura</strong>: cálculos,
-          formateo, validación y ordenamiento.
-          <strong
-            >No hay ni un test que toque la API, la capa de red, los componentes
-            ni la navegación.</strong
-          >
-          Toda la cadena orden → reserva → portafolio —los riesgos R1 a R3 y R6,
-          es decir, donde se pierde dinero— está hoy sin cobertura automatizada.
+          Los 43 tests unitarios cubren únicamente <strong>lógica pura</strong>:
+          cálculos, formateo, validación y ordenamiento. Desde la suite E2E de
+          <code>e2e/</code> (Appium + WebdriverIO), la cadena
+          <strong>orden → portafolio</strong> (R1, R2) sí tiene cobertura
+          automatizada de punta a punta —API, componentes y navegación real, en
+          las dos plataformas— vía <code>COCOS-7</code> (compra a mercado) y
+          <code>COCOS-25/28</code> (venta y venta parcial). Lo que sigue sin
+          cobertura automatizada son <strong>R3 y R6</strong> —reserva y
+          resolución de órdenes límite—: la API las resuelve con un factor
+          aleatorio ante cualquier request posterior, así que se excluyeron a
+          propósito (ver <code>docs/qase.html</code>, sección 4).
         </p>
       </div>
 
