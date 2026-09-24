@@ -39,8 +39,10 @@ export const SPECS = [
   resolve(E2E_ROOT, "specs/12-order-resubmission.e2e.ts"),
   resolve(E2E_ROOT, "specs/13-portfolio-derived.e2e.ts"),
   resolve(E2E_ROOT, "specs/14-account-behavior.e2e.ts"),
+  resolve(E2E_ROOT, "specs/15-order-history-order.e2e.ts"),
+  resolve(E2E_ROOT, "specs/16-limit-orders.e2e.ts"),
   // Último, a propósito: reinicia la cuenta compartida por toda la corrida.
-  resolve(E2E_ROOT, "specs/15-account-reset.e2e.ts"),
+  resolve(E2E_ROOT, "specs/17-account-reset.e2e.ts"),
 ]
 
 export const sharedConfig = (platform: E2ePlatform) => {
