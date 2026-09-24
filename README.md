@@ -10,7 +10,7 @@ navegador, no necesitan servidor ni build.
 
 - [`docs/plan-de-pruebas.html`](docs/plan-de-pruebas.html) — el plan de pruebas:
   alcance y fuera de alcance, estrategia por niveles, priorización por riesgo,
-  trazabilidad de los 51 casos con sus resultados, decisiones de automatización
+  trazabilidad de los 52 casos con sus resultados, decisiones de automatización
   (incluye cómo se trabaja sin `POST /reset`), defectos y pendientes.
 - [`docs/glosario.html`](docs/glosario.html) — qué significa cada término de la
   app, la API y el resto de la documentación. Escrito desde cero, sin asumir
@@ -25,7 +25,7 @@ navegador, no necesitan servidor ni build.
   tecnología usa la app, qué usamos nosotros para QA, para qué sirve cada pieza y
   con qué versión se verificó.
 - [`docs/qase.html`](docs/qase.html) — el catálogo de casos de prueba: qué es Qase,
-  cómo está organizado el proyecto `COCOS`, los 51 casos con link a cada ficha y las
+  cómo está organizado el proyecto `COCOS`, los 52 casos con link a cada ficha y las
   corridas registradas, manuales y automatizadas.
 - [`docs/api.html`](docs/api.html) — contrato de la API observado con requests
   reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
@@ -210,6 +210,10 @@ La config elige el simulador que ya esté booteado; si hay varios, se fija con
   deshace. Se cubre mejor a nivel API, sin lecturas entre las dos órdenes.
 - **Casos `tipo:visual`** (`COCOS-16, 19, 23, 26, 31`): superposiciones y
   recortes. Appium valida jerarquía, no píxeles.
+- **Prueba con VoiceOver** (`COCOS-52`): Appium lee el árbol de accesibilidad
+  pero no lo escucha, y el simulador de iOS no soporta VoiceOver: hace falta un
+  iPhone físico. El caso está documentado en Qase, con sus pasos, y todavía sin
+  ejecutar.
 - **Casos de red caída** (`COCOS-14, 33, 38`): en Android se haría con
   `adb shell svc wifi disable`, pero en el simulador de iOS no hay equivalente.
   Sin paridad entre plataformas, no entran.

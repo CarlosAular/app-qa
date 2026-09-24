@@ -9,7 +9,7 @@
     <title>Plan de pruebas</title>
     <meta
       name="description"
-      content="Plan de pruebas del challenge de QA de Cocos: alcance, fuera de alcance, estrategia por niveles, priorización por riesgo, trazabilidad de los 51 casos, resultados y pendientes."
+      content="Plan de pruebas del challenge de QA de Cocos: alcance, fuera de alcance, estrategia por niveles, priorización por riesgo, trazabilidad de los 52 casos, resultados y pendientes."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -631,7 +631,7 @@
             <a href="#riesgo">Priorización por riesgo</a>
             <span>— y cobertura de cada riesgo</span>
           </li>
-          <li><a href="#trazabilidad">Trazabilidad de los 51 casos</a></li>
+          <li><a href="#trazabilidad">Trazabilidad de los 52 casos</a></li>
           <li>
             <a href="#decisiones">Decisiones de automatización</a>
             <span>— incluye cómo se trabaja sin <code>POST /reset</code></span>
@@ -652,7 +652,7 @@
       <p class="h2sub">La lectura de un minuto.</p>
 
       <div class="kpis">
-        <div class="kpi"><b>51</b><span>casos en Qase, en 5 suites</span></div>
+        <div class="kpi"><b>52</b><span>casos en Qase, en 5 suites</span></div>
         <div class="kpi">
           <b>42</b><span>automatizados: 34 de UI y 8 de API</span>
         </div>
@@ -677,8 +677,9 @@
         </li>
         <li>
           <strong>Lo que no se automatizó tiene motivo escrito.</strong> Son
-          nueve casos: uno no determinístico, cinco visuales y tres que exigen
-          cortar la red (sección 12 y 3.2).
+          diez casos: uno no determinístico, cinco visuales, tres que exigen
+          cortar la red y uno que exige un iPhone físico con VoiceOver (sección
+          12 y 3.2).
         </li>
         <li>
           <strong>Las suites no esconden defectos.</strong> Cuatro casos de UI y
@@ -752,7 +753,7 @@
             </tr>
             <tr>
               <td>Armado y validación de la orden</td>
-              <td class="num">11</td>
+              <td class="num">12</td>
               <td>
                 El ticket antes de enviar: lado, tipo, cantidad en acciones o en
                 pesos, conversión y lo que la app rechaza por sí misma.
@@ -842,7 +843,8 @@
               <td>
                 Se reportó el hallazgo puntual que apareció al automatizar: el
                 ticket era inoperable con VoiceOver en iOS (defecto #46), y se
-                corrigió con una línea.
+                corrigió con una línea. La prueba con VoiceOver quedó
+                documentada como COCOS-52, sin ejecutar.
               </td>
             </tr>
             <tr>
@@ -957,7 +959,7 @@
             <tr>
               <td>Exploratorio manual</td>
               <td>Qase, dos corridas de 50 casos</td>
-              <td class="num">9 casos sin automatizar</td>
+              <td class="num">10 casos sin automatizar</td>
               <td>
                 Lo visual, lo que exige cortar la red y el descubrimiento
                 inicial: las dos pasadas manuales fueron las que produjeron los
@@ -1198,14 +1200,15 @@
               <td>Medio</td>
               <td><span class="chip chip--warn">Medio</span></td>
               <td class="num">3</td>
-              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num"><span class="chip chip--ok">6</span></td>
               <td class="num">0</td>
               <td class="wrapnum">
                 <a href="https://app.qase.io/case/COCOS-16">16</a>,
                 <a href="https://app.qase.io/case/COCOS-19">19</a>,
                 <a href="https://app.qase.io/case/COCOS-23">23</a>,
                 <a href="https://app.qase.io/case/COCOS-26">26</a>,
-                <a href="https://app.qase.io/case/COCOS-31">31</a>
+                <a href="https://app.qase.io/case/COCOS-31">31</a>,
+                <a href="https://app.qase.io/case/COCOS-52">52</a>
               </td>
             </tr>
             <tr>
@@ -1227,11 +1230,12 @@
       <ul>
         <li>
           <strong>Los 17 riesgos cumplen el objetivo mínimo.</strong> Un caso
-          puede cubrir más de un riesgo, por eso la suma de la columna no da 51.
+          puede cubrir más de un riesgo, por eso la suma de la columna no da 52.
         </li>
         <li>
-          <strong>R3, R11, R12 y R17 superan el objetivo</strong> (7, 4, 4 y 5
-          casos). En R17 son los cinco casos visuales.
+          <strong>R3, R11, R12 y R17 superan el objetivo</strong> (7, 4, 4 y 6
+          casos). En R17 son los cinco casos visuales y la prueba con VoiceOver
+          (COCOS-52).
         </li>
         <li>
           <strong>Los huecos de automatización son deliberados.</strong> R17
@@ -1249,7 +1253,7 @@
         </li>
       </ul>
 
-      <h2 id="trazabilidad">6 · Trazabilidad de los 51 casos</h2>
+      <h2 id="trazabilidad">6 · Trazabilidad de los 52 casos</h2>
       <p class="h2sub">
         Un caso por fila: qué riesgo cubre, cómo se ejecutó y qué resultó en
         cada corrida. Los pasos de cada caso viven solo en Qase; ver
@@ -1439,7 +1443,7 @@
             <tr class="sep">
               <td colspan="10">
                 <strong>Armado y validación de la orden</strong>
-                <span class="count">11 casos</span>
+                <span class="count">12 casos</span>
               </td>
             </tr>
             <tr>
@@ -1654,6 +1658,20 @@
                 ?
               </td>
               <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-52">COCOS-52</a>
+              </td>
+              <td>El ticket de trading se puede operar con VoiceOver en iOS</td>
+              <td class="riesgos">R17</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
               <td class="r na">—</td>
             </tr>
             <tr class="sep">
@@ -2246,10 +2264,12 @@
           <strong>Appium</strong> y <strong>API</strong> muestran lo que hoy
           devuelven las suites. En iOS, los ocho casos originales (COCOS-5, 6,
           7, 10, 25, 28, 47 y 49) dieron 4 de 8 en su corrida, y no se volvieron
-          a correr tras los arreglos de esta ronda; se marcan con «?». COCOS-42
-          corre en la suite de API como test de defecto (<code>@defecto</code>)
-          y falla porque el servicio no lo cumple; COCOS-24 tiene además un test
-          de defecto propio que queda fuera de la corrida base.
+          a correr tras los arreglos de esta ronda; se marcan con «?». COCOS-52
+          (VoiceOver) está documentado y todavía sin ejecutar: no figura en
+          ninguna corrida. COCOS-42 corre en la suite de API como test de
+          defecto (<code>@defecto</code>) y falla porque el servicio no lo
+          cumple; COCOS-24 tiene además un test de defecto propio que queda
+          fuera de la corrida base.
         </p>
       </div>
 
@@ -3067,6 +3087,20 @@
             </tr>
             <tr>
               <td class="num">
+                <a href="https://app.qase.io/case/COCOS-52">52</a>
+              </td>
+              <td>
+                Prueba con VoiceOver. Appium lee el árbol de accesibilidad pero
+                no lo escucha, y el simulador de iOS no soporta VoiceOver: hace
+                falta un iPhone físico.
+              </td>
+              <td>
+                Documentada en Qase y todavía sin ejecutar. El arreglo del
+                defecto #46 solo se comprobó por el árbol de accesibilidad.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
                 <a href="https://app.qase.io/case/COCOS-14">14</a>,
                 <a href="https://app.qase.io/case/COCOS-33">33</a>,
                 <a href="https://app.qase.io/case/COCOS-38">38</a>
@@ -3119,7 +3153,8 @@
             >El defecto #46 (VoiceOver) está resuelto en Qase, pero solo se
             verificó por el árbol de accesibilidad,</strong
           >
-          no con VoiceOver activado. Falta esa prueba manual.
+          no con VoiceOver activado. Esa prueba manual quedó documentada como
+          COCOS-52 y no se ejecutó.
         </li>
         <li>
           <strong>Sin Postman:</strong> lo opcional del contrato queda cubierto
@@ -3220,7 +3255,7 @@ bun run format:check</code></pre>
       <footer class="footer">
         Plan de pruebas del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
-        con las suites del repositorio al 24/09/2026: 51 casos, 42
+        con las suites del repositorio al 24/09/2026: 52 casos, 42
         automatizados, 18 defectos abiertos. Documento vivo: se actualiza cuando
         cambian el alcance o los resultados.
       </footer>

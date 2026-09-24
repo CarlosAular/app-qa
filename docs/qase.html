@@ -522,7 +522,7 @@
         <p class="standfirst">
           Los casos de prueba del challenge no viven en este repositorio: viven
           en Qase, y este documento es el índice para llegar a ellos. Qué es la
-          herramienta, cómo está organizado el proyecto y los 51 casos cargados,
+          herramienta, cómo está organizado el proyecto y los 52 casos cargados,
           cada uno con link a su ficha.
         </p>
         <a class="biglink" href="https://app.qase.io/project/COCOS">
@@ -537,7 +537,7 @@
           <li><a href="#que-es">Qué es Qase y por qué está acá</a></li>
           <li><a href="#organizacion">Cómo está organizado el proyecto</a></li>
           <li>
-            <a href="#casos">Los 51 casos</a>
+            <a href="#casos">Los 52 casos</a>
             <span>— el catálogo completo</span>
           </li>
           <li>
@@ -661,7 +661,7 @@
       <ul>
         <li>
           <code>tipo:</code> — cómo se verifica.
-          <span class="chip chip--neutral">e2e</span> usando la app (38 casos),
+          <span class="chip chip--neutral">e2e</span> usando la app (39 casos),
           <span class="chip chip--ok">api</span> pegándole directo al servicio
           (8), y <span class="chip chip--warn">visual</span> mirando que nada
           quede tapado, recortado o superpuesto (5).
@@ -681,12 +681,12 @@
         <li>
           <code>automatizado:</code> — qué herramienta lo automatiza:
           <code>appium</code> (34 casos) o <code>playwright</code> (8). Va junto
-          con el campo de automatización del caso, que pasa a «Automated». Los 9
-          restantes siguen manuales, cada uno con su motivo.
+          con el campo de automatización del caso, que pasa a «Automated». Los
+          10 restantes siguen manuales, cada uno con su motivo.
         </li>
       </ul>
 
-      <h2 id="casos">3 · Los 51 casos</h2>
+      <h2 id="casos">3 · Los 52 casos</h2>
       <p class="h2sub">
         El catálogo completo, en el mismo orden en que aparece en Qase —
         agrupado por tema, no por número. El ID lleva a la ficha con los pasos.
@@ -791,7 +791,7 @@
         </table>
       </div>
       <h3>
-        Armado y validación de la orden <span class="count">11 casos</span>
+        Armado y validación de la orden <span class="count">12 casos</span>
       </h3>
       <p class="h3sub">
         Todo lo que pasa en el panel de orden antes de enviar nada, y lo que la
@@ -916,6 +916,17 @@
                 <span class="chip chip--neutral">e2e</span>
               </td>
               <td class="cubre">R4 · R14</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-52">COCOS-52</a>
+              </td>
+              <td>
+                El ticket de trading se puede operar con VoiceOver en iOS
+                <span class="chip chip--neutral">e2e</span>
+                <span class="muted">manual · documentado, sin ejecutar</span>
+              </td>
+              <td class="cubre">R17</td>
             </tr>
           </tbody>
         </table>
@@ -1655,6 +1666,16 @@
                 entran.
               </td>
             </tr>
+            <tr>
+              <td class="num">COCOS-52</td>
+              <td>
+                Prueba con VoiceOver. Appium lee el árbol de accesibilidad pero
+                no lo escucha, y el simulador de iOS no soporta VoiceOver: hace
+                falta un iPhone físico. Queda documentada y sin ejecutar; el
+                arreglo del defecto #46 solo se comprobó por el árbol de
+                accesibilidad.
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -1834,8 +1855,10 @@
             <tr>
               <td>Casos cargados</td>
               <td>
-                <span class="chip chip--ok">51</span> (los 50 originales más
-                COCOS-51, de API) con pasos, precondición y postcondición
+                <span class="chip chip--ok">52</span> (los 50 originales,
+                COCOS-51, de API, y COCOS-52, la prueba con VoiceOver,
+                documentada y sin ejecutar) con pasos, precondición y
+                postcondición
               </td>
             </tr>
             <tr>
@@ -1843,7 +1866,7 @@
               <td>
                 <span class="chip chip--ok">42</span> — 34 por la suite Appium y
                 8 por la de API con Playwright (sección 4, COCOS-42 corre como
-                defecto y falla porque el servicio no lo cumple); los 9
+                defecto y falla porque el servicio no lo cumple); los 10
                 restantes quedan manuales, cada uno con su motivo
               </td>
             </tr>
@@ -1881,7 +1904,7 @@
       <div class="note">
         <span class="note__label">Qué cambió con la suite automatizada</span>
         <p>
-          41 de los 51 casos (sección 4) ya corren solos: 34 vía Appium y 8 vía
+          42 de los 52 casos (sección 4) ya corren solos: 34 vía Appium y 8 vía
           Playwright (API), con su resultado atado al mismo ID de Qase que usa
           la corrida manual. Cuatro de los 34 de Appium fallan por un defecto de
           la app (COCOS-15, 18, 30 y 41): automatizan el comportamiento correcto
@@ -1912,12 +1935,26 @@
             <tr>
               <td class="num">2026-09-24</td>
               <td>
+                Se agregó COCOS-52: la prueba manual con VoiceOver del ticket de
+                trading en iOS. Está documentada, con sus pasos, y todavía sin
+                ejecutar. El catálogo pasa a 52 casos: 42 automatizados y 10
+                manuales.
+              </td>
+              <td>
+                El arreglo del defecto #46 se comprobó por el árbol de
+                accesibilidad, no escuchando a VoiceOver. El caso deja escrito
+                cómo hacerlo, con un iPhone físico.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-24</td>
+              <td>
                 Qase ordenado y conteos alineados: los 34 casos de Appium
                 pasaron a «Automated» con la etiqueta
                 <code>automatizado:appium</code> (los 8 de API ya lo estaban,
                 con <code>automatizado:playwright</code>) y el defecto #46 quedó
-                resuelto. Resultado: 51 casos, 42 automatizados y 18 defectos
-                abiertos.
+                resuelto. Resultado, en ese momento: 51 casos, 42 automatizados
+                y 18 defectos abiertos.
               </td>
               <td>
                 Qase marcaba 8 casos como automatizados y los documentos decían
@@ -2090,7 +2127,7 @@
       <footer class="footer">
         Catálogo de casos del challenge de QA de Cocos · Foto del proyecto
         <a href="https://app.qase.io/project/COCOS">COCOS</a> tomada el
-        24/09/2026: 51 casos, 5 suites, 42 automatizados, 6 corridas. Documento
+        24/09/2026: 52 casos, 5 suites, 42 automatizados, 6 corridas. Documento
         vivo: se actualiza con cada corrida que se ejecute.
       </footer>
     </div>
