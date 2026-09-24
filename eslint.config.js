@@ -17,6 +17,7 @@ module.exports = defineConfig([
     "src/uniwind-types.d.ts",
     "**/*.test.ts",
     "e2e/reports/*",
+    "api-tests/reports/*",
   ]),
   expoConfig,
   eslintPluginPrettierRecommended,
@@ -102,6 +103,19 @@ module.exports = defineConfig([
     },
   },
   // La suite E2E: su propio tsconfig, y la consola ES su canal de reporte.
+  {
+    // Playwright: `use` de los fixtures no es el hook de React.
+    files: [ "api-tests/**/*.ts" ],
+    languageOptions: {
+      parserOptions: {
+        project: [ "./api-tests/tsconfig.json" ],
+      },
+    },
+    rules: {
+      "no-console": "off",
+      "react-hooks/rules-of-hooks": "off",
+    },
+  },
   {
     files: [ "e2e/**/*.ts" ],
     languageOptions: {
