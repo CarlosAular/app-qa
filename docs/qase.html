@@ -522,7 +522,7 @@
         <p class="standfirst">
           Los casos de prueba del challenge no viven en este repositorio: viven
           en Qase, y este documento es el índice para llegar a ellos. Qué es la
-          herramienta, cómo está organizado el proyecto y los 50 casos cargados,
+          herramienta, cómo está organizado el proyecto y los 51 casos cargados,
           cada uno con link a su ficha.
         </p>
         <a class="biglink" href="https://app.qase.io/project/COCOS">
@@ -537,7 +537,7 @@
           <li><a href="#que-es">Qué es Qase y por qué está acá</a></li>
           <li><a href="#organizacion">Cómo está organizado el proyecto</a></li>
           <li>
-            <a href="#casos">Los 50 casos</a>
+            <a href="#casos">Los 51 casos</a>
             <span>— el catálogo completo</span>
           </li>
           <li>
@@ -627,7 +627,7 @@
             </tr>
             <tr>
               <td>Ejecución y ciclo de la orden</td>
-              <td class="num">15</td>
+              <td class="num">16</td>
               <td>
                 El núcleo de riesgo: ejecución, órdenes límite, reservas de
                 saldo, rechazos e historial. Acá es donde el usuario pierde
@@ -680,7 +680,7 @@
         </li>
       </ul>
 
-      <h2 id="casos">3 · Los 50 casos</h2>
+      <h2 id="casos">3 · Los 51 casos</h2>
       <p class="h2sub">
         El catálogo completo, en el mismo orden en que aparece en Qase —
         agrupado por tema, no por número. El ID lleva a la ficha con los pasos.
@@ -914,7 +914,7 @@
           </tbody>
         </table>
       </div>
-      <h3>Ejecución y ciclo de la orden <span class="count">15 casos</span></h3>
+      <h3>Ejecución y ciclo de la orden <span class="count">16 casos</span></h3>
       <p class="h3sub">
         Qué pasa después de enviar: ejecución, órdenes límite, reservas,
         rechazos e historial.
@@ -1078,6 +1078,20 @@
                 cronológico <span class="chip chip--neutral">e2e</span>
               </td>
               <td class="cubre">R8 <span class="hall">O5</span></td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-51">COCOS-51</a>
+              </td>
+              <td>
+                El servicio rechaza las órdenes sin efectivo o sin tenencias
+                suficientes y no mueve nada
+              </td>
+              <td>
+                Saldo insuficiente al comprar y venta sin posición o en exceso:
+                rechazo con mensaje y sin rastro en la cuenta. Automatizado
+                (API).
+              </td>
             </tr>
           </tbody>
         </table>
@@ -1351,6 +1365,218 @@
                 datos.
               </td>
             </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-1">COCOS-1</a>,
+                <a href="https://app.qase.io/case/COCOS-17">COCOS-17</a>,
+                <a href="https://app.qase.io/case/COCOS-18">COCOS-18</a>,
+                <a href="https://app.qase.io/case/COCOS-43">COCOS-43</a>
+              </td>
+              <td><code>06-search</code></td>
+              <td>
+                Buscar por ticker, por sugerencia de "Más movidos", por nombre
+                de empresa (hallazgo O3, rojo a propósito) y distinguir ACCIONES
+                de MONEDA en el resultado.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-3">COCOS-3</a>,
+                <a href="https://app.qase.io/case/COCOS-2">COCOS-2</a>
+              </td>
+              <td><code>07-market-catalog</code></td>
+              <td>
+                Abrir la ficha desde el panel y que precio y retorno diario
+                coincidan entre el panel y la ficha.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-4">COCOS-4</a>,
+                <a href="https://app.qase.io/case/COCOS-22">COCOS-22</a>
+              </td>
+              <td><code>08-ticket-setup</code></td>
+              <td>
+                El panel abre con Comprar · Market · Acciones por defecto, y
+                sobre el instrumento correcto desde los tres accesos.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-21">COCOS-21</a>
+              </td>
+              <td><code>09-ticket-limit-pricing</code></td>
+              <td>
+                El estimado de una orden límite usa el precio límite, no el de
+                mercado.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-41">COCOS-41</a>
+              </td>
+              <td><code>10-ticket-non-stock</code></td>
+              <td>
+                ARS no debería poder comprarse (hallazgo O8: hoy la API la
+                ejecuta igual, rojo a propósito).
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-9">COCOS-9</a>,
+                <a href="https://app.qase.io/case/COCOS-44">COCOS-44</a>
+              </td>
+              <td><code>11-order-integrity</code></td>
+              <td>
+                No se puede comprar por más efectivo del disponible, y el precio
+                confirmado en el panel es el que se ejecuta.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-36">COCOS-36</a>,
+                <a href="https://app.qase.io/case/COCOS-37">COCOS-37</a>,
+                <a href="https://app.qase.io/case/COCOS-40">COCOS-40</a>
+              </td>
+              <td><code>12-order-resubmission</code></td>
+              <td>
+                Doble toque en "Enviar orden", arrastre de estado entre
+                instrumentos y reenvío fantasma al reabrir el panel.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-11">COCOS-11</a>,
+                <a href="https://app.qase.io/case/COCOS-12">COCOS-12</a>,
+                <a href="https://app.qase.io/case/COCOS-30">COCOS-30</a>
+              </td>
+              <td><code>13-portfolio-derived</code></td>
+              <td>
+                Efectivo y posiciones reflejan el servicio, detalle de la
+                posición coherente, y signo de la ganancia en cero (el
+                rendimiento en rojo documenta el mismo defecto de formato que
+                O4, ahora en el portafolio).
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-34">COCOS-34</a>,
+                <a href="https://app.qase.io/case/COCOS-15">COCOS-15</a>
+              </td>
+              <td><code>14-account-behavior</code></td>
+              <td>
+                Cambiar de pestaña conserva el estado, e importes/porcentajes en
+                formato argentino (hallazgo O4, el porcentaje rojo a propósito).
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-13">COCOS-13</a>,
+                <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
+              </td>
+              <td><code>15-account-reset</code></td>
+              <td>
+                Reiniciar deja el saldo inicial sin posiciones ni historial, y
+                también borra las órdenes límite pendientes. Último spec de la
+                corrida, a propósito: nuclea la cuenta compartida.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Suite de API (Playwright)</h3>
+      <p class="h3sub">
+        Vive en <code>api-tests/</code> y corre sin simulador. Cada test declara
+        su caso con <code>qase(id, …)</code> y cada paso del caso es un
+        <code>test.step</code>. Los 7 casos <code>tipo:api</code> se
+        reescribieron para reflejar exactamente lo que se automatizó, y se sumó
+        COCOS-51. Sin <code>POST /reset</code>: cada test usa un identificador
+        de cuenta nuevo.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Caso</th>
+              <th>Spec</th>
+              <th>Qué protege</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-20">COCOS-20</a>
+              </td>
+              <td><code>contract</code></td>
+              <td>
+                Catálogo de instrumentos y búsqueda por fragmento, con esquema
+                validado y headers obligatorios.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-24">COCOS-24</a>
+              </td>
+              <td><code>validation</code></td>
+              <td>
+                Los rechazos de cuerpos inválidos con su mensaje exacto, sin
+                dejar rastro en la cuenta.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-27">COCOS-27</a>,
+                <a href="https://app.qase.io/case/COCOS-39">COCOS-39</a>
+              </td>
+              <td><code>market-orders</code></td>
+              <td>
+                Orden a mercado al precio real, ciclo de las límite no
+                ejecutables y ausencia de idempotencia.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-32">COCOS-32</a>
+              </td>
+              <td><code>portfolio</code></td>
+              <td>
+                El portafolio cuadra al centavo con las órdenes ejecutadas y la
+                reserva no crea acciones.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-35">COCOS-35</a>
+              </td>
+              <td><code>isolation</code></td>
+              <td>
+                Cada X-Candidate-Id es una cuenta separada, sin usar POST
+                /reset.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-51">COCOS-51</a>
+              </td>
+              <td><code>balance</code></td>
+              <td>
+                Sin efectivo o sin tenencias: rechazo y ningún movimiento. Caso
+                nuevo.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-24">COCOS-24</a>,
+                <a href="https://app.qase.io/case/COCOS-42">COCOS-42</a>
+              </td>
+              <td><code>defects</code></td>
+              <td>
+                Defectos conocidos en off (@defecto): fallan a propósito, corren
+                aparte.
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -1451,11 +1677,88 @@
                 verse
               </td>
             </tr>
+            <tr>
+              <td>
+                Automatizada — Android 16 / API 36 · Pixel 8 (Appium)<br /><span
+                  class="muted"
+                  >bugs=off · emulador · local, QASE_MODE=off</span
+                >
+              </td>
+              <td class="num">2026-09-23</td>
+              <td class="num">30</td>
+              <td class="num">26</td>
+              <td class="num">4</td>
+              <td>
+                <span class="chip chip--ok">26 verdes</span> y
+                <span class="chip chip--warn">4 rojos a propósito</span>:
+                COCOS-18 (O3), COCOS-41 (O8), COCOS-15 y COCOS-30 (formato de
+                porcentaje, O4). Fallan porque el comportamiento esperado no
+                existe todavía en la app, no por la suite. La primera corrida
+                completa (27 min, los 15 specs en una sola sesión) dio además 2
+                fallos propios de la suite, COCOS-36 y COCOS-50: se
+                estabilizaron y ambos pasan en verde al correrlos nuevamente por
+                separado.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Automatizada — iOS 26.5 · iPhone 17 Pro (Appium)<br /><span
+                  class="muted"
+                  >bugs=off · simulador · local, QASE_MODE=off</span
+                >
+              </td>
+              <td class="num">2026-09-23</td>
+              <td class="num">8</td>
+              <td class="num">4</td>
+              <td class="num">4</td>
+              <td>
+                <span class="chip chip--warn">4 fallados</span> — desajuste de
+                Xcode/runtime del simulador en esta máquina, no bug de la suite
+                (detalle en el README)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Automatizada — iOS 26.5 · iPhone 17 Pro (Appium, 22 casos
+                nuevos)<br /><span class="muted"
+                  >bugs=off · simulador · local, spec por spec,
+                  QASE_MODE=off</span
+                >
+              </td>
+              <td class="num">2026-09-23</td>
+              <td class="num">22</td>
+              <td class="num">14</td>
+              <td class="num">8</td>
+              <td>
+                <span class="chip chip--ok">14 verdes</span>, dos rojos a
+                propósito confirmados (COCOS-18 por O3 y COCOS-41 por O8) y
+                <span class="chip chip--warn">6 sin resolver</span>: COCOS-22 se
+                cuelga al leer la ficha de la posición (el scroll de WDA no
+                llega a la etiqueta), COCOS-34 y COCOS-15 no llegaron a cargar
+                el listado del Portafolio, y el spec 13 (COCOS-11, 12 y 30) no
+                se llegó a completar. Ninguno está verificado como defecto de la
+                app: en iOS quedan pendientes de reproducir.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://app.qase.io/run/COCOS/dashboard/4"
+                  >Automatizada — Playwright API · tier off</a
+                ><br /><span class="muted"
+                  >bugs=off · sin dispositivo · QASE_MODE=testops</span
+                >
+              </td>
+              <td class="num">2026-09-23</td>
+              <td class="num">7</td>
+              <td class="num">7</td>
+              <td class="num">0</td>
+              <td><span class="chip chip--ok">7/7 verdes</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <p>Cuando haya corridas, cada fila va a decir:</p>
+      <p>Cada fila de corrida dice:</p>
 
       <ul>
         <li>
@@ -1488,22 +1791,27 @@
             <tr>
               <td>Casos cargados</td>
               <td>
-                <span class="chip chip--ok">50</span> con pasos, precondición y
-                postcondición
+                <span class="chip chip--ok">51</span> (los 50 originales más
+                COCOS-51, de API) con pasos, precondición y postcondición
               </td>
             </tr>
             <tr>
               <td>Casos automatizados</td>
               <td>
-                <span class="chip chip--warn">0</span> — todos manuales por
-                ahora
+                <span class="chip chip--ok">37</span> — 30 por la suite Appium y
+                7 por la de API con Playwright (sección 4); el resto sigue
+                manual
               </td>
             </tr>
             <tr>
               <td>Corridas</td>
               <td>
-                <span class="chip chip--ok">2</span> — una por plataforma, el
-                catálogo completo ejecutado a mano contra el golden path
+                <span class="chip chip--ok">6</span> — 2 manuales (catálogo
+                completo, una por plataforma) y 4 automatizadas: Appium en
+                Android (30 casos: 26 verdes y 4 rojos a propósito), Appium en
+                iOS (los 8 originales, 4/8, y los 22 nuevos verificados spec por
+                spec: 14 verdes, 2 rojos a propósito y 6 sin resolver) y la de
+                API con Playwright, la única publicada en Qase
               </td>
             </tr>
             <tr>
@@ -1525,15 +1833,17 @@
       </div>
 
       <div class="note">
-        <span class="note__label"
-          >Qué cambia cuando exista la suite automatizada</span
-        >
+        <span class="note__label">Qué cambió con la suite automatizada</span>
         <p>
-          Los casos marcados <span class="chip chip--ok">api</span> son los
-          primeros candidatos: no dependen del simulador y son estables. Cada
-          ejecución va a crear una corrida en Qase con sus resultados atados a
-          estos mismos IDs, y este documento va a listarlas en la sección
-          anterior.
+          37 de los 51 casos (sección 4) ya corren solos: 30 vía Appium y 7 vía
+          Playwright (API), con su resultado atado al mismo ID de Qase que usa
+          la corrida manual. Cuatro de los 30 de Appium están en rojo a
+          propósito (COCOS-15, 18, 30 y 41): automatizan el comportamiento
+          correcto de un defecto todavía abierto, así que se ponen en verde
+          solos el día que se arregle la app. Las corridas de Appium quedan
+          locales (sección 5, <code>QASE_MODE=off</code>) y sólo la de API está
+          publicada en Qase; publicar las de Appium es opcional y se hace con
+          <code>QASE_MODE=testops</code> y un token, como describe el README.
         </p>
       </div>
 
@@ -1553,6 +1863,65 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-23</td>
+              <td>
+                La suite Appium pasó de 8 a 30 casos: 10 specs nuevos (<code
+                  >06</code
+                >
+                a <code>15</code>) cubren los 22 casos de UI que seguían
+                manuales sin motivo anotado.
+              </td>
+              <td>
+                Eran la zona de mayor riesgo de la matriz (integridad de la
+                orden, portafolio, reenvíos, reinicio) y salían casi gratis con
+                los page objects existentes. Cuatro casos quedaron en rojo a
+                propósito porque el comportamiento correcto todavía no existe en
+                la app: COCOS-18 (búsqueda por nombre, O3), COCOS-41 (ARS
+                comprable, O8) y COCOS-15 y COCOS-30 (porcentaje con punto
+                decimal, O4: la misma causa aparece también en el formateador
+                del portafolio). La verificación cruzada Android e iOS corrigió
+                además varios defectos propios de la suite, entre ellos el tap
+                sobre la última fila del portafolio (tapada por la barra de
+                pestañas) y dos scrolls simultáneos en la misma sesión de
+                WebDriver.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-23</td>
+              <td>
+                Se automatizó la API con Playwright: los 7 casos
+                <code>tipo:api</code> (COCOS-20, 24, 27, 32, 35, 39, 42) se
+                reescribieron para reflejar lo automatizado (automation=2, sin
+                <code>POST /reset</code>) y se creó COCOS-51 (saldo
+                insuficiente).
+              </td>
+              <td>
+                Un test por caso, con los pasos como <code>test.step</code>,
+                para que el resultado de cada caso no se enmascare. Los pasos
+                que hoy fallan por defectos del servicio (coerción de cantidad,
+                precio límite no positivo, orden sobre ARS) quedaron en tests
+                <code>@defecto</code> que se corren aparte. Los resultados de
+                las corridas manuales se conservan, pero ya no coinciden 1 a 1
+                con el texto de estos casos.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-23</td>
+              <td>
+                Se agregó la suite E2E automatizada (Appium + WebdriverIO +
+                Mocha): 8 de los 50 casos quedaron cubiertos en 5 specs, con el
+                reporter de Qase integrado.
+              </td>
+              <td>
+                Era el entregable automatizado del challenge. Resultado local:
+                Android 8/8, iOS 4/8 — los 4 fallos de iOS son un desajuste de
+                Xcode/runtime del simulador en esta máquina, no defectos de los
+                specs. Los 42 casos restantes (órdenes límite, visuales, corte
+                de red) quedaron fuera de la automatización por las razones que
+                documenta la sección 4.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-22</td>
               <td>
@@ -1621,8 +1990,8 @@
       <footer class="footer">
         Catálogo de casos del challenge de QA de Cocos · Foto del proyecto
         <a href="https://app.qase.io/project/COCOS">COCOS</a> tomada el
-        20/09/2026: 50 casos, 5 suites, sin corridas. Documento vivo: se
-        actualiza con cada corrida que se ejecute.
+        23/09/2026: 51 casos, 5 suites, 37 automatizados, 6 corridas. Documento
+        vivo: se actualiza con cada corrida que se ejecute.
       </footer>
     </div>
   </body>

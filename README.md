@@ -21,8 +21,8 @@ navegador, no necesitan servidor ni build.
   tecnología usa la app, qué usamos nosotros para QA, para qué sirve cada pieza y
   con qué versión se verificó.
 - [`docs/qase.html`](docs/qase.html) — el catálogo de casos de prueba: qué es Qase,
-  cómo está organizado el proyecto `COCOS`, los 50 casos con link a cada ficha y el
-  lugar donde se irán registrando las corridas.
+  cómo está organizado el proyecto `COCOS`, los 50 casos con link a cada ficha y las
+  corridas registradas, manuales y automatizadas.
 - [`docs/api.html`](docs/api.html) — contrato de la API observado con requests
   reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
   diferencias entre niveles de defectos.
@@ -106,18 +106,68 @@ de ejecución.
 
 ### Casos automatizados
 
-| Spec                   | Casos de Qase          | Qué protege                                                                               |
-| ---------------------- | ---------------------- | ----------------------------------------------------------------------------------------- |
-| `01-market-buy`        | `COCOS-7`              | Compra a mercado end-to-end: estimado, ejecución al precio vigente, efectivo y posición.  |
-| `02-amount-pesos`      | `COCOS-5`, `COCOS-49`  | Conversión de pesos a acciones enteras: nunca redondea hacia arriba, acepta coma decimal. |
-| `03-ticket-validation` | `COCOS-6`, `COCOS-47`  | Los tres mensajes de validación del ticket, sin crear ninguna orden.                      |
-| `04-sell-partial`      | `COCOS-25`, `COCOS-28` | Venta a mercado y venta parcial: el PPP no cambia al vender.                              |
-| `05-order-history`     | `COCOS-10`             | La orden recién enviada aparece primera con sus datos.                                    |
+| Spec                      | Casos de Qase               | Qué protege                                                                                                                    |
+| ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `01-market-buy`           | `COCOS-7`                   | Compra a mercado end-to-end: estimado, ejecución al precio vigente, efectivo y posición.                                       |
+| `02-amount-pesos`         | `COCOS-5`, `COCOS-49`       | Conversión de pesos a acciones enteras: nunca redondea hacia arriba, acepta coma decimal.                                      |
+| `03-ticket-validation`    | `COCOS-6`, `COCOS-47`       | Los tres mensajes de validación del ticket, sin crear ninguna orden.                                                           |
+| `04-sell-partial`         | `COCOS-25`, `COCOS-28`      | Venta a mercado y venta parcial: el PPP no cambia al vender.                                                                   |
+| `05-order-history`        | `COCOS-10`                  | La orden recién enviada aparece primera con sus datos.                                                                         |
+| `06-search`               | `COCOS-1`, `17`, `18`, `43` | Buscar por ticker, por sugerencia, por nombre de empresa (hallazgo O3, rojo a propósito) y distinguir ACCIONES de MONEDA.      |
+| `07-market-catalog`       | `COCOS-3`, `2`              | Abrir la ficha desde el panel; precio y retorno diario coinciden entre panel y ficha.                                          |
+| `08-ticket-setup`         | `COCOS-4`, `22`             | El panel abre con los valores por defecto correctos, y sobre el instrumento correcto desde los tres accesos.                   |
+| `09-ticket-limit-pricing` | `COCOS-21`                  | El estimado de una orden límite usa el precio límite, no el de mercado.                                                        |
+| `10-ticket-non-stock`     | `COCOS-41`                  | ARS no debería poder comprarse (hallazgo O8, rojo a propósito).                                                                |
+| `11-order-integrity`      | `COCOS-9`, `44`             | No comprar por más efectivo del disponible; el precio confirmado es el que se ejecuta.                                         |
+| `12-order-resubmission`   | `COCOS-36`, `37`, `40`      | Doble toque, arrastre de estado entre instrumentos y reenvío fantasma al reabrir.                                              |
+| `13-portfolio-derived`    | `COCOS-11`, `12`, `30`      | Efectivo/posiciones reflejan el servicio; signo de la ganancia en cero (rendimiento en rojo, mismo defecto de formato que O4). |
+| `14-account-behavior`     | `COCOS-34`, `15`            | Cambiar de pestaña conserva el estado; formato argentino (hallazgo O4, porcentaje en rojo).                                    |
+| `15-account-reset`        | `COCOS-13`, `50`            | Reiniciar deja el saldo inicial y borra las órdenes límite pendientes. Corre último: nuclea la cuenta compartida.              |
 
 **Un instrumento distinto por caso** (DYCA, CAPX, MIRG, TECO2, PATA, FERR,
-SAMI), a propósito: todos los specs de una corrida comparten tenant, así que si
-dos casos operaran el mismo ticker el delta de uno mediría el movimiento del
-otro.
+SAMI, y doce más agregados para los specs `06`–`15`), a propósito: todos los
+specs de una corrida comparten tenant, así que si dos casos operaran el mismo
+ticker el delta de uno mediría el movimiento del otro.
+
+### Casos en rojo a propósito
+
+Cuatro casos automatizan el comportamiento **correcto** de un defecto que sigue
+abierto en la app: hoy fallan, y se ponen en verde solos el día que se arregle.
+No son bugs de la suite.
+
+- `COCOS-18`: buscar por el nombre de la empresa no devuelve nada (hallazgo O3).
+- `COCOS-41`: ARS se puede comprar, la API la ejecuta como cualquier acción
+  (hallazgo O8).
+- `COCOS-15`: el retorno diario se muestra con punto decimal en vez de coma
+  (hallazgo O4).
+- `COCOS-30`: el rendimiento del portafolio tiene el mismo problema de formato.
+  El signo de la ganancia sólo se verifica en cero, porque la API dummy nunca
+  mueve los precios.
+
+### Estado por plataforma
+
+**Android** (Pixel 8, API 36): los 30 casos, 26 verdes y los 4 rojos de arriba.
+La primera corrida completa de los 15 specs en una sola sesión (27 minutos) dio
+además dos fallos propios de la suite, `COCOS-36` y `COCOS-50`; se estabilizaron
+y pasan en verde por separado, pero no se repitió la corrida completa.
+
+**iOS** (iPhone 17 Pro, iOS 26.5): los 22 casos nuevos se verificaron spec por
+spec, no en una sola corrida.
+
+- Verdes: `COCOS-1, 2, 3, 4, 9, 13, 17, 21, 36, 37, 40, 43, 44, 50`.
+- Rojos a propósito, confirmados: `COCOS-18` y `COCOS-41`.
+- Sin resolver, hay que reproducirlos antes de decidir si son de la suite o del
+  simulador: `COCOS-22` se cuelga al leer la ficha de la posición (WDA responde
+  "max scroll count reached"), `COCOS-34` y `COCOS-15` no llegan a cargar el
+  listado del Portafolio, y el spec `13` (`COCOS-11, 12, 30`) no se llegó a
+  completar.
+- Los 4 fallos originales de iOS se atribuyeron al desajuste entre Xcode y el
+  runtime. En esta ronda apareció además un defecto propio, ya corregido: dos
+  scrolls simultáneos al leer la ficha de la posición. No se re-verificó si eso
+  cambia esos fallos.
+
+La config elige el simulador que ya esté booteado; si hay varios, se fija con
+`E2E_IOS_UDID` (más `E2E_IOS_DEVICE_NAME` y `E2E_IOS_RUNTIME`).
 
 ### Qué NO se automatiza, y por qué
 
@@ -230,6 +280,83 @@ build y la suite de iOS van en el **mismo job** a propósito: separarlos obliga 
 un segundo checkout, un segundo `bun install` de 4,1 GB, un round-trip de
 artifact que le saca el bit de ejecución al `.app`, y una compilación de
 WebDriverAgent en frío.
+
+## Suite de API (Playwright)
+
+Suite **separada** de la de UI: prueba la API directamente, sin simulador ni
+dispositivo, con **Playwright Test** (sólo el cliente HTTP, sin navegador) y
+reporte **Allure**. Vive en `api-tests/` y está linkeada a los casos `tipo:api`
+de Qase.
+
+```bash
+bun run test:api            # tier `off` (línea base): debe pasar en verde
+bun run test:api:easy       # también :medium y :hard — los fallos son hallazgos
+bun run test:api:tiers      # los cuatro tiers en una sola corrida
+bun run test:api:defectos   # defectos conocidos en `off`: fallan a propósito
+bun run test:api:report     # genera y abre el reporte de Allure
+```
+
+- **Un test por caso de Qase:** cada test declara su caso con
+  `qase(id, "COCOS-N · ...")` y cada paso del caso es un `test.step`, igual que
+  los E2E. Cubren COCOS-20, 24, 27, 32, 35, 39 y 51.
+- **Tiers como proyectos:** cada valor de `X-Enable-Bugs` es un proyecto de
+  Playwright. La misma suite pasa en `off` y va fallando al subir el tier
+  (en `easy` ya falla el catálogo y el saldo). `API_TIERS=off,hard bun run test:api`
+  elige cuáles.
+- **Sin `POST /reset`:** cada test genera su propio `X-Candidate-Id` (cuenta
+  virgen de 1.000.000 ARS), así que no hay estado compartido ni hace falta
+  limpiar. Sirve igual en un entorno donde `/reset` no exista.
+- **LIMIT no determinístico:** no se asierta el estado final, sino invariantes
+  (nunca FILLED si no es ejecutable, saldo neto de reserva o liberado) y se
+  relee con reintentos hasta que deje de estar PENDING.
+- **Contrato:** cada respuesta se valida con `zod` (`api-tests/schemas.ts`).
+- **Defectos conocidos en `off`** (tests `@defecto`, fuera de la corrida base):
+  cantidad `"1e3"`/`true` coaccionada, `LIMIT` con `price` ≤ 0 aceptado y orden
+  sobre ARS aceptada. Se corren con `test:api:defectos` y en Qase quedan como
+  _failed_ hasta que el servicio se corrija.
+- `API_URL` cambia la URL base (por defecto `https://dummy-api-topaz.vercel.app`).
+
+### Publicar en Qase
+
+Como los E2E: apagado por defecto. Para publicar, el token va en el `.env`
+(ignorado por git) y se activa el modo `testops`:
+
+```bash
+# .env
+QASE_TESTOPS_API_TOKEN=<token>
+```
+
+```bash
+bun run publish:api            # publica el tier off
+bun run publish:api:easy       # también :medium y :hard
+bun run publish:api:defectos   # los defectos conocidos en off
+```
+
+Los `test:api*` **nunca** publican: corren en local. Sólo los `publish:api*`
+activan `QASE_MODE=testops`, y cada uno crea su propia run en Qase.
+
+`bun run` no le pasa el `.env` a Playwright, así que
+`api-tests/playwright.config.ts` lo carga solo. Un token exportado en la shell
+tiene precedencia sobre el del `.env`.
+
+La run se llama `Playwright API · tier off` (o `· defectos conocidos`). Con
+`QASE_MODE=report` deja el resultado local en `api-tests/reports/qase-report`.
+
+## Correr la app y la API con cada nivel de bugs
+
+`X-Enable-Bugs` se fija con `EXPO_PUBLIC_BUGS_TIER` (app) o `API_TIERS` (suite de
+API). Hay un script por nivel:
+
+| Nivel    | App (Metro)            | iOS                  | Android                  | API                       |
+| -------- | ---------------------- | -------------------- | ------------------------ | ------------------------- |
+| `off`    | `bun run start:off`    | `bun run ios:off`    | `bun run android:off`    | `bun run test:api:off`    |
+| `easy`   | `bun run start:easy`   | `bun run ios:easy`   | `bun run android:easy`   | `bun run test:api:easy`   |
+| `medium` | `bun run start:medium` | `bun run ios:medium` | `bun run android:medium` | `bun run test:api:medium` |
+| `hard`   | `bun run start:hard`   | `bun run ios:hard`   | `bun run android:hard`   | `bun run test:api:hard`   |
+
+Los `start:*` limpian la caché de Metro (`--clear`), porque las variables
+`EXPO_PUBLIC_*` se incrustan al empaquetar. La suite E2E (Appium) está
+calibrada para el golden path: se compila y corre en `off`.
 
 ## Requirements
 
