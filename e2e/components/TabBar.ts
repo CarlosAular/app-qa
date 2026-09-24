@@ -141,12 +141,29 @@ class TabBar {
       return
     }
 
-    const item = await waitForVisible(tabSelector(tab), {
-      message: `No encontré la pestaña "${tab}".`,
-    })
+    /*
+     * Se verifica que la pestaña quedó seleccionada y se reintenta. Justo
+     * después de cerrar el ticket y salir de la ficha del instrumento, la
+     * pantalla sigue atenuada un instante por el backdrop del sheet que se
+     * está cerrando: el clic lo recibe ese backdrop, la barra lo ignora y la
+     * app se queda en Mercados. Medido en COCOS-46, dos corridas seguidas.
+     */
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const item = await waitForVisible(tabSelector(tab), {
+        message: `No encontré la pestaña "${tab}".`,
+      })
 
-    await item.click()
-    await browser.pause(900)
+      await item.click()
+      await browser.pause(900)
+
+      if ((await item.getAttribute("selected")) === "true") {
+        return
+      }
+
+      await browser.pause(600)
+    }
+
+    throw new Error(`No pude cambiar a la pestaña "${tab}".`)
   }
 
   markets = () => this.open(NAV.tabMarkets as TabName)
