@@ -1,0 +1,3187 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Plan de pruebas</title>
+    <meta
+      name="description"
+      content="Plan de pruebas del challenge de QA de Cocos: alcance, fuera de alcance, estrategia por niveles, priorización por riesgo, trazabilidad de los 51 casos, resultados y pendientes."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      h3 {
+        font-size: 1.06rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 34px 0 4px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ------------------------------ Pasos ------------------------------ */
+
+      .steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 24px 0;
+        max-width: none;
+        display: grid;
+        gap: 14px;
+      }
+
+      .steps > li {
+        counter-increment: step;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px 18px 60px;
+        position: relative;
+        margin: 0;
+      }
+
+      .steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(45, 212, 191, 0.12);
+        color: var(--primary);
+        border: 1px solid rgba(45, 212, 191, 0.35);
+        font-family: var(--mono);
+        font-size: 12.5px;
+        display: grid;
+        place-items: center;
+      }
+
+      .steps h3 {
+        margin: 0 0 6px;
+      }
+
+      .steps > li > :last-child {
+        margin-bottom: 0;
+      }
+
+      .steps p {
+        max-width: none;
+      }
+
+      /* ----------------------------- Código ------------------------------ */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 16px 0;
+        font-size: 13.5px;
+        line-height: 1.7;
+      }
+
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+        white-space: pre;
+        color: var(--fg);
+      }
+
+      pre .c {
+        color: var(--fg-dim);
+      }
+
+      pre .k {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Tablas ----------------------------- */
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 480px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num,
+      td.ver {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      td.ver {
+        color: var(--primary);
+      }
+
+      tbody tr.sep td {
+        border-top: 1px solid var(--border);
+      }
+
+      /* ------------------------------ Avisos ----------------------------- */
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note--bad {
+        border-left-color: var(--loss);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--ok {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--bad {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+    <style>
+      .chip--warn {
+        color: var(--warning);
+        background: rgba(250, 204, 21, 0.12);
+        border-color: rgba(250, 204, 21, 0.3);
+      }
+
+      .chip--neutral {
+        color: var(--fg-muted);
+        background: rgba(154, 167, 189, 0.1);
+        border-color: rgba(154, 167, 189, 0.28);
+      }
+
+      td .chip {
+        margin-left: 4px;
+        vertical-align: 1px;
+      }
+
+      td.cubre {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        color: var(--fg-muted);
+        white-space: nowrap;
+      }
+
+      td.num a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      td.num a:hover {
+        text-decoration: underline;
+      }
+
+      .hall {
+        color: var(--warning);
+      }
+
+      .count {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        font-weight: 400;
+        color: var(--fg-dim);
+        margin-left: 6px;
+      }
+
+      .muted {
+        color: var(--fg-muted);
+        font-size: 0.86rem;
+      }
+
+      .empty {
+        color: var(--fg-dim);
+        text-align: center;
+        padding-block: 18px;
+      }
+
+      .h3sub {
+        color: var(--fg-muted);
+        font-size: 14.5px;
+        margin: 4px 0 0;
+      }
+
+      .biglink {
+        display: inline-block;
+        margin-top: 20px;
+        font-family: var(--mono);
+        font-size: 13.5px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 12px 16px;
+        text-decoration: none;
+      }
+
+      .biglink:hover {
+        border-color: var(--primary);
+      }
+
+      .biglink span {
+        display: block;
+        font-family: var(--sans);
+        font-size: 11px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 4px;
+      }
+    </style>
+
+    <style>
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin: 22px 0 8px;
+      }
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 14px 16px;
+      }
+      .kpi b {
+        display: block;
+        font-size: 1.9rem;
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--primary);
+      }
+      .kpi span {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.82rem;
+        color: var(--fg-muted);
+      }
+      td.r {
+        text-align: center;
+        white-space: nowrap;
+      }
+      .ok {
+        color: var(--profit);
+        font-weight: 700;
+      }
+      .ko {
+        color: var(--loss);
+        font-weight: 700;
+      }
+      .rp {
+        color: var(--warning);
+        font-weight: 700;
+      }
+      .bl {
+        color: var(--secondary);
+        font-weight: 700;
+      }
+      .na {
+        color: var(--fg-dim);
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin: 10px 0 4px;
+        font-size: 0.85rem;
+        color: var(--fg-muted);
+      }
+      td.riesgos {
+        white-space: nowrap;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+      }
+      td.wrapnum {
+        white-space: normal;
+      }
+
+      /* Este documento tiene tablas anchas (matriz de riesgo, trazabilidad y
+         defectos): la página se ensancha y el texto corrido conserva su medida. */
+      .wrap {
+        max-width: 1240px;
+      }
+      .masthead > *,
+      .toc,
+      .wrap > p,
+      .wrap > ul,
+      .wrap > ol,
+      .wrap > .note,
+      .wrap > pre,
+      .wrap > .legend,
+      .wrap > h3 {
+        max-width: 900px;
+      }
+      .tablewrap.dense table {
+        font-size: 13.5px;
+      }
+      .tablewrap.dense th,
+      .tablewrap.dense td {
+        padding: 8px 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · Challenge de QA Automation</p>
+        <h1>Plan de pruebas</h1>
+        <p class="standfirst">
+          Qué se probó, qué no y por qué. Es el documento que reúne el criterio
+          detrás de todo lo demás: el alcance, la estrategia por niveles, la
+          priorización por riesgo y la trazabilidad entre riesgos, casos,
+          automatización, resultados y defectos. Lo que dice acá está
+          contrastado con el proyecto de Qase y con las suites del repositorio
+          al 24/09/2026.
+        </p>
+      </header>
+
+      <nav class="toc" aria-label="Contenido">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#resumen">Resumen</a></li>
+          <li><a href="#objetivo">Objetivo y contexto</a></li>
+          <li><a href="#alcance">Alcance y fuera de alcance</a></li>
+          <li><a href="#estrategia">Estrategia por niveles</a></li>
+          <li>
+            <a href="#riesgo">Priorización por riesgo</a>
+            <span>— y cobertura de cada riesgo</span>
+          </li>
+          <li><a href="#trazabilidad">Trazabilidad de los 51 casos</a></li>
+          <li>
+            <a href="#decisiones">Decisiones de automatización</a>
+            <span>— incluye cómo se trabaja sin <code>POST /reset</code></span>
+          </li>
+          <li><a href="#entornos">Entornos, datos y supuestos</a></li>
+          <li>
+            <a href="#criterios">Criterios de entrada, salida y aprobación</a>
+          </li>
+          <li><a href="#resultados">Ejecución y resultados</a></li>
+          <li><a href="#defectos">Hallazgos y defectos</a></li>
+          <li><a href="#pendientes">Límites del plan y pendientes</a></li>
+          <li><a href="#ejecutar">Cómo ejecutar todo</a></li>
+          <li><a href="#entregables">Mapa de entregables del challenge</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="resumen">1 · Resumen</h2>
+      <p class="h2sub">La lectura de un minuto.</p>
+
+      <div class="kpis">
+        <div class="kpi"><b>51</b><span>casos en Qase, en 5 suites</span></div>
+        <div class="kpi">
+          <b>42</b><span>automatizados: 34 de UI y 8 de API</span>
+        </div>
+        <div class="kpi">
+          <b>17</b><span>riesgos, todos con cobertura mínima cumplida</span>
+        </div>
+        <div class="kpi">
+          <b>19</b><span>defectos abiertos, 2 críticos</span>
+        </div>
+        <div class="kpi">
+          <b>3</b><span>niveles automatizados: unitario, API y UI</span>
+        </div>
+      </div>
+
+      <ul>
+        <li>
+          <strong>El esfuerzo se concentra donde se pierde plata.</strong> La
+          cadena <em>orden → reserva → portafolio</em> (R1, R2, R3, R6) más el
+          doble envío (R15) y la validación del ticket (R5) son los seis riesgos
+          Altos. Todos tienen al menos cinco casos y la mayoría corre
+          automatizada, con lo determinístico resuelto a nivel API.
+        </li>
+        <li>
+          <strong>Lo que no se automatizó tiene motivo escrito.</strong> Son
+          nueve casos: uno no determinístico, cinco visuales y tres que exigen
+          cortar la red (sección 12 y 3.2).
+        </li>
+        <li>
+          <strong>Las suites no esconden defectos.</strong> Cuatro casos de UI y
+          uno de API fallan a propósito porque documentan un defecto real de la
+          app; no se silencian ni se marcan como esperados.
+        </li>
+        <li>
+          <strong>El requisito de trabajar sin <code>POST /reset</code></strong>
+          está resuelto con un tenant por build y aserciones por delta (sección
+          7.3).
+        </li>
+        <li>
+          <strong>Lo que falta se dice acá.</strong> La sección 12 lista los
+          límites del plan sin maquillaje.
+        </li>
+      </ul>
+
+      <h2 id="objetivo">2 · Objetivo y contexto</h2>
+      <p class="h2sub">Qué se pidió, y qué se decidió hacer con eso.</p>
+
+      <p>
+        La app es un cliente de trading (React Native con Expo) que habla con
+        una API dummy multi-tenant. El challenge no pide agregar funcionalidad:
+        pide
+        <strong>evaluar la calidad y automatizar la validación</strong>, y
+        entregar cuatro cosas: un plan de pruebas, una suite automatizada con su
+        documentación de ejecución, un reporte de bugs y un README con las
+        decisiones. Lo que más pesa es el criterio propio: qué se prueba, qué no
+        y por qué.
+      </p>
+
+      <p>El plan persigue tres objetivos:</p>
+      <ul>
+        <li>
+          Reducir el riesgo donde el usuario pierde dinero antes de mirar
+          cualquier otra cosa.
+        </li>
+        <li>
+          Dejar una suite <strong>reproducible y sin flakiness</strong>, aunque
+          el servicio resuelva las órdenes límite de forma no determinística.
+        </li>
+        <li>
+          Que cada decisión de alcance sea trazable: de un riesgo a un caso, de
+          un caso a su automatización y a su último resultado, y de ahí a un
+          defecto.
+        </li>
+      </ul>
+
+      <h2 id="alcance">3 · Alcance y fuera de alcance</h2>
+
+      <h3>3.1 Dentro del alcance</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Área</th>
+              <th>Casos</th>
+              <th>Qué se verifica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mercados y búsqueda</td>
+              <td class="num">8</td>
+              <td>
+                El panel de instrumentos, la ficha de cada uno, el retorno
+                diario y la búsqueda por ticker. Es la información sobre la que
+                el usuario decide.
+              </td>
+            </tr>
+            <tr>
+              <td>Armado y validación de la orden</td>
+              <td class="num">11</td>
+              <td>
+                El ticket antes de enviar: lado, tipo, cantidad en acciones o en
+                pesos, conversión y lo que la app rechaza por sí misma.
+              </td>
+            </tr>
+            <tr>
+              <td>Ejecución y ciclo de la orden</td>
+              <td class="num">16</td>
+              <td>
+                Ejecución a mercado, órdenes límite, reserva y liberación de
+                saldo, rechazos por fondos insuficientes, doble envío e
+                historial.
+              </td>
+            </tr>
+            <tr>
+              <td>Portafolio y posiciones</td>
+              <td class="num">8</td>
+              <td>
+                Efectivo, valor, costo, resultado y detalle de cada tenencia,
+                derivados de las órdenes ejecutadas.
+              </td>
+            </tr>
+            <tr>
+              <td>Cuenta y comportamiento transversal</td>
+              <td class="num">8</td>
+              <td>
+                Estado inicial, reinicio, persistencia entre pestañas, estados
+                de error y carga, formato argentino de importes y textos.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>
+          <strong>Plataformas:</strong> iOS 26.5 (simulador de iPhone 17 Pro) y
+          Android 16 / API 36 (emulador de Pixel 8), con el mismo binario de
+          release por plataforma.
+        </li>
+        <li>
+          <strong>API:</strong> instrumentos, órdenes, portafolio y aislamiento
+          por cuenta, con validación de contrato. La línea base es el nivel de
+          defectos <code>off</code>; los niveles <code>easy</code>,
+          <code>medium</code> y <code>hard</code> se corren con la misma suite y
+          sus fallos son hallazgos.
+        </li>
+        <li>
+          <strong>Regla de lectura:</strong> en <code>off</code> todo lo que
+          falla es un defecto real de la app o del servicio, no uno inyectado.
+        </li>
+      </ul>
+
+      <h3>3.2 Fuera de alcance, y por qué</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Queda afuera</th>
+              <th>Por qué</th>
+              <th>Qué se hizo en cambio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pruebas de seguridad y autenticación</td>
+              <td>
+                La app no tiene login: identifica al usuario con el header
+                <code>X-Candidate-Id</code>, que no es un mecanismo de
+                autenticación. Un pentest no es el objeto del challenge.
+              </td>
+              <td>
+                Se verifica el aislamiento entre cuentas (COCOS-35), que es lo
+                que sí puede fallar.
+              </td>
+            </tr>
+            <tr>
+              <td>Rendimiento y carga</td>
+              <td>
+                El servicio es una API dummy compartida; medir tiempos o
+                capacidad contra ella no dice nada del producto.
+              </td>
+              <td>Nada. Se anota como límite.</td>
+            </tr>
+            <tr>
+              <td>Accesibilidad completa</td>
+              <td>Auditarla exige otro alcance y herramientas propias.</td>
+              <td>
+                Se reportó el hallazgo puntual que apareció al automatizar: el
+                ticket era inoperable con VoiceOver en iOS (defecto #46), y se
+                corrigió con una línea.
+              </td>
+            </tr>
+            <tr>
+              <td>Regresión visual por píxeles</td>
+              <td>
+                Appium valida jerarquía de vistas, no píxeles. Una herramienta
+                de comparación de capturas era otro costo para cinco casos.
+              </td>
+              <td>
+                Cinco casos <code>visual</code> ejecutados a mano en las dos
+                plataformas.
+              </td>
+            </tr>
+            <tr>
+              <td>Corte de red (COCOS-14, 33, 38)</td>
+              <td>
+                En Android se puede con <code>adb shell svc wifi disable</code>;
+                el simulador de iOS no tiene equivalente. Sin paridad entre
+                plataformas, no entran a la suite.
+              </td>
+              <td>Ejecución manual en Android. En iOS quedaron bloqueados.</td>
+            </tr>
+            <tr>
+              <td>Doble reserva de acciones (COCOS-45)</td>
+              <td>
+                Depende de que una orden límite siga pendiente, y el servicio la
+                resuelve al leer la cuenta, con un factor aleatorio.
+              </td>
+              <td>
+                Queda manual. Es candidato a un test de API sin lecturas
+                intermedias.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Dispositivos físicos, otras versiones de sistema, tabletas
+              </td>
+              <td>
+                Un simulador o emulador por plataforma alcanza para el alcance
+                funcional; el resto multiplicaría el costo sin cambiar las
+                conclusiones.
+              </td>
+              <td>
+                Se anota como límite. Una prueba en horizontal en Android
+                destapó el defecto #3.
+              </td>
+            </tr>
+            <tr>
+              <td>Lógica interna del backend</td>
+              <td>Se prueba como caja negra a través de su contrato.</td>
+              <td>Suite de API con validación de esquema.</td>
+            </tr>
+            <tr>
+              <td><code>POST /reset</code> desde la suite</td>
+              <td>La consigna lo prohíbe para automatizar.</td>
+              <td>
+                Tenant por build y aserciones por delta (7.3). El botón
+                «Reiniciar» de la propia app sí se prueba por UI (COCOS-13 y
+                50).
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="estrategia">4 · Estrategia por niveles</h2>
+      <p class="h2sub">
+        Cada cosa se prueba en el nivel más barato que la puede detectar.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nivel</th>
+              <th>Herramienta</th>
+              <th>Cantidad</th>
+              <th>Qué cubre y por qué a este nivel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Unitario</td>
+              <td>Bun test</td>
+              <td class="num">43 tests, 11 archivos</td>
+              <td>
+                Lógica pura de la app: formateadores y cálculos. Es lo que
+                justifica que el retorno diario (R9) sea un riesgo Bajo.
+              </td>
+            </tr>
+            <tr>
+              <td>Contrato y API</td>
+              <td>Playwright Test (solo el cliente HTTP), zod, Allure</td>
+              <td class="num">8 casos</td>
+              <td>
+                El núcleo determinístico: reservas, validación de órdenes,
+                ejecución a mercado, portafolio derivado y aislamiento. Corre
+                sin dispositivo, en segundos, y cada respuesta se valida contra
+                un esquema.
+              </td>
+            </tr>
+            <tr>
+              <td>E2E de UI</td>
+              <td>Appium + WebdriverIO + Mocha</td>
+              <td class="num">34 casos</td>
+              <td>
+                Lo que solo la UI puede romper: que el usuario vea el dato
+                correcto, pueda operar y llegue a cada pantalla. Un mismo test
+                corre en iOS y Android.
+              </td>
+            </tr>
+            <tr>
+              <td>Exploratorio manual</td>
+              <td>Qase, dos corridas de 50 casos</td>
+              <td class="num">9 casos sin automatizar</td>
+              <td>
+                Lo visual, lo que exige cortar la red y el descubrimiento
+                inicial: las dos pasadas manuales fueron las que produjeron los
+                hallazgos.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label">Criterio</span>
+        <p>
+          El núcleo de riesgo se prueba
+          <strong>preferentemente a nivel API</strong>, porque ahí es
+          determinístico y barato. La UI se reserva para verificar que lo que el
+          servicio hace llegue bien al usuario. Por eso el caso de la reserva de
+          saldo tiene dos versiones: una por API, que afirma el servicio, y otra
+          por UI, que afirma lo que se ve.
+        </p>
+      </div>
+
+      <h2 id="riesgo">5 · Priorización por riesgo</h2>
+      <p class="h2sub">
+        Probabilidad por impacto, con foco en qué pierde el usuario si falla. La
+        matriz completa y su justificación están en
+        <a href="producto-y-qa.html#riesgo">producto-y-qa.html</a>; acá se la
+        cruza con lo que efectivamente se cubrió.
+      </p>
+
+      <p>
+        La cobertura se dimensiona con una regla:
+        <strong>5 casos por riesgo Alto, 3 por Medio y 1 por Bajo</strong>. Cada
+        caso lleva la etiqueta del riesgo que cubre, así que el cruce se puede
+        verificar en Qase filtrando por etiqueta.
+      </p>
+
+      <div class="tablewrap dense">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Área</th>
+              <th>Qué puede fallar</th>
+              <th>Impacto</th>
+              <th>Riesgo</th>
+              <th>Objetivo</th>
+              <th>Casos</th>
+              <th>Automatizados</th>
+              <th>Sin automatizar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="riesgos">R1</td>
+              <td>Envío de órdenes a mercado</td>
+              <td>Ejecuta cantidad, precio o lado distinto al confirmado</td>
+              <td>Crítico — pérdida de dinero</td>
+              <td><span class="chip chip--bad">Alto</span></td>
+              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num">5</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R2</td>
+              <td>Derivación del portafolio</td>
+              <td>Efectivo o tenencias no reflejan las órdenes ejecutadas</td>
+              <td>Crítico — se opera sobre datos falsos</td>
+              <td><span class="chip chip--bad">Alto</span></td>
+              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num">5</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R3</td>
+              <td>Reservas de saldo</td>
+              <td>Permite gastar o vender dos veces lo mismo</td>
+              <td>Crítico</td>
+              <td><span class="chip chip--bad">Alto</span></td>
+              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">7</span></td>
+              <td class="num">6</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-45">45</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R15</td>
+              <td>Doble envío de órdenes</td>
+              <td>
+                Un toque repetido o un reintento crea dos órdenes en vez de una
+              </td>
+              <td>Crítico — pérdida de dinero</td>
+              <td><span class="chip chip--bad">Alto</span></td>
+              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num">4</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-38">38</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R5</td>
+              <td>Validación del ticket</td>
+              <td>Deja pasar 0, negativos o decimales al backend</td>
+              <td>Alto</td>
+              <td><span class="chip chip--bad">Alto</span></td>
+              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num">5</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R6</td>
+              <td>Resolución de órdenes límite</td>
+              <td>La reserva no se libera al rechazar ⇒ efectivo bloqueado</td>
+              <td>Alto</td>
+              <td><span class="chip chip--bad">Alto</span></td>
+              <td class="num">5</td>
+              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num">4</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-45">45</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R4</td>
+              <td>Conversión pesos → acciones</td>
+              <td>Redondeo mal aplicado ⇒ orden por monto mayor al deseado</td>
+              <td>Alto</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">3</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R7</td>
+              <td>Cálculo de ganancia y rendimiento</td>
+              <td>Signo o base de cálculo equivocados</td>
+              <td>Alto</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">3</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R10</td>
+              <td>Reset de cuenta</td>
+              <td>Se dispara sin confirmar o no limpia todo</td>
+              <td>Alto</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">3</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R14</td>
+              <td>Formato argentino</td>
+              <td>Monto mal interpretado por el separador decimal</td>
+              <td>Alto</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">2</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-33">33</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R16</td>
+              <td>Instrumentos no operables</td>
+              <td>Se puede comprar ARS como si fuera una acción</td>
+              <td>Alto</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">3</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R8</td>
+              <td>Historial de órdenes</td>
+              <td>Órdenes faltantes, duplicadas, mal ordenadas o en N/D</td>
+              <td>Medio</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">2</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-26">26</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R11</td>
+              <td>Navegación a detalle de posición</td>
+              <td>El id por índice apunta a otra posición</td>
+              <td>Medio</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">4</span></td>
+              <td class="num">4</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R12</td>
+              <td>Búsqueda</td>
+              <td>No encuentra un ticker existente</td>
+              <td>Medio</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">4</span></td>
+              <td class="num">4</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="riesgos">R13</td>
+              <td>Estados de error y carga</td>
+              <td>Pantalla en blanco o spinner infinito ante fallo de red</td>
+              <td>Medio</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">3</span></td>
+              <td class="num">1</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-14">14</a>,
+                <a href="https://app.qase.io/case/COCOS-38">38</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R17</td>
+              <td>Integridad visual y de presentación</td>
+              <td>Controles tapados, texto superpuesto o recortado</td>
+              <td>Medio</td>
+              <td><span class="chip chip--warn">Medio</span></td>
+              <td class="num">3</td>
+              <td class="num"><span class="chip chip--ok">5</span></td>
+              <td class="num">0</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-16">16</a>,
+                <a href="https://app.qase.io/case/COCOS-19">19</a>,
+                <a href="https://app.qase.io/case/COCOS-23">23</a>,
+                <a href="https://app.qase.io/case/COCOS-26">26</a>,
+                <a href="https://app.qase.io/case/COCOS-31">31</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="riesgos">R9</td>
+              <td>Retorno diario</td>
+              <td>Signo o valor equivocados ⇒ decisión de compra errónea</td>
+              <td>Medio</td>
+              <td><span class="chip chip--neutral">Bajo</span></td>
+              <td class="num">1</td>
+              <td class="num"><span class="chip chip--ok">1</span></td>
+              <td class="num">1</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Qué dice la tabla</h3>
+      <ul>
+        <li>
+          <strong>Los 17 riesgos cumplen el objetivo mínimo.</strong> Un caso
+          puede cubrir más de un riesgo, por eso la suma de la columna no da 51.
+        </li>
+        <li>
+          <strong>R3, R11, R12 y R17 superan el objetivo</strong> (7, 4, 4 y 5
+          casos). En R17 son los cinco casos visuales.
+        </li>
+        <li>
+          <strong>Los huecos de automatización son deliberados.</strong> R17
+          (visual) no tiene ningún caso automatizado y R13 (errores y carga)
+          tiene uno de tres, porque cortar la red y comparar píxeles quedaron
+          fuera de alcance (3.2). R3, R6, R8, R14 y R15 tienen un caso manual
+          cada uno.
+        </li>
+        <li>
+          <strong>Cambios respecto de la primera versión de la matriz:</strong>
+          R5 subió a Alto porque el hallazgo O9 se verificó en la API; R4 bajó a
+          Medio porque la conversión se comprobó correcta de punta a punta; R12
+          subió a Medio por el hallazgo O3; R9 bajó a Bajo porque es cálculo
+          puro cubierto por los tests unitarios; se agregaron R15, R16 y R17.
+        </li>
+      </ul>
+
+      <h2 id="trazabilidad">6 · Trazabilidad de los 51 casos</h2>
+      <p class="h2sub">
+        Un caso por fila: qué riesgo cubre, cómo se ejecutó y qué resultó en
+        cada corrida. Los pasos de cada caso viven solo en Qase; ver
+        <a href="qase.html">qase.html</a>.
+      </p>
+
+      <div class="legend">
+        <span><span class="ok">✓</span> pasó</span>
+        <span
+          ><span class="ko">✗</span> falló: destapó un defecto (corridas
+          manuales)</span
+        >
+        <span
+          ><span class="rp">▲</span> rojo a propósito: la suite documenta un
+          defecto</span
+        >
+        <span><span class="bl">⊘</span> bloqueado</span>
+        <span><span class="na">?</span> sin re-verificar</span>
+        <span><span class="na">—</span> no aplica</span>
+      </div>
+
+      <div class="tablewrap dense">
+        <table>
+          <thead>
+            <tr>
+              <th>Caso</th>
+              <th>Qué verifica</th>
+              <th>Riesgo</th>
+              <th>Prioridad</th>
+              <th>Nivel</th>
+              <th>Manual iOS</th>
+              <th>Manual Android</th>
+              <th>Appium iOS</th>
+              <th>Appium Android</th>
+              <th>API</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="sep">
+              <td colspan="10">
+                <strong>Mercados y búsqueda</strong>
+                <span class="count">8 casos</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-1">COCOS-1</a>
+              </td>
+              <td>Buscar un instrumento por ticker muestra el resultado</td>
+              <td class="riesgos">R12</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-2">COCOS-2</a>
+              </td>
+              <td>
+                El panel muestra el precio y la variación del día de cada
+                instrumento
+              </td>
+              <td class="riesgos">R9</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-3">COCOS-3</a>
+              </td>
+              <td>
+                Abrir un instrumento desde el panel muestra su ficha completa
+              </td>
+              <td class="riesgos">R11</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-17">COCOS-17</a>
+              </td>
+              <td>
+                Tocar una sugerencia de &quot;Más movidos&quot; completa la
+                búsqueda
+              </td>
+              <td class="riesgos">R12</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-18">COCOS-18</a>
+              </td>
+              <td>
+                Buscar por el nombre de la empresa encuentra el instrumento
+                <span class="hall">O3</span>
+              </td>
+              <td class="riesgos">R12</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-19">COCOS-19</a>
+              </td>
+              <td>
+                El panel de instrumentos se ve correcto en toda la pantalla
+                <span class="hall">O13</span>
+              </td>
+              <td class="riesgos">R17</td>
+              <td>Media</td>
+              <td><span class="chip chip--warn">visual</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-20">COCOS-20</a>
+              </td>
+              <td>
+                El servicio de instrumentos devuelve el catálogo completo y bien
+                tipado
+              </td>
+              <td class="riesgos">R12</td>
+              <td>Media</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-43">COCOS-43</a>
+              </td>
+              <td>
+                Los instrumentos que no son acciones se distinguen en los
+                listados
+              </td>
+              <td class="riesgos">R16</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr class="sep">
+              <td colspan="10">
+                <strong>Armado y validación de la orden</strong>
+                <span class="count">11 casos</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-4">COCOS-4</a>
+              </td>
+              <td>
+                El panel de orden abre listo para comprar a precio de mercado
+              </td>
+              <td class="riesgos">R5</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-5">COCOS-5</a>
+              </td>
+              <td>
+                Comprar indicando un importe en pesos calcula cuántas acciones
+                enteras entran
+              </td>
+              <td class="riesgos">R4</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-6">COCOS-6</a>
+              </td>
+              <td>No se puede enviar una orden sin una cantidad válida</td>
+              <td class="riesgos">R5</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-21">COCOS-21</a>
+              </td>
+              <td>
+                El importe estimado de una orden límite usa el precio límite
+                ingresado
+              </td>
+              <td class="riesgos">R4, R5</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-22">COCOS-22</a>
+              </td>
+              <td>
+                El panel de orden abre sobre el instrumento correcto desde los
+                tres accesos
+              </td>
+              <td class="riesgos">R1, R11</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ko">✗</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-23">COCOS-23</a>
+              </td>
+              <td>
+                Con el teclado abierto, los campos y el botón de enviar siguen
+                visibles
+              </td>
+              <td class="riesgos">R17</td>
+              <td>Media</td>
+              <td><span class="chip chip--warn">visual</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-24">COCOS-24</a>
+              </td>
+              <td>
+                El servicio de órdenes rechaza los cuerpos inválidos con el
+                mensaje correcto
+              </td>
+              <td class="riesgos">R5</td>
+              <td>Alta</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-41">COCOS-41</a>
+              </td>
+              <td>
+                La moneda ARS no se ofrece como instrumento comprable
+                <span class="hall">O8</span>
+              </td>
+              <td class="riesgos">R16</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-42">COCOS-42</a>
+              </td>
+              <td>
+                El servicio rechaza órdenes sobre instrumentos que no son
+                acciones <span class="hall">O8</span>
+              </td>
+              <td class="riesgos">R16</td>
+              <td>Media</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-47">COCOS-47</a>
+              </td>
+              <td>Un precio límite de cero o negativo no se puede enviar</td>
+              <td class="riesgos">R5</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-49">COCOS-49</a>
+              </td>
+              <td>
+                Un importe en pesos con coma decimal se interpreta correctamente
+              </td>
+              <td class="riesgos">R4, R14</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr class="sep">
+              <td colspan="10">
+                <strong>Ejecución y ciclo de la orden</strong>
+                <span class="count">16 casos</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-7">COCOS-7</a>
+              </td>
+              <td>
+                Una compra a mercado se ejecuta al precio vigente y descuenta el
+                importe del efectivo
+              </td>
+              <td class="riesgos">R1, R2</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-8">COCOS-8</a>
+              </td>
+              <td>
+                Una orden límite por debajo del precio de mercado nunca se
+                ejecuta
+              </td>
+              <td class="riesgos">R3, R6</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-9">COCOS-9</a>
+              </td>
+              <td>
+                No se puede comprar por más dinero del disponible
+                <span class="hall">O7</span>
+              </td>
+              <td class="riesgos">R3</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-10">COCOS-10</a>
+              </td>
+              <td>
+                La orden recién enviada aparece primera en el historial con sus
+                datos
+              </td>
+              <td class="riesgos">R8</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-25">COCOS-25</a>
+              </td>
+              <td>
+                Una venta a mercado reduce la tenencia y aumenta el efectivo
+              </td>
+              <td class="riesgos">R1, R2</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-26">COCOS-26</a>
+              </td>
+              <td>
+                El historial muestra cada orden con su estado y su ticker
+                correctos <span class="hall">O6</span>
+              </td>
+              <td class="riesgos">R8, R17</td>
+              <td>Media</td>
+              <td><span class="chip chip--warn">visual</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-27">COCOS-27</a>
+              </td>
+              <td>
+                El servicio ejecuta las órdenes a mercado al instante y devuelve
+                el precio real
+              </td>
+              <td class="riesgos">R1, R6</td>
+              <td>Alta</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-36">COCOS-36</a>
+              </td>
+              <td>
+                Tocar &quot;Enviar orden&quot; dos veces seguidas crea una sola
+                orden
+              </td>
+              <td class="riesgos">R15</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-37">COCOS-37</a>
+              </td>
+              <td>Después de enviar, el panel no arrastra la orden anterior</td>
+              <td class="riesgos">R15</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-38">COCOS-38</a>
+              </td>
+              <td>Reintentar tras un fallo de conexión no duplica la orden</td>
+              <td class="riesgos">R13, R15</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r bl">⊘</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-39">COCOS-39</a>
+              </td>
+              <td>
+                El servicio no distingue dos envíos idénticos consecutivos
+              </td>
+              <td class="riesgos">R15</td>
+              <td>Alta</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-40">COCOS-40</a>
+              </td>
+              <td>
+                Salir del panel y volver a abrirlo no reenvía la última orden
+              </td>
+              <td class="riesgos">R15</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-44">COCOS-44</a>
+              </td>
+              <td>
+                El precio confirmado en el panel es el precio al que se ejecuta
+              </td>
+              <td class="riesgos">R1</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-45">COCOS-45</a>
+              </td>
+              <td>
+                Dos ventas límite pendientes no pueden comprometer las mismas
+                acciones
+              </td>
+              <td class="riesgos">R3, R6</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r bl">⊘</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-48">COCOS-48</a>
+              </td>
+              <td>
+                Con más de nueve órdenes el historial mantiene el orden
+                cronológico <span class="hall">O5</span>
+              </td>
+              <td class="riesgos">R8</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-51">COCOS-51</a>
+              </td>
+              <td>
+                El servicio rechaza las órdenes sin efectivo o sin tenencias
+                suficientes y no mueve nada
+              </td>
+              <td class="riesgos">R3</td>
+              <td>Alta</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr class="sep">
+              <td colspan="10">
+                <strong>Portafolio y posiciones</strong>
+                <span class="count">8 casos</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-11">COCOS-11</a>
+              </td>
+              <td>
+                El efectivo y las posiciones reflejan las órdenes ya ejecutadas
+              </td>
+              <td class="riesgos">R2</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-12">COCOS-12</a>
+              </td>
+              <td>
+                El detalle de una posición muestra los precios de referencia y
+                el resultado
+              </td>
+              <td class="riesgos">R7, R11</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-28">COCOS-28</a>
+              </td>
+              <td>
+                Una venta parcial reduce la cantidad y mantiene el precio
+                promedio de compra
+              </td>
+              <td class="riesgos">R2, R7</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td
+                class="r na"
+                title="Sin re-verificar tras los arreglos de esta ronda"
+              >
+                ?
+              </td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-29">COCOS-29</a>
+              </td>
+              <td>
+                Una orden límite pendiente descuenta el efectivo sin crear
+                ninguna posición
+              </td>
+              <td class="riesgos">R3, R6</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-30">COCOS-30</a>
+              </td>
+              <td>La ganancia y el rendimiento llevan el signo correcto</td>
+              <td class="riesgos">R7</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-31">COCOS-31</a>
+              </td>
+              <td>
+                El resumen del portafolio no induce a error sobre cuánto tiene
+                el usuario <span class="hall">O2</span>
+              </td>
+              <td class="riesgos">R17</td>
+              <td>Media</td>
+              <td><span class="chip chip--warn">visual</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-32">COCOS-32</a>
+              </td>
+              <td>
+                El servicio de portafolio cuadra con las órdenes ejecutadas
+              </td>
+              <td class="riesgos">R2, R3</td>
+              <td>Alta</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-46">COCOS-46</a>
+              </td>
+              <td>
+                Una venta límite pendiente reduce la cantidad visible de la
+                posición
+              </td>
+              <td class="riesgos">R6</td>
+              <td>Alta</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r bl">⊘</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr class="sep">
+              <td colspan="10">
+                <strong>Cuenta y comportamiento transversal</strong>
+                <span class="count">8 casos</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-13">COCOS-13</a>
+              </td>
+              <td>
+                Reiniciar la cuenta deja el saldo inicial, sin posiciones ni
+                historial
+              </td>
+              <td class="riesgos">R10</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-14">COCOS-14</a>
+              </td>
+              <td>Si el mercado no carga, la pantalla ofrece reintentar</td>
+              <td class="riesgos">R13</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r bl">⊘</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-15">COCOS-15</a>
+              </td>
+              <td>
+                Los importes y porcentajes se muestran en formato argentino
+                <span class="hall">O4</span>
+              </td>
+              <td class="riesgos">R14</td>
+              <td>Baja</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r rp" title="Rojo a propósito: documenta un defecto">
+                ▲
+              </td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-16">COCOS-16</a>
+              </td>
+              <td>
+                El botón para operar una posición es alcanzable al final de la
+                pantalla <span class="hall">O12</span>
+              </td>
+              <td class="riesgos">R17</td>
+              <td>Media</td>
+              <td><span class="chip chip--warn">visual</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-33">COCOS-33</a>
+              </td>
+              <td>
+                Los mensajes de error se muestran en español
+                <span class="hall">O4</span>
+              </td>
+              <td class="riesgos">R14</td>
+              <td>Baja</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ko">✗</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-34">COCOS-34</a>
+              </td>
+              <td>Cambiar entre las pestañas conserva el estado de cada una</td>
+              <td class="riesgos">R11, R13</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ko">✗</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-35">COCOS-35</a>
+              </td>
+              <td>El servicio aísla cada cuenta por su X-Candidate-Id</td>
+              <td class="riesgos">R10</td>
+              <td>Media</td>
+              <td><span class="chip chip--ok">api</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+              <td class="r na">—</td>
+              <td class="r ok">✓</td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
+              </td>
+              <td>
+                Reiniciar la cuenta también borra las órdenes límite pendientes
+              </td>
+              <td class="riesgos">R3, R10</td>
+              <td>Media</td>
+              <td><span class="chip chip--neutral">e2e</span></td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r ok">✓</td>
+              <td class="r na">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">Cómo leer las columnas</span>
+        <p>
+          <strong>Manual iOS y Manual Android</strong> son las dos corridas
+          manuales de Qase (50 casos cada una; COCOS-51 se agregó después). Un ✗
+          ahí es un caso que encontró un defecto, no una falla de la prueba.
+          <strong>Appium</strong> y <strong>API</strong> muestran lo que hoy
+          devuelven las suites. En iOS, los ocho casos originales (COCOS-5, 6,
+          7, 10, 25, 28, 47 y 49) dieron 4 de 8 en su corrida, y no se volvieron
+          a correr tras los arreglos de esta ronda; se marcan con «?». COCOS-42
+          corre en la suite de API como test de defecto (<code>@defecto</code>)
+          y falla a propósito; COCOS-24 tiene además un test de defecto propio
+          que queda fuera de la corrida base.
+        </p>
+      </div>
+
+      <h3>Dónde la automatización cubre menos que el caso</h3>
+      <p>
+        Un ✓ en Appium significa que el test pasa, no que el caso completo pase
+        a mano. En cuatro casos la suite verifica un tramo:
+      </p>
+      <ul>
+        <li>
+          <strong>COCOS-43:</strong> la suite comprueba la etiqueta ACCIONES o
+          MONEDA en los resultados de Buscar. El paso del listado de Mercados,
+          que no muestra el tipo (defecto #20), sigue fallando a mano.
+        </li>
+        <li>
+          <strong>COCOS-30:</strong> el signo de la ganancia solo se verifica en
+          cero, porque el servicio no mueve precios en <code>off</code>; el
+          formato del rendimiento es el rojo a propósito.
+        </li>
+        <li>
+          <strong>COCOS-22 en Android:</strong> el acceso desde la ficha de la
+          posición cae al de Mercados, porque el botón «Operar esta posición»
+          queda tapado por la barra (defecto #2). El flujo lo deja escrito en el
+          log y en el resultado.
+        </li>
+        <li>
+          <strong>COCOS-8, 29 y 46:</strong> el paso intermedio acepta
+          «reservado o ya liberado», por lo dicho en 7.4; los pasos finales son
+          exactos.
+        </li>
+      </ul>
+
+      <h2 id="decisiones">7 · Decisiones de automatización</h2>
+      <p class="h2sub">
+        El criterio detrás de las herramientas y de cómo se escriben los tests.
+      </p>
+
+      <h3>7.1 Por qué Appium</h3>
+      <ul>
+        <li>
+          Es el único de los candidatos (frente a Maestro y Detox) que habla W3C
+          WebDriver contra iOS y Android, así que
+          <strong>un mismo test corre en las dos plataformas</strong> y el
+          modelo de páginas es compartido de verdad.
+        </li>
+        <li>
+          Los casos exigen aritmética dentro del test: verificar que
+          <code>floor(monto / precio)</code> nunca redondee hacia arriba, y
+          comparar importes en formato <code>es-AR</code> por delta. Maestro es
+          YAML declarativo y no puede parsear ese texto ni calcular el esperado.
+        </li>
+        <li>
+          Permite mezclar UI y HTTP en el mismo test, que es lo que hace viable
+          el aislamiento por tenant: se siembra el estado por API y se verifica
+          por UI.
+        </li>
+        <li>Tiene reporter oficial de Qase, además de Allure y JUnit.</li>
+      </ul>
+
+      <h3>7.2 Cómo se evita la flakiness</h3>
+      <ul>
+        <li>
+          <strong>Serial y sin reintentos.</strong> Los specs comparten tenant,
+          así que paralelizar haría que los deltas de un worker midan los
+          movimientos de otro. Reintentar un spec que ya movió plata mediría
+          sobre una cuenta distinta a la fotografiada.
+        </li>
+        <li>
+          <strong>Aserciones por delta,</strong> nunca contra el millón inicial,
+          y cada spec <strong>se autoabastece</strong>: la posición que necesita
+          la siembra por API.
+        </li>
+        <li>
+          <strong>Esperas por condición:</strong> se reintenta hasta que la
+          aserción pase, en vez de dormir a ciegas. Las pausas cortas que quedan
+          son para que una animación termine de asentarse.
+        </li>
+        <li>
+          <strong>Binarios de release, no de debug:</strong> embeben el bundle
+          (la suite no depende de Metro) y no tienen la capa de avisos que en
+          debug tapa la barra de pestañas y se traga los toques.
+        </li>
+        <li><strong>Órdenes límite: invariantes, no estados</strong> (7.4).</li>
+      </ul>
+
+      <h3 id="sin-reset">7.3 Sin <code>POST /reset</code></h3>
+      <div class="note">
+        <span class="note__label">Requisito explícito del challenge</span>
+        <p>
+          Documentar cómo montar la automatización en un entorno donde
+          <code>POST /reset</code> no sea posible. Es la situación de esta
+          suite: la consigna lo prohíbe.
+        </p>
+      </div>
+      <p>
+        El identificador de cuenta (<code>EXPO_PUBLIC_CANDIDATE_ID</code>) se
+        inlinea al empaquetar, así que el tenant contra el que habla la app
+        queda congelado en el binario y no puede variar por test. De ahí sale el
+        diseño:
+      </p>
+      <ol>
+        <li>
+          El script de build genera un identificador por build, lo hornea,
+          <strong>verifica con grep que haya quedado dentro del bundle</strong>
+          y lo escribe en un archivo de información de build.
+        </li>
+        <li>
+          El proceso de test lee ese archivo: su cliente HTTP apunta al mismo
+          tenant que la app. Nunca se recalcula del lado del test.
+        </li>
+        <li>Las aserciones son por delta.</li>
+        <li>Cada spec se autoabastece por <code>POST /orders</code>.</li>
+        <li>Un worker y sin reintentos, por lo dicho en 7.2.</li>
+      </ol>
+      <p>
+        Para forzar una cuenta virgen basta recompilar: cada build nuevo es una
+        cuenta nueva. La suite de API, que no depende de un binario, genera un
+        identificador nuevo <strong>por test</strong>. Ninguna de las dos
+        necesita limpiar nada, y las dos funcionan igual donde
+        <code>/reset</code> no exista. El botón «Reiniciar cuenta» de la propia
+        app se prueba por UI (COCOS-13 y 50) y ese spec corre siempre último.
+      </p>
+
+      <h3>7.4 Órdenes límite no determinísticas</h3>
+      <p>
+        El servicio resuelve las órdenes límite al <strong>leer</strong> la
+        cuenta y con un factor aleatorio, así que un estado puntual no se puede
+        afirmar. Lo que sí se mantiene, y se midió, es un invariante: una orden
+        <strong>no ejecutable</strong> (compra por debajo del mercado, venta por
+        encima) nunca se ejecuta (0 de 40 observadas) y termina rechazada. Los
+        tests se apoyan en eso:
+      </p>
+      <ul>
+        <li>
+          Los pasos intermedios afirman
+          <strong>pertenencia a un conjunto</strong>: el efectivo o las acciones
+          están reservados <em>o</em> ya liberados, y se deja constancia de cuál
+          se vio.
+        </li>
+        <li>
+          Los pasos finales afirman el estado terminal: rechazada, nunca
+          ejecutada, y efectivo o cantidad exactamente iguales a los iniciales.
+        </li>
+        <li>
+          Para llegar al estado final se sondea la API (unos 300 ms por lectura,
+          hasta 40), que es lo mismo que refrescar la pantalla sin pagar unos 5
+          s por refresco.
+        </li>
+        <li>
+          COCOS-48 (orden del historial) no depende de esto: son doce órdenes a
+          mercado.
+        </li>
+      </ul>
+
+      <h3>7.5 Rojos a propósito</h3>
+      <p>
+        Cuatro casos de UI (COCOS-15, 18, 30 y 41) y el test de defecto de API
+        de COCOS-42 <strong>fallan a propósito</strong>: el comportamiento
+        correcto todavía no existe en la app. No se silencian ni se marcan como
+        fallo esperado, porque un test en rojo que documenta un defecto es la
+        forma más honesta de reportarlo, y se vuelve verde solo cuando el
+        defecto se corrige. Se listan en el README para que nadie los confunda
+        con una regresión de la suite.
+      </p>
+
+      <h3>7.6 Lo que enseñaron las plataformas</h3>
+      <ul>
+        <li>
+          En iOS 26 la barra de pestañas se colapsa a dos círculos al scrollear,
+          y un toque por geometría cae sobre una fila. La suite expande la barra
+          tocando el círculo de la pestaña activa, como haría una persona.
+        </li>
+        <li>
+          El sheet del ticket era opaco para VoiceOver en iOS (defecto #46), y
+          eso bloqueaba toda la automatización en iOS. Se resolvió con una línea
+          en <code>ModalContext.tsx</code>:
+          <strong>es la única modificación hecha al código de la app</strong>.
+        </li>
+        <li>
+          En la ficha de una posición, el scroll nativo de WebDriverAgent no
+          converge y el gráfico absorbe los gestos del centro; se scrollea desde
+          el margen.
+        </li>
+        <li>
+          En Android, cambiar de pestaña justo después de cerrar el ticket puede
+          caer sobre el fondo atenuado del sheet que se cierra; la suite
+          verifica la pestaña seleccionada y reintenta.
+        </li>
+      </ul>
+
+      <h3>7.7 Reportes e integración</h3>
+      <ul>
+        <li>
+          <strong>Reportes:</strong> Allure (HTML), JUnit y Qase. Cada test
+          declara su caso con <code>qase(id, …)</code> y cada paso del caso es
+          un paso del reporte. Al fallar se adjuntan una captura y el árbol de
+          accesibilidad.
+        </li>
+        <li>
+          <strong>Qase apagado por defecto</strong> en local; se enciende con
+          una variable y un token que va en un archivo ignorado por git.
+        </li>
+        <li>
+          <strong>CI:</strong> Android en cada push y iOS de noche y a pedido.
+          El workflow está escrito y revisado pero
+          <strong>todavía no corrió en GitHub</strong> (sección 12).
+        </li>
+      </ul>
+
+      <h2 id="entornos">8 · Entornos, datos y supuestos</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Elemento</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>iOS</td>
+              <td>Simulador de iPhone 17 Pro, iOS 26.5, Xcode 26.6</td>
+            </tr>
+            <tr>
+              <td>Android</td>
+              <td>Emulador de Pixel 8, Android 16 / API 36</td>
+            </tr>
+            <tr>
+              <td>App</td>
+              <td>
+                Expo SDK 56, binario de release por plataforma con el
+                identificador de cuenta horneado
+              </td>
+            </tr>
+            <tr>
+              <td>Automatización</td>
+              <td>
+                Appium 3.7, WebdriverIO 9.32, Mocha, TypeScript · Playwright
+                Test para la API
+              </td>
+            </tr>
+            <tr>
+              <td>Servicio</td>
+              <td>
+                <code>https://dummy-api-topaz.vercel.app</code>, con
+                <code>X-Candidate-Id</code> y
+                <code>X-Enable-Bugs</code> (<code>off</code>, <code>easy</code>,
+                <code>medium</code>, <code>hard</code>)
+              </td>
+            </tr>
+            <tr>
+              <td>Cuenta inicial</td>
+              <td>1.000.000 ARS, sin posiciones ni historial</td>
+            </tr>
+            <tr>
+              <td>Nivel de defectos</td>
+              <td>
+                <code>off</code> como línea base para todas las corridas
+                registradas
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Supuestos</h3>
+      <ul>
+        <li>
+          Con <code>X-Enable-Bugs: off</code> el servicio es el golden path:
+          cualquier fallo es real.
+        </li>
+        <li>
+          El servicio es compartido y ajeno: puede cambiar sin aviso. Por eso
+          los tests afirman relaciones (deltas, invariantes) y no valores
+          absolutos que dependan de él.
+        </li>
+        <li>
+          En el nivel <code>off</code> el servicio no mueve precios, así que el
+          precio promedio de compra siempre coincide con el último y la ganancia
+          real es siempre cero. El caso del signo de la ganancia (COCOS-30) se
+          acota a verificar el formato en cero; un signo positivo o negativo
+          real no se puede ejercitar contra este entorno.
+        </li>
+        <li>
+          Las órdenes límite se resuelven al leer la cuenta, con un factor
+          aleatorio.
+        </li>
+        <li>
+          Se permite modificar la app si hace falta para automatizarla,
+          documentando qué y por qué. Se modificó una línea.
+        </li>
+        <li>
+          Un identificador de cuenta por corrida; las cuentas no se limpian.
+        </li>
+      </ul>
+
+      <h2 id="criterios">9 · Criterios de entrada, salida y aprobación</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Se cumple cuando</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Entrada</td>
+              <td>
+                Hay un binario compilado con el identificador verificado dentro
+                del bundle, el dispositivo está booteado, el servicio responde
+                en <code>off</code> y las dependencias están instaladas.
+              </td>
+            </tr>
+            <tr>
+              <td>Un test está terminado</td>
+              <td>
+                Declara su caso de Qase, corre solo y en la suite completa, no
+                depende del estado que dejó otro, y pasa en las dos plataformas
+                o documenta por qué no.
+              </td>
+            </tr>
+            <tr>
+              <td>Salida de una corrida</td>
+              <td>
+                Todo verde salvo los rojos a propósito documentados. Un rojo
+                nuevo es una regresión hasta que se demuestre lo contrario.
+              </td>
+            </tr>
+            <tr>
+              <td>Sin flakiness</td>
+              <td>
+                Sin reintentos, sin esperas fijas y sin depender de un estado no
+                determinístico. Un test que pasa solo y falla en secuencia se
+                trata como defecto de la suite y se corrige.
+              </td>
+            </tr>
+            <tr>
+              <td>Calidad del repositorio</td>
+              <td>
+                Lint, formato y tipos limpios, y los tests unitarios en verde.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="resultados">10 · Ejecución y resultados</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Corrida</th>
+              <th>Fecha</th>
+              <th>Casos</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a href="https://app.qase.io/run/COCOS/dashboard/2"
+                  >Manual · iOS 26.5 · iPhone 17 Pro</a
+                ><br /><span class="muted">Qase, bugs=off</span>
+              </td>
+              <td class="num">20–21/09</td>
+              <td class="num">50</td>
+              <td>
+                <span class="chip chip--ok">32 pasaron</span>
+                <span class="chip chip--bad">14 fallaron</span>
+                <span class="chip chip--warn">4 bloqueados</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://app.qase.io/run/COCOS/dashboard/3"
+                  >Manual · Android 16 · Pixel 8</a
+                ><br /><span class="muted">Qase, bugs=off</span>
+              </td>
+              <td class="num">22/09</td>
+              <td class="num">50</td>
+              <td>
+                <span class="chip chip--ok">36 pasaron</span>
+                <span class="chip chip--bad">14 fallaron</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://app.qase.io/run/COCOS/dashboard/4"
+                  >Playwright API · nivel off</a
+                ><br /><span class="muted">Qase</span>
+              </td>
+              <td class="num">23/09</td>
+              <td class="num">7</td>
+              <td><span class="chip chip--ok">7 pasaron</span></td>
+            </tr>
+            <tr>
+              <td>
+                Appium · Android<br /><span class="muted"
+                  >Local, Qase apagado</span
+                >
+              </td>
+              <td class="num">23–24/09</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">30 verdes</span>
+                <span class="chip chip--warn">4 rojos a propósito</span>
+                (COCOS-15, 18, 30 y 41)
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Appium · iOS<br /><span class="muted"
+                  >Local, spec por spec</span
+                >
+              </td>
+              <td class="num">23–24/09</td>
+              <td class="num">26 + 8</td>
+              <td>
+                <span class="chip chip--ok">22 verdes</span>
+                <span class="chip chip--warn">4 rojos a propósito</span>, los
+                mismos que en Android. Los 8 casos originales dieron 4 de 8 en
+                su corrida y no se volvieron a correr.
+              </td>
+            </tr>
+            <tr>
+              <td>Tests unitarios<br /><span class="muted">Bun</span></td>
+              <td class="num">24/09</td>
+              <td class="num">43</td>
+              <td><span class="chip chip--ok">43 pasaron</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>
+          Los cuatro rojos a propósito son los mismos en las dos plataformas, y
+          cada uno remite a un defecto de Qase.
+        </li>
+        <li>
+          Las corridas de Appium se quedan en local a propósito: solo la de API
+          está publicada en Qase. Las de UI se reproducen con un comando y su
+          reporte de Allure.
+        </li>
+        <li>
+          Las corridas manuales de Qase cuentan 50 casos; COCOS-51 se agregó
+          después y solo lo corre la suite de API.
+        </li>
+      </ul>
+
+      <h2 id="defectos">11 · Hallazgos y defectos</h2>
+      <p class="h2sub">
+        19 defectos abiertos en Qase: 2 críticos, 9 mayores, 1 normal, 6 menores
+        y 1 trivial. Cada ficha documenta qué pasa, cómo reproducirlo o dónde se
+        notó, la plataforma y el impacto.
+      </p>
+
+      <div class="tablewrap dense">
+        <table>
+          <thead>
+            <tr>
+              <th>Defecto</th>
+              <th>Severidad</th>
+              <th>Qué pasa</th>
+              <th>Plataforma</th>
+              <th>Riesgo</th>
+              <th>Casos que lo destapan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">#19</td>
+              <td><span class="chip chip--bad">Crítica</span></td>
+              <td>
+                Los rechazos del servicio son silenciosos: la app no avisa
+                cuando la orden no se puede enviar
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">R13, R5</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-9">9</a>,
+                <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-33">33</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#46</td>
+              <td><span class="chip chip--bad">Crítica</span></td>
+              <td>
+                El ticket es inoperable con VoiceOver: el bottom sheet colapsa
+                todo su contenido en un elemento.
+                <strong>Corregido en el código</strong> (una prop en
+                <code>ModalContext.tsx</code>); en Qase sigue abierto
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">accesibilidad</td>
+              <td class="wrapnum"><span class="muted">—</span></td>
+            </tr>
+            <tr>
+              <td class="num">#1</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                Buscar por el nombre de la empresa no encuentra el instrumento
+                (el servicio solo coincide por ticker)
+              </td>
+              <td>iOS, Android, API</td>
+              <td class="riesgos">R12 · O3</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-18">18</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#2</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                La última fila de las listas y el botón «Operar esta posición»
+                quedan tapados por la barra de pestañas
+              </td>
+              <td>iOS, Android</td>
+              <td class="riesgos">R17 · O12</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-16">16</a>,
+                <a href="https://app.qase.io/case/COCOS-19">19</a>,
+                <a href="https://app.qase.io/case/COCOS-22">22</a>,
+                <a href="https://app.qase.io/case/COCOS-26">26</a>,
+                <a href="https://app.qase.io/case/COCOS-48">48</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#4</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                El «Valor total» no incluye el efectivo: una cuenta nueva
+                muestra $ 0,00 con un millón disponible
+              </td>
+              <td>iOS, Android</td>
+              <td class="riesgos">R7 · O2</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-11">11</a>,
+                <a href="https://app.qase.io/case/COCOS-31">31</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#20</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                La moneda ARS se puede comprar como si fuera una acción y la API
+                la ejecuta
+              </td>
+              <td>iOS, API</td>
+              <td class="riesgos">R16 · O8</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-41">41</a>,
+                <a href="https://app.qase.io/case/COCOS-42">42</a>,
+                <a href="https://app.qase.io/case/COCOS-43">43</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#21</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                La API coacciona cantidades («1e3» ⇒ 1000, true ⇒ 1) y acepta
+                precios límite ≤ 0
+              </td>
+              <td>API</td>
+              <td class="riesgos">R5 · O9</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-24">24</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#22</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                Con el teclado abierto el botón de enviar queda tapado y
+                deslizar dentro del ticket lo cierra perdiendo lo cargado
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">R17, R5</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-23">23</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#23</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                Con la lista scrolleada, los toques atraviesan la barra de
+                pestañas y abren el instrumento de abajo
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">R17, R11</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-34">34</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#43</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>Nunca se muestra el aviso de orden ejecutada</td>
+              <td>Android</td>
+              <td class="riesgos">R13, R1</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-7">7</a>,
+                <a href="https://app.qase.io/case/COCOS-8">8</a>,
+                <a href="https://app.qase.io/case/COCOS-10">10</a>,
+                <a href="https://app.qase.io/case/COCOS-44">44</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#45</td>
+              <td><span class="chip chip--warn">Mayor</span></td>
+              <td>
+                La posición desaparece del portafolio mientras una venta límite
+                reserva todas las acciones
+              </td>
+              <td>Android, API</td>
+              <td class="riesgos">R2, R6</td>
+              <td class="wrapnum"><span class="muted">ninguno</span></td>
+            </tr>
+            <tr>
+              <td class="num">#24</td>
+              <td><span class="chip chip--neutral">Normal</span></td>
+              <td>
+                El estado pendiente de una orden límite nunca es observable en
+                la app
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">R6 · O11</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-26">26</a>,
+                <a href="https://app.qase.io/case/COCOS-29">29</a>,
+                <a href="https://app.qase.io/case/COCOS-45">45</a>,
+                <a href="https://app.qase.io/case/COCOS-46">46</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#3</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                El contenido scrollea por debajo de la barra de estado sin fondo
+                opaco
+              </td>
+              <td>iOS, Android</td>
+              <td class="riesgos">R17 · O13</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-19">19</a>,
+                <a href="https://app.qase.io/case/COCOS-23">23</a>,
+                <a href="https://app.qase.io/case/COCOS-26">26</a>,
+                <a href="https://app.qase.io/case/COCOS-28">28</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#25</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                Los porcentajes usan punto decimal mientras los importes usan
+                coma
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">R14 · O4</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-15">15</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#26</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                La confirmación de la orden no dice a qué precio se ejecutó
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">UX</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-44">44</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#28</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                El gráfico de variación del día se dibuja en verde aunque la
+                variación sea negativa
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">UX</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-3">3</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#29</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                Al volver a Órdenes o Portafolio se ven datos viejos hasta
+                refrescar a mano
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">UX</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-34">34</a>,
+                <a href="https://app.qase.io/case/COCOS-50">50</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#44</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                El error de red llega al usuario sin traducir: «Network Error»
+              </td>
+              <td>Android</td>
+              <td class="riesgos">R14 · O4</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-14">14</a>,
+                <a href="https://app.qase.io/case/COCOS-15">15</a>,
+                <a href="https://app.qase.io/case/COCOS-33">33</a>,
+                <a href="https://app.qase.io/case/COCOS-38">38</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="num">#27</td>
+              <td><span class="chip chip--neutral">Trivial</span></td>
+              <td>
+                El estado vacío del portafolio le habla al usuario de la API
+              </td>
+              <td>iOS</td>
+              <td class="riesgos">UX</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-11">11</a>,
+                <a href="https://app.qase.io/case/COCOS-31">31</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul>
+        <li>
+          Los defectos de UX (#26 a #29) se anotaron como mejoras: no rompen un
+          flujo, pero degradan la confianza en una app financiera.
+        </li>
+        <li>
+          Los hallazgos más antiguos (O1 a O14) y su evidencia con capturas
+          están en
+          <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
+        </li>
+        <li>
+          El defecto #45 (la posición desaparece con una venta límite que
+          reserva todo) <strong>no lo destapó ningún caso</strong>: COCOS-46
+          cubre la reserva parcial. Conviene agregar un caso para ese borde.
+        </li>
+        <li>
+          Los defectos #2, #3 y #23 comparten causa raíz: superficies flotantes
+          sin fondo opaco ni área de toque protegida.
+        </li>
+      </ul>
+
+      <h2 id="pendientes">12 · Límites del plan y pendientes</h2>
+      <p class="h2sub">Lo que este plan no garantiza, dicho sin maquillaje.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Casos sin automatizar</th>
+              <th>Motivo</th>
+              <th>Cobertura alternativa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-45">45</a>
+              </td>
+              <td>
+                Doble reserva de acciones. Exige que la primera venta límite
+                siga pendiente cuando se envía la segunda, y la API resuelve las
+                límite al leer la cuenta, con un factor aleatorio: cualquier
+                lectura intermedia la deshace.
+              </td>
+              <td>
+                Cubrible a nivel API, sin lecturas entre las dos órdenes. Queda
+                como mejora.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-16">16</a>,
+                <a href="https://app.qase.io/case/COCOS-19">19</a>,
+                <a href="https://app.qase.io/case/COCOS-23">23</a>,
+                <a href="https://app.qase.io/case/COCOS-26">26</a>,
+                <a href="https://app.qase.io/case/COCOS-31">31</a>
+              </td>
+              <td>
+                Casos <code>visual</code>: superposiciones y recortes. Appium
+                valida la jerarquía de vistas, no píxeles.
+              </td>
+              <td>
+                Se ejecutaron a mano en las dos plataformas y destaparon los
+                defectos #2, #3, #4, #22 y #24.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-14">14</a>,
+                <a href="https://app.qase.io/case/COCOS-33">33</a>,
+                <a href="https://app.qase.io/case/COCOS-38">38</a>
+              </td>
+              <td>
+                Necesitan cortar la red. En Android se haría con
+                <code>adb shell svc wifi disable</code>, pero el simulador de
+                iOS no tiene equivalente. Sin paridad entre plataformas, no
+                entran.
+              </td>
+              <td>
+                Se ejecutaron a mano en Android; en iOS quedaron bloqueados.
+                Destaparon el defecto #44.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ul>
+        <li>
+          <strong
+            >No se corrió la suite de UI completa de una sola vez en
+            Android</strong
+          >
+          con todos los casos actuales (rondaría los 45 minutos). Cada spec se
+          verificó por separado, y los specs de órdenes límite también en
+          secuencia.
+        </li>
+        <li>
+          <strong>En iOS</strong> los casos nuevos se verificaron spec por spec,
+          y los ocho originales no se re-corrieron tras los arreglos.
+        </li>
+        <li>
+          <strong>El CI nunca corrió en GitHub.</strong> El workflow está
+          escrito, pero no se probó hasta que el repositorio se publique.
+        </li>
+        <li>
+          <strong>En iOS la venta límite cierra el ticket sola</strong> unos
+          segundos después de enviarse. La orden llega igual. La suite lo tolera
+          y lo verifica contra la API; la causa no se confirmó y por eso no está
+          registrado como defecto.
+        </li>
+        <li>
+          <strong>Un dispositivo por plataforma:</strong> no hay evidencia sobre
+          otros tamaños ni versiones.
+        </li>
+        <li>
+          <strong>Estado de Qase por ordenar:</strong> los casos de Appium
+          figuran como manuales en el campo de automatización, y el defecto #46
+          sigue abierto aunque ya está corregido en el código.
+        </li>
+        <li>
+          <strong>Sin Postman:</strong> lo opcional del contrato queda cubierto
+          por la suite de Playwright con validación de esquema.
+        </li>
+      </ul>
+
+      <h2 id="ejecutar">13 · Cómo ejecutar todo</h2>
+      <pre><code>bun install
+
+# UI · Android (compila el APK de release y hornea el identificador)
+bun run e2e:build:android
+bun run e2e:android
+
+# UI · iOS
+bun run e2e:build:ios
+bun run e2e:ios
+
+# Las dos plataformas, una después de la otra
+bun run e2e
+
+# Reporte HTML de Allure
+bun run e2e:report
+
+# API (línea base) y los cuatro niveles de defectos
+bun run test:api
+bun run test:api:tiers
+bun run test:api:defectos     # los defectos conocidos: fallan a propósito
+
+# Unitarios, lint, formato y tipos
+bun test
+bun run lint
+bun run format:check</code></pre>
+
+      <h2 id="entregables">14 · Mapa de entregables del challenge</h2>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Entregable</th>
+              <th>Dónde está</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Plan de pruebas</td>
+              <td>Este documento.</td>
+            </tr>
+            <tr>
+              <td>Suite automatizada y su documentación de ejecución</td>
+              <td>
+                <code>e2e/</code> (UI, iOS y Android) y
+                <code>api-tests/</code> (API); instrucciones en el
+                <a href="../README.md">README</a>.
+              </td>
+            </tr>
+            <tr>
+              <td>Reporte de bugs</td>
+              <td>
+                Los 19 defectos de Qase (sección 11) y los hallazgos con
+                evidencia en
+                <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
+              </td>
+            </tr>
+            <tr>
+              <td>README con instrucciones y decisiones</td>
+              <td><a href="../README.md">README.md</a>.</td>
+            </tr>
+            <tr>
+              <td>Automatización sin <code>POST /reset</code></td>
+              <td>
+                Sección 7.3 y la sección «Aislamiento sin POST /reset» del
+                README.
+              </td>
+            </tr>
+            <tr>
+              <td>Reportes legibles (HTML y JUnit)</td>
+              <td>Allure, JUnit y Qase, generados por las dos suites.</td>
+            </tr>
+            <tr>
+              <td>Validación de contrato (opcional)</td>
+              <td>
+                <code>api-tests/schemas.ts</code>, con esquemas zod aplicados a
+                cada respuesta.
+              </td>
+            </tr>
+            <tr>
+              <td>Catálogo de casos</td>
+              <td>
+                <a href="qase.html">qase.html</a> y el proyecto
+                <a href="https://app.qase.io/project/COCOS">COCOS</a> en Qase.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="footer">
+        Plan de pruebas del challenge de QA de Cocos · Contrastado con el
+        proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
+        con las suites del repositorio al 24/09/2026: 51 casos, 42
+        automatizados, 19 defectos abiertos. Documento vivo: se actualiza cuando
+        cambian el alcance o los resultados.
+      </footer>
+    </div>
+  </body>
+</html>

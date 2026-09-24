@@ -5,9 +5,13 @@ Query, and a multi-tenant dummy trading API.
 
 ## Documentación QA
 
-Seis documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
+Siete documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
 navegador, no necesitan servidor ni build.
 
+- [`docs/plan-de-pruebas.html`](docs/plan-de-pruebas.html) — el plan de pruebas:
+  alcance y fuera de alcance, estrategia por niveles, priorización por riesgo,
+  trazabilidad de los 51 casos con sus resultados, decisiones de automatización
+  (incluye cómo se trabaja sin `POST /reset`), defectos y pendientes.
 - [`docs/glosario.html`](docs/glosario.html) — qué significa cada término de la
   app, la API y el resto de la documentación. Escrito desde cero, sin asumir
   conocimiento del mundo financiero.
