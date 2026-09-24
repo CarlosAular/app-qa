@@ -41,6 +41,26 @@ class MarketsScreen {
     return extractArs(match[1])
   }
 
+  /**
+   * El retorno diario sale del mismo label que el precio:
+   * "..., retorno diario -8.69 por ciento". Devuelve el fragmento CRUDO (sin
+   * parsear a número) porque lo que importa acá es el FORMATO: la app lo
+   * arma con `dailyReturnPercent.toFixed(2)`, punto decimal, no es-AR.
+   */
+  async readDailyReturnLabel(ticker: string): Promise<string> {
+    const row = await this.rowFor(ticker)
+    const label = await labelOf(row)
+    const match = label.match(/retorno diario (.+?) por ciento/)
+
+    if (!match?.[1]) {
+      throw new Error(
+        `No pude leer el retorno diario de ${ticker} del label de la fila: ${JSON.stringify(label)}`
+      )
+    }
+
+    return match[1]
+  }
+
   async openInstrument(ticker: string) {
     const row = await this.rowFor(ticker)
     await row.click()

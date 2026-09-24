@@ -3,10 +3,26 @@ import {
   scrollToTextContains,
   scrollToTop,
 } from "../support/gestures"
-import {byTextContains} from "../support/selectors"
-import {isVisible, waitForVisible} from "../support/waits"
+import {
+  byLabel,
+  byText,
+  byTextContains,
+  byTextInsensitive,
+} from "../support/selectors"
+import {isVisible, waitForGone, waitForVisible} from "../support/waits"
 
 const COUNT_PATTERN = /^(\d+)\s+(orden|órdenes)$/i
+
+/**
+ * El botón y el título del diálogo nativo comparten el MISMO texto
+ * ("Reiniciar cuenta"): a propósito no se usa `byText` para tocar el botón,
+ * para no arriesgar una resolución ambigua si la plataforma expone el
+ * subárbol de atrás mientras el alert está arriba.
+ */
+const RESET_TRIGGER_LABEL = "Reiniciar cuenta"
+const RESET_CONFIRM_MARK = "No se puede deshacer"
+const RESET_CONFIRM_BUTTON = "Reiniciar"
+const RESET_PENDING_LABEL = "Reiniciando…"
 
 class OrdersScreen {
   async waitUntilLoaded() {
@@ -77,6 +93,54 @@ class OrdersScreen {
   async isEmpty(): Promise<boolean> {
     await scrollToTop()
     return isVisible(byTextContains("Todavía no enviaste órdenes"), 2_000)
+  }
+
+  /** El botón vive en el header de la lista: hay que estar arriba de todo. */
+  async tapReset() {
+    await scrollToTop()
+
+    const button = await waitForVisible(byLabel(RESET_TRIGGER_LABEL), {
+      message: `No encontré el botón "${RESET_TRIGGER_LABEL}".`,
+    })
+    await button.click()
+  }
+
+  /**
+   * Ancla en el CUERPO del alert, no en su título: el título repite el mismo
+   * texto que el accessibilityLabel del botón que lo disparó.
+   */
+  async waitForResetConfirmDialog() {
+    await waitForVisible(byTextContains(RESET_CONFIRM_MARK), {
+      message: "No apareció el diálogo de confirmación del reinicio.",
+    })
+  }
+
+  /**
+   * El AlertDialog nativo de Android pone los botones en mayúsculas por el
+   * tema Material ("REINICIAR"), aunque el string de la app es "Reiniciar":
+   * por eso el match es insensible a mayúsculas, no exacto.
+   */
+  async confirmReset() {
+    const confirmButton = await waitForVisible(
+      byTextInsensitive(RESET_CONFIRM_BUTTON),
+      {
+        message: `No encontré el botón "${RESET_CONFIRM_BUTTON}" del diálogo.`,
+      }
+    )
+    await confirmButton.click()
+  }
+
+  /**
+   * 25s, no 15s: llama a la API real (sin mock), y una corrida larga (la
+   * suite completa corre este spec último, tras ~25 minutos de otros tests)
+   * ya mostró que 15s se queda corto por latencia de red, no porque el
+   * reinicio falle — el servicio y la UI sí terminan, solo tardan más.
+   */
+  async waitForResetComplete(timeout = 25_000) {
+    await waitForGone(byText(RESET_PENDING_LABEL), {
+      timeout,
+      message: `El reinicio nunca terminó: el botón siguió en "${RESET_PENDING_LABEL}".`,
+    })
   }
 }
 

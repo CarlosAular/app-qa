@@ -1,7 +1,7 @@
 import {NAV} from "../data/messages"
 import {scrollToText, scrollToTop, tapElement} from "../support/gestures"
 import {extractArs, parseQuantity} from "../support/money"
-import {readValueUnderLabel} from "../support/pageMap"
+import {readTextNodes, readValueUnderLabel} from "../support/pageMap"
 import {byText} from "../support/selectors"
 import {waitForVisible} from "../support/waits"
 
@@ -40,6 +40,31 @@ class PositionDetailScreen {
 
   async readMarketValue(): Promise<number> {
     return extractArs(await this.readMetric("Valor"))
+  }
+
+  /**
+   * El rendimiento (retorno %) no tiene una etiqueta al lado como "Costo" o
+   * "Valor": es el único TEXTO VISIBLE con "%" en la ficha, dentro de
+   * PortfolioReturnBadge. Devuelve el texto CRUDO porque lo que importa acá
+   * es el FORMATO (formatPortfolioPercent usa `toFixed(2)`, punto decimal,
+   * no es-AR).
+   *
+   * No se usa `byTextContains("%")`: en iOS matchea antes un
+   * accessibilityValue oculto del gráfico ("0 %", ver
+   * InstrumentDetailScreen.readDailyReturnText) que el badge real.
+   * `readTextNodes` sólo trae StaticText realmente dibujado.
+   */
+  async readReturnRatioText(): Promise<string> {
+    await scrollToText("Resultado de la posición")
+
+    const nodes = await readTextNodes()
+    const node = nodes.find(candidate => candidate.text.includes("%"))
+
+    if (!node) {
+      throw new Error("No encontré el badge de rendimiento en la ficha.")
+    }
+
+    return node.text
   }
 
   /**
