@@ -448,6 +448,7 @@
           <li><a href="#stack">Stack de tecnología y versiones</a></li>
           <li><a href="#comandos">Comandos de referencia</a></li>
           <li><a href="#manual">Levantar los dispositivos a mano</a></li>
+          <li><a href="#tests">Correr los tests</a></li>
         </ol>
       </nav>
 
@@ -1224,7 +1225,11 @@ xcrun simctl listapps booted | grep com.cocos.trading</code></pre>
       </div>
 
       <h2 id="comandos">7 · Comandos de referencia</h2>
-      <p class="h2sub">Todo lo que se usa a diario, en un solo lugar.</p>
+      <p class="h2sub">
+        Todo lo que se usa a diario, en un solo lugar. Los comandos que corren
+        pruebas están explicados uno por uno en
+        <a href="#tests">la sección 9</a>.
+      </p>
 
       <div class="tablewrap">
         <table>
@@ -2016,6 +2021,464 @@ curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/reset"</span
       </p>
       <pre><code>adb emu kill                    <span class="c"># apaga el emulador de Android</span>
 xcrun simctl shutdown booted    <span class="c"># apaga el simulador de iOS</span></code></pre>
+
+      <!-- ================================================================ -->
+      <h2 id="tests">9 · Correr los tests</h2>
+      <p class="h2sub">
+        Qué hace cada comando del <code>package.json</code> que corre pruebas,
+        qué necesita y cuánto tarda. Las columnas «necesita» y «tarda» son lo
+        que se midió o documentó en este proyecto.
+      </p>
+
+      <h3>Cuál me conviene</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Quiero…</th>
+              <th>Comando</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                Verificar todo antes de commitear, sin prender dispositivos
+              </td>
+              <td><code>bun run qa:rapido</code></td>
+            </tr>
+            <tr>
+              <td>
+                Correr absolutamente todo, con la UI en las dos plataformas
+              </td>
+              <td><code>bun run qa</code></td>
+            </tr>
+            <tr>
+              <td>Probar sólo la API</td>
+              <td><code>bun run test:api</code></td>
+            </tr>
+            <tr>
+              <td>Probar la UI en Android sin recompilar</td>
+              <td><code>bun run e2e:android</code></td>
+            </tr>
+            <tr>
+              <td>Ver los resultados de una corrida</td>
+              <td>
+                <code>bun run e2e:report</code> ·
+                <code>bun run test:api:report</code>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="note__label">Qase</span>
+        <p>
+          Sólo los comandos que empiezan con <code>publish:</code> escriben en
+          Qase. Todos los demás corren con <code>QASE_MODE=off</code>: dejan los
+          resultados en archivos locales y no tocan el proyecto.
+        </p>
+      </div>
+
+      <h3>Todo en uno</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué hace</th>
+              <th>Necesita</th>
+              <th>Tarda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun run qa:rapido</code></td>
+              <td>
+                Lint, formato, tipos, tests unitarios y la suite de API, en ese
+                orden. Se corta en el primero que falle.
+              </td>
+              <td>Internet, para llegar a la API. Ningún dispositivo.</td>
+              <td>Unos 20 segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run qa</code></td>
+              <td>
+                Lo anterior y después la suite de UI en Android y en iOS.
+                Compila antes el binario de las plataformas que no lo tengan.
+              </td>
+              <td>
+                Emulador de Android y simulador de iOS ya arrancados; Xcode y el
+                SDK de Android. iOS sólo corre en macOS.
+              </td>
+              <td>
+                Si hay que compilar, 30 a 45 minutos por plataforma la primera
+                vez. La UI de Android ronda los 45 minutos.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Calidad del código</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué hace</th>
+              <th>Tarda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun run typecheck</code></td>
+              <td>
+                Revisa los tipos de TypeScript de la app y, aparte, los de la
+                suite de UI (<code>e2e/</code> tiene su propio
+                <code>tsconfig</code>, con los tipos de WebdriverIO).
+              </td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run lint</code></td>
+              <td>Corre ESLint sobre todo el repo y sólo informa.</td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run lint:fix</code></td>
+              <td>
+                Lo mismo, pero corrige en el lugar lo que puede arreglar solo.
+              </td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run format:check</code></td>
+              <td>
+                Verifica con Prettier que el formato sea el esperado, sin tocar
+                nada.
+              </td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run format</code></td>
+              <td>Reescribe los archivos con el formato de Prettier.</td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun test</code></td>
+              <td>
+                Los 43 tests unitarios de la app (formateadores y cálculos). No
+                es un script del <code>package.json</code>: es el ejecutor de
+                Bun.
+              </td>
+              <td>Menos de un segundo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>UI en iOS y Android (Appium)</h3>
+      <p>
+        La suite corre contra un <strong>binario de release</strong>, no contra
+        el build de desarrollo: lleva el código embebido, así que no necesita
+        Metro, pero hay que recompilarlo cada vez que cambia el código de la
+        app. Al compilar se hornea un identificador de cuenta propio y se lo
+        anota en <code>e2e/.build-info.&lt;plataforma&gt;.json</code>; los tests
+        hablan con esa misma cuenta.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué hace</th>
+              <th>Necesita</th>
+              <th>Tarda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun run e2e:build:android</code></td>
+              <td>
+                Compila el APK de release y hornea el identificador de cuenta.
+                Comprueba que haya quedado dentro del bundle.
+              </td>
+              <td>JDK 17 y el SDK de Android</td>
+              <td>30 a 45 minutos la primera vez</td>
+            </tr>
+            <tr>
+              <td><code>bun run e2e:build:ios</code></td>
+              <td>Lo mismo para el <code>.app</code> del simulador.</td>
+              <td>macOS con Xcode</td>
+              <td>30 a 45 minutos la primera vez</td>
+            </tr>
+            <tr>
+              <td><code>bun run e2e:android</code></td>
+              <td>
+                Deja el emulador en condiciones para Appium (cierra el diálogo
+                del stylus, apaga el teclado por hardware y las animaciones) y
+                corre la suite de Android.
+              </td>
+              <td>El binario compilado y un emulador corriendo</td>
+              <td>Unos 45 minutos</td>
+            </tr>
+            <tr>
+              <td><code>bun run e2e:ios</code></td>
+              <td>Corre la suite de iOS.</td>
+              <td>El binario compilado y un simulador arrancado</td>
+              <td>
+                La primera sesión es lenta: Appium compila WebDriverAgent y
+                puede tardar más de diez minutos. Las siguientes arrancan en
+                unos 30 segundos.
+              </td>
+            </tr>
+            <tr>
+              <td><code>bun run e2e</code></td>
+              <td>
+                Las dos plataformas, una después de la otra, con los resultados
+                sumados en un solo reporte. Si falta un binario, avisa cómo
+                compilarlo. Acepta <code>android</code> o <code>ios</code> para
+                correr una sola, y <code>--build</code> para compilar antes lo
+                que falte.
+              </td>
+              <td>Lo de las dos filas anteriores</td>
+              <td>La suma de las dos</td>
+            </tr>
+            <tr>
+              <td><code>bun run e2e:report</code></td>
+              <td>
+                Genera el reporte HTML de Allure a partir de la última corrida y
+                lo abre en el navegador.
+              </td>
+              <td>Haber corrido la suite, y Java</td>
+              <td>Segundos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <pre><code><span class="c"># UI en Android, de cero</span>
+bun run e2e:build:android      <span class="c"># una vez, o cuando cambie el código de la app</span>
+adb devices                    <span class="c"># tiene que aparecer un emulador</span>
+bun run e2e:android
+
+<span class="c"># UI en iOS, de cero</span>
+bun run e2e:build:ios
+xcrun simctl boot "iPhone 17 Pro"
+bun run e2e:ios
+
+<span class="c"># Conservar la cuenta del binario anterior (por defecto cada build es una cuenta nueva; pide un build previo)</span>
+bun run e2e:build:android --reuse</code></pre>
+
+      <div class="note note--warn">
+        <span class="note__label">Un build nuevo es una cuenta nueva</span>
+        <p>
+          Los specs comparten esa cuenta y corren en serie, en un orden que
+          importa: el que reinicia la cuenta va siempre último. Por eso no se
+          paralelizan ni se reintentan. Para partir de una cuenta virgen alcanza
+          con recompilar.
+        </p>
+      </div>
+
+      <h3>API (Playwright)</h3>
+      <p>
+        No necesita dispositivo ni binario: es el cliente HTTP de Playwright
+        contra el servicio, con validación de esquema de cada respuesta. Cada
+        test usa una cuenta nueva, así que nunca hace falta reiniciar nada.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué hace</th>
+              <th>Resultado esperado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>bun run test:api</code></td>
+              <td>
+                La línea base: nivel de defectos <code>off</code>, sin los tests
+                <code>@defecto</code>. Unos 10 segundos.
+              </td>
+              <td>Todo verde (7 casos)</td>
+            </tr>
+            <tr>
+              <td><code>bun run test:api:off</code></td>
+              <td>Igual que el anterior, con el nivel dicho explícitamente.</td>
+              <td>Todo verde</td>
+            </tr>
+            <tr>
+              <td>
+                <code>bun run test:api:easy</code> · <code>:medium</code> ·
+                <code>:hard</code>
+              </td>
+              <td>
+                La misma suite contra un nivel en el que el servicio inyecta
+                defectos a propósito.
+              </td>
+              <td>Fallan: cada fallo es un hallazgo</td>
+            </tr>
+            <tr>
+              <td><code>bun run test:api:tiers</code></td>
+              <td>Los cuatro niveles en una sola corrida.</td>
+              <td>Verde en <code>off</code>, fallos en los otros</td>
+            </tr>
+            <tr>
+              <td><code>bun run test:api:defectos</code></td>
+              <td>
+                Sólo los tests <code>@defecto</code> (COCOS-24, 42 y 53), en el
+                nivel <code>off</code>.
+              </td>
+              <td>
+                Fallan: el servicio no cumple lo que afirman, y se ponen en
+                verde el día que se corrija
+              </td>
+            </tr>
+            <tr>
+              <td><code>bun run test:api:report</code></td>
+              <td>
+                Genera y abre el reporte de Allure de la última corrida de API.
+              </td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Publicar en Qase</h3>
+      <p>
+        Son los mismos comandos de la API, pero con
+        <code>QASE_MODE=testops</code>: además de correr, crean una corrida en
+        el proyecto <code>COCOS</code> con el resultado de cada caso. Necesitan
+        el token en el <code>.env</code>
+        (<code>QASE_TESTOPS_API_TOKEN</code>, ignorado por git). Las corridas de
+        la suite de UI no se publican.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Comando</th>
+              <th>Qué publica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <code>bun run publish:api</code> ·
+                <code>bun run publish:api:off</code>
+              </td>
+              <td>La línea base (son el mismo comando)</td>
+            </tr>
+            <tr>
+              <td>
+                <code>bun run publish:api:easy</code> · <code>:medium</code> ·
+                <code>:hard</code>
+              </td>
+              <td>La corrida contra ese nivel de defectos</td>
+            </tr>
+            <tr>
+              <td><code>bun run publish:api:defectos</code></td>
+              <td>
+                Los tests <code>@defecto</code>: en Qase quedan como
+                <em>failed</em> hasta que el servicio se corrija
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Variables que cambian el comportamiento</h3>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Para qué sirve</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>API_URL</code></td>
+              <td>
+                Cambia la URL base de la API. Por defecto
+                <code>https://dummy-api-topaz.vercel.app</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>API_TIERS</code></td>
+              <td>
+                Niveles a correr, separados por coma:
+                <code>API_TIERS=off,hard bun run test:api</code>.
+              </td>
+            </tr>
+            <tr>
+              <td><code>API_DEFECTS=1</code></td>
+              <td>Corre sólo los tests <code>@defecto</code>.</td>
+            </tr>
+            <tr>
+              <td><code>QASE_MODE</code></td>
+              <td>
+                <code>off</code> (el valor por defecto) o <code>testops</code>
+                para publicar.
+              </td>
+            </tr>
+            <tr>
+              <td><code>QASE_TESTOPS_API_TOKEN</code></td>
+              <td>
+                El token de Qase. Va en el <code>.env</code>, nunca en el repo.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>E2E_IOS_UDID</code> · <code>E2E_IOS_DEVICE_NAME</code> ·
+                <code>E2E_IOS_RUNTIME</code>
+              </td>
+              <td>
+                Fijan qué simulador usar cuando hay varios. Por defecto se elige
+                el que ya esté arrancado.
+              </td>
+            </tr>
+            <tr>
+              <td><code>E2E_ANDROID_UDID</code></td>
+              <td>Fija qué emulador usar cuando hay varios.</td>
+            </tr>
+            <tr>
+              <td><code>E2E_LOG_LEVEL</code></td>
+              <td>
+                Nivel de log de WebdriverIO. Por defecto <code>warn</code>.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Dónde queda cada cosa</h3>
+      <ul>
+        <li>
+          <code>e2e/reports/</code> y <code>api-tests/reports/</code>: los
+          resultados de Allure, el JUnit, los logs de Appium y el reporte local
+          de Qase. Están ignorados por git. La suite de UI los borra al empezar
+          cada corrida, salvo cuando <code>bun run e2e</code> suma la segunda
+          plataforma al mismo reporte.
+        </li>
+        <li>
+          <code>e2e/.build-info.android.json</code> y
+          <code>e2e/.build-info.ios.json</code>: la ruta del binario y el
+          identificador de cuenta de cada build. También ignorados por git.
+        </li>
+        <li>
+          En CI, los dos workflows de <code>.github/workflows/</code> corren
+          estos mismos comandos (<code>api.yml</code> para calidad y API,
+          <code>e2e.yml</code> para la UI).
+        </li>
+      </ul>
 
       <footer class="footer">
         Puesta en marcha de la app Cocos bajo prueba · Versiones verificadas en

@@ -56,6 +56,9 @@ Sin dispositivos:
 bun run qa:rapido   # todo menos la UI: unos 20 segundos
 ```
 
+Cada comando del `package.json` que corre pruebas, qué necesita y cuánto tarda:
+[`docs/puesta-en-marcha.html`](docs/puesta-en-marcha.html#tests).
+
 ## Suite E2E automatizada (Appium)
 
 Suite de regresión en TypeScript sobre **Appium + WebdriverIO**, con un Page
