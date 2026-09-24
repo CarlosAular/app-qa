@@ -8,6 +8,10 @@ Query, and a multi-tenant dummy trading API.
 Ocho documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
 navegador, no necesitan servidor ni build.
 
+El proyecto de Qase (`COCOS`) es privado: los links a sus fichas piden acceso al
+workspace. Estos documentos son la copia legible de lo que hay ahí (los casos,
+las corridas y los defectos), así que no hace falta entrar a Qase para evaluar.
+
 - [`docs/reporte-de-bugs.html`](docs/reporte-de-bugs.html) — los mismos defectos
   que están en Qase, para leerlos sin acceso al proyecto: pasos para reproducir,
   obtenido y esperado, severidad, evidencia y la configuración en que se corrió
