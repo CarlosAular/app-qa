@@ -1,0 +1,2730 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Reporte de defectos</title>
+    <meta
+      name="description"
+      content="Los defectos abiertos y resueltos del proyecto COCOS de Qase, con pasos para reproducir, obtenido y esperado, severidad, evidencia y la configuración en que se observó cada uno."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Paleta tomada de src/global.css — la app es dark-only */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --elevated: #172033;
+        --muted: #171d2f;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --border-soft: #1e293b;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        scroll-margin-top: 24px;
+      }
+
+      h3 {
+        font-size: 1.06rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 34px 0 4px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul,
+      ol {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      ul,
+      ol {
+        margin: 14px 0;
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      li::marker {
+        color: var(--fg-dim);
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      a {
+        color: var(--primary);
+        text-underline-offset: 3px;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+      }
+
+      .toc h2 {
+        all: unset;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+
+      .toc ol {
+        max-width: none;
+        margin: 12px 0 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .toc a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .toc a:hover {
+        text-decoration: underline;
+      }
+
+      .toc span {
+        color: var(--fg-dim);
+        font-weight: 400;
+      }
+
+      /* ------------------------------ Pasos ------------------------------ */
+
+      .steps {
+        counter-reset: step;
+        list-style: none;
+        padding: 0;
+        margin: 24px 0;
+        max-width: none;
+        display: grid;
+        gap: 14px;
+      }
+
+      .steps > li {
+        counter-increment: step;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px 18px 60px;
+        position: relative;
+        margin: 0;
+      }
+
+      .steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(45, 212, 191, 0.12);
+        color: var(--primary);
+        border: 1px solid rgba(45, 212, 191, 0.35);
+        font-family: var(--mono);
+        font-size: 12.5px;
+        display: grid;
+        place-items: center;
+      }
+
+      .steps h3 {
+        margin: 0 0 6px;
+      }
+
+      .steps > li > :last-child {
+        margin-bottom: 0;
+      }
+
+      .steps p {
+        max-width: none;
+      }
+
+      /* ----------------------------- Código ------------------------------ */
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--muted);
+        border: 1px solid var(--border-soft);
+        border-radius: 4px;
+        padding: 1px 5px;
+        white-space: nowrap;
+      }
+
+      pre {
+        overflow-x: auto;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 16px 0;
+        font-size: 13.5px;
+        line-height: 1.7;
+      }
+
+      pre code {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 1em;
+        white-space: pre;
+        color: var(--fg);
+      }
+
+      pre .c {
+        color: var(--fg-dim);
+      }
+
+      pre .k {
+        color: var(--primary);
+      }
+
+      /* ------------------------------ Tablas ----------------------------- */
+
+      .tablewrap {
+        overflow-x: auto;
+        margin: 22px 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 480px;
+        font-size: 14.5px;
+      }
+
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      thead th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        background: var(--muted);
+        white-space: nowrap;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      td.num,
+      td.ver {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      td.ver {
+        color: var(--primary);
+      }
+
+      tbody tr.sep td {
+        border-top: 1px solid var(--border);
+      }
+
+      /* ------------------------------ Avisos ----------------------------- */
+
+      .note {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 15px 18px;
+        margin: 24px 0;
+        max-width: var(--measure);
+      }
+
+      .note--warn {
+        border-left-color: var(--warning);
+      }
+
+      .note--bad {
+        border-left-color: var(--loss);
+      }
+
+      .note > :first-child {
+        margin-top: 0;
+      }
+
+      .note > :last-child {
+        margin-bottom: 0;
+      }
+
+      .note__label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 7px;
+      }
+
+      .chip {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid;
+        white-space: nowrap;
+      }
+
+      .chip--ok {
+        color: var(--profit);
+        background: rgba(52, 211, 153, 0.12);
+        border-color: rgba(52, 211, 153, 0.3);
+      }
+
+      .chip--bad {
+        color: var(--loss);
+        background: rgba(251, 113, 133, 0.12);
+        border-color: rgba(251, 113, 133, 0.3);
+      }
+
+      .footer {
+        margin-top: 68px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-size: 13.5px;
+        color: var(--fg-dim);
+        max-width: var(--measure);
+      }
+    </style>
+    <style>
+      .chip--warn {
+        color: var(--warning);
+        background: rgba(250, 204, 21, 0.12);
+        border-color: rgba(250, 204, 21, 0.3);
+      }
+
+      .chip--neutral {
+        color: var(--fg-muted);
+        background: rgba(154, 167, 189, 0.1);
+        border-color: rgba(154, 167, 189, 0.28);
+      }
+
+      td .chip {
+        margin-left: 4px;
+        vertical-align: 1px;
+      }
+
+      td.cubre {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        color: var(--fg-muted);
+        white-space: nowrap;
+      }
+
+      td.num a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      td.num a:hover {
+        text-decoration: underline;
+      }
+
+      .hall {
+        color: var(--warning);
+      }
+
+      .count {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        font-weight: 400;
+        color: var(--fg-dim);
+        margin-left: 6px;
+      }
+
+      .muted {
+        color: var(--fg-muted);
+        font-size: 0.86rem;
+      }
+
+      .empty {
+        color: var(--fg-dim);
+        text-align: center;
+        padding-block: 18px;
+      }
+
+      .h3sub {
+        color: var(--fg-muted);
+        font-size: 14.5px;
+        margin: 4px 0 0;
+      }
+
+      .biglink {
+        display: inline-block;
+        margin-top: 20px;
+        font-family: var(--mono);
+        font-size: 13.5px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--primary);
+        border-radius: 10px;
+        padding: 12px 16px;
+        text-decoration: none;
+      }
+
+      .biglink:hover {
+        border-color: var(--primary);
+      }
+
+      .biglink span {
+        display: block;
+        font-family: var(--sans);
+        font-size: 11px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+        margin-bottom: 4px;
+      }
+    </style>
+
+    <style>
+      .wrap {
+        max-width: 1040px;
+      }
+      .masthead > *,
+      .toc,
+      .wrap > p,
+      .wrap > ul,
+      .wrap > ol,
+      .wrap > .note {
+        max-width: 900px;
+      }
+      h3.sev {
+        margin-top: 44px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border);
+      }
+      .defect {
+        background: var(--card);
+        border: 1px solid var(--border-soft);
+        border-radius: 16px;
+        padding: 20px 22px 8px;
+        margin: 20px 0;
+      }
+      .defect h3 {
+        margin: 0 0 8px;
+        font-size: 1.15rem;
+        line-height: 1.35;
+      }
+      .defect .did {
+        font-family: var(--mono);
+        color: var(--primary);
+        margin-right: 6px;
+      }
+      .defect .chips {
+        margin: 8px 0 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+      .defect h4 {
+        margin: 20px 0 6px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+      .defect .body p,
+      .defect .body li {
+        font-size: 0.95rem;
+        max-width: 84ch;
+      }
+      .defect pre {
+        max-width: 100%;
+        overflow-x: auto;
+        font-size: 0.8rem;
+      }
+      .meta {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        gap: 6px 16px;
+        margin: 0 0 14px;
+        padding: 12px 14px;
+        background: var(--panel);
+        border-radius: 10px;
+        font-size: 0.9rem;
+      }
+      .meta dt {
+        color: var(--fg-dim);
+      }
+      .meta dd {
+        margin: 0;
+      }
+      .evidence {
+        margin: 8px 0 14px;
+      }
+      .evidence img {
+        max-width: min(100%, 360px);
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+      .evidence figcaption {
+        font-size: 0.82rem;
+        color: var(--fg-muted);
+        margin-top: 4px;
+      }
+      .release {
+        margin: 14px 0 12px;
+        padding: 10px 14px;
+        border-left: 3px solid var(--secondary);
+        background: var(--panel);
+        border-radius: 0 10px 10px 0;
+      }
+      .release h4 {
+        margin-top: 4px;
+      }
+      .release p {
+        margin: 6px 0;
+        font-size: 0.92rem;
+      }
+      @media (max-width: 640px) {
+        .meta {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · Hallazgos</p>
+        <h1>Reporte de defectos</h1>
+        <p class="standfirst">
+          Los mismos defectos que están en Qase, para leerlos sin acceso al
+          proyecto: 18 abiertos y 1 resuelto. Cada uno trae los pasos para
+          reproducirlo, lo obtenido y lo esperado, la severidad, la evidencia y
+          la configuración en que se corrió la app cuando se lo observó.
+        </p>
+        <a class="biglink" href="https://app.qase.io/project/COCOS">
+          <span>Proyecto en Qase</span>
+          app.qase.io/project/COCOS
+        </a>
+      </header>
+
+      <nav class="toc" aria-label="Contenido">
+        <h2>Contenido</h2>
+        <ol>
+          <li><a href="#resumen">Resumen</a></li>
+          <li>
+            <a href="#configuracion">En qué configuración se corrió la app</a>
+          </li>
+          <li><a href="#lectura">Cómo se lee cada ficha</a></li>
+          <li>
+            <a href="#defectos">Los defectos</a> <span>— por severidad</span>
+          </li>
+          <li><a href="#fuera">Qué no está en este reporte</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="resumen">1 · Resumen</h2>
+      <p class="h2sub">19 defectos en Qase: 18 abiertos y 1 resuelto.</p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Severidad</th>
+              <th>Cantidad</th>
+              <th>Defectos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Crítica</td>
+              <td class="num">1</td>
+              <td><a href="#d19">#19</a></td>
+            </tr>
+            <tr>
+              <td>Mayor</td>
+              <td class="num">9</td>
+              <td>
+                <a href="#d1">#1</a>, <a href="#d2">#2</a>,
+                <a href="#d4">#4</a>, <a href="#d20">#20</a>,
+                <a href="#d21">#21</a>, <a href="#d22">#22</a>,
+                <a href="#d23">#23</a>, <a href="#d43">#43</a>,
+                <a href="#d45">#45</a>
+              </td>
+            </tr>
+            <tr>
+              <td>Normal</td>
+              <td class="num">1</td>
+              <td><a href="#d24">#24</a></td>
+            </tr>
+            <tr>
+              <td>Menor</td>
+              <td class="num">6</td>
+              <td>
+                <a href="#d3">#3</a>, <a href="#d25">#25</a>,
+                <a href="#d26">#26</a>, <a href="#d28">#28</a>,
+                <a href="#d29">#29</a>, <a href="#d44">#44</a>
+              </td>
+            </tr>
+            <tr>
+              <td>Trivial</td>
+              <td class="num">1</td>
+              <td><a href="#d27">#27</a></td>
+            </tr>
+            <tr>
+              <td>Resuelto</td>
+              <td class="num">1</td>
+              <td><a href="#d46">#46</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Dónde se ve</th>
+              <th>Defectos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Solo iOS</td>
+              <td>
+                <a href="#d19">#19</a>, <a href="#d20">#20</a>,
+                <a href="#d22">#22</a>, <a href="#d23">#23</a>,
+                <a href="#d24">#24</a>, <a href="#d25">#25</a>,
+                <a href="#d26">#26</a>, <a href="#d27">#27</a>,
+                <a href="#d28">#28</a>, <a href="#d29">#29</a>,
+                <a href="#d46">#46</a>
+              </td>
+            </tr>
+            <tr>
+              <td>Solo Android</td>
+              <td>
+                <a href="#d43">#43</a>, <a href="#d44">#44</a>,
+                <a href="#d45">#45</a>
+              </td>
+            </tr>
+            <tr>
+              <td>iOS y Android</td>
+              <td>
+                <a href="#d1">#1</a>, <a href="#d2">#2</a>,
+                <a href="#d3">#3</a>, <a href="#d4">#4</a>
+              </td>
+            </tr>
+            <tr>
+              <td>Solo el servicio (API)</td>
+              <td><a href="#d21">#21</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="configuracion">2 · En qué configuración se corrió la app</h2>
+      <p class="h2sub">
+        Un defecto solo se puede reproducir si se sabe con qué se lo vio. Hay
+        dos configuraciones, y la ficha de cada defecto dice cuál usó.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Corridas manuales</th>
+              <th>Suite automatizada (UI)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>App</td>
+              <td>
+                Build de <strong>desarrollo</strong> servido por Metro (Expo SDK
+                56), <code>com.cocos.trading</code>
+              </td>
+              <td>
+                Binario de <strong>release</strong> con el bundle embebido: sin
+                Metro, sin la capa de avisos de desarrollo y con las
+                actualizaciones por aire desactivadas
+              </td>
+            </tr>
+            <tr>
+              <td>iOS</td>
+              <td>Simulador de iPhone 17 Pro, iOS 26.5 (20 y 21/09/2026)</td>
+              <td>El mismo simulador y versión, con Xcode 26.6</td>
+            </tr>
+            <tr>
+              <td>Android</td>
+              <td>
+                Emulador de Pixel 8, Android 16 / API 36 (22/09/2026), operado
+                con adb y uiautomator
+              </td>
+              <td>El mismo emulador y versión</td>
+            </tr>
+            <tr>
+              <td>Servicio</td>
+              <td>
+                <code>https://dummy-api-topaz.vercel.app</code> con
+                <code>X-Enable-Bugs: off</code>
+              </td>
+              <td>El mismo servicio y nivel</td>
+            </tr>
+            <tr>
+              <td>Cuenta</td>
+              <td>
+                <code>X-Candidate-Id: carlos-aular</code>, reiniciada antes de
+                empezar: 1.000.000 ARS, sin posiciones ni historial
+              </td>
+              <td>
+                Un identificador por binario, horneado al compilar; los tests no
+                reinician la cuenta
+              </td>
+            </tr>
+            <tr>
+              <td>Herramientas</td>
+              <td>Interacción a mano (Android, con adb y uiautomator)</td>
+              <td>Appium 3.7, WebdriverIO 9.32</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Suite de API</th>
+              <th>Configuración</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cliente</td>
+              <td>
+                Playwright Test, solo el cliente HTTP: sin app ni dispositivo
+              </td>
+            </tr>
+            <tr>
+              <td>Servicio y nivel</td>
+              <td>El mismo servicio, con <code>X-Enable-Bugs: off</code></td>
+            </tr>
+            <tr>
+              <td>Cuenta</td>
+              <td>Un <code>X-Candidate-Id</code> nuevo por test</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">Por qué importa la diferencia</span>
+        <p>
+          Los defectos se descubrieron a mano, con el build de desarrollo. Ese
+          build tiene una capa de avisos que puede tapar la barra de pestañas y
+          tragarse toques, así que algo visto solo ahí podría no pasar en
+          release. Para cada defecto, la sección «Confirmación con el binario de
+          release» dice si la suite automatizada lo reprodujo con el build de
+          release o si quedó verificado solo a mano.
+        </p>
+      </div>
+
+      <p>
+        <strong>Nivel de defectos.</strong> Todos los defectos de este reporte
+        se observaron con <code>X-Enable-Bugs: off</code>. Los niveles
+        <code>easy</code>, <code>medium</code> y <code>hard</code> inyectan
+        defectos a propósito en el servicio y no forman parte de este reporte.
+      </p>
+
+      <h2 id="lectura">3 · Cómo se lee cada ficha</h2>
+      <ul>
+        <li>
+          <strong>Encabezado:</strong> el número de defecto en Qase, el título,
+          la severidad y el estado, las plataformas, el riesgo de la matriz que
+          compromete y, en amarillo, el hallazgo del análisis inicial al que
+          corresponde (<a href="producto-y-qa.html#hallazgos"
+            >producto-y-qa.html</a
+          >).
+        </li>
+        <li>
+          <strong>Cómo se observó:</strong> corrida manual o suite automatizada,
+          plataforma y nivel de defectos.
+        </li>
+        <li>
+          <strong>Casos que lo destapan:</strong> los casos del catálogo que
+          fallan por este defecto o lo dejan a la vista (<a href="qase.html"
+            >qase.html</a
+          >).
+        </li>
+        <li>
+          <strong>Cuerpo:</strong> el texto del defecto en Qase: pasos para
+          reproducir, obtenido, esperado, causa cuando se la conoce e impacto.
+        </li>
+        <li>
+          <strong>Confirmación con el binario de release:</strong> si la suite
+          lo reprodujo fuera del build de desarrollo.
+        </li>
+      </ul>
+
+      <h2 id="defectos">4 · Los defectos</h2>
+      <p class="h2sub">
+        De mayor a menor severidad. Los resueltos quedan al final.
+      </p>
+      <h3 class="sev" id="sev-critical">
+        Críticos <span class="count">1</span>
+      </h3>
+      <article class="defect" id="d19">
+        <header>
+          <h3>
+            <span class="did">#19</span> iOS: los rechazos del servicio son
+            silenciosos, la app no avisa cuando la orden no se puede enviar
+          </h3>
+          <p class="chips">
+            <span class="chip chip--bad">Crítica</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS</span>
+            <span class="chip chip--neutral">Riesgo R13, R5</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-9">COCOS-9</a>,
+            <a href="https://app.qase.io/case/COCOS-25">COCOS-25</a>,
+            <a href="https://app.qase.io/case/COCOS-33">COCOS-33</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            SÓLO EN iOS. En Android el mismo escenario muestra el aviso
+            correcto, así que el problema está en la plataforma, no en la
+            lógica.
+          </p>
+          <p>
+            Al enviar una orden que el servicio rechaza por saldo o tenencia
+            insuficientes, la app iOS no muestra absolutamente nada: ni aviso,
+            ni mensaje de error, ni cambio de estado del botón. El usuario toca
+            &quot;Enviar orden&quot; y la pantalla queda igual.
+          </p>
+          <h4>PASOS PARA REPRODUCIR (iOS 26.5, iPhone 17 Pro, bugs=off)</h4>
+          <ol>
+            <li>Abrir un instrumento y tocar &quot;Operar ahora&quot;.</li>
+            <li>
+              Cargar una cantidad que supere el efectivo disponible (200.000
+              acciones de DYCA, estimado $ 9.144.000 con $ 999.405,64
+              disponibles). También se reproduce en modo Pesos con 5.000.000.
+            </li>
+            <li>Tocar &quot;Enviar orden&quot;.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Un mensaje de error explícito. El código lo tiene escrito (&quot;No
+            pudimos enviar la orden&quot;, 6 segundos) y en Android se muestra
+            sin problemas.
+          </p>
+          <p>
+            OBTENIDO EN iOS<br />Nada. El historial no cambia, el efectivo no
+            cambia, el botón sigue diciendo &quot;Enviar orden&quot;.
+            Reproducido cinco veces, en modo Acciones y en modo Pesos, desde los
+            dos accesos al panel. El mismo panel envía sin problema una orden
+            válida y, con el campo vacío, muestra su mensaje de validación: el
+            botón funciona; lo que falta es la respuesta al rechazo.
+          </p>
+          <p>
+            También ocurre al vender: intentar vender 50 acciones teniendo 13 no
+            produce ningún aviso.
+          </p>
+          <h4>CONTRASTE CON ANDROID (mismo build, misma API)</h4>
+          <p>
+            &quot;No pudimos enviar la orden — No tenés efectivo
+            suficiente.&quot; y &quot;No pudimos enviar la orden — No tenés
+            acciones suficientes.&quot;, en rojo, en español y con botón de
+            cierre.
+          </p>
+          <h4>Confirmado contra la api</h4>
+          <pre><code>POST /orders con quantity 109361 → 400 {&quot;error&quot;:&quot;Insufficient cash&quot;}
+POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient shares&quot;}</code></pre>
+          <p>
+            La API no crea ninguna orden rechazada, así que tampoco queda rastro
+            en el historial.
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            En una app que mueve dinero, un envío que falla en silencio es
+            indistinguible de uno que no se registró: el usuario puede creer que
+            la orden quedó tomada, o seguir tocando el botón.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <p>
+            COCOS-9 (falla en iOS, pasa parcialmente en Android), COCOS-25 (paso
+            7) y COCOS-33 (pasos 1 y 2, que en iOS no pueden ni evaluarse porque
+            no hay texto que leer).
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí, en iOS. La suite lo contempla: el rechazo por efectivo o
+            acciones insuficientes se verifica por estado (no se creó la orden,
+            la tenencia no se movió) porque no hay ningún mensaje que leer
+            (COCOS-9).
+          </p>
+        </div>
+      </article>
+      <h3 class="sev" id="sev-major">Mayores <span class="count">9</span></h3>
+      <article class="defect" id="d1">
+        <header>
+          <h3>
+            <span class="did">#1</span> Buscar por el nombre de la empresa
+            encuentra el instrumento
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · Android · API</span>
+            <span class="chip chip--neutral">Riesgo R12</span>
+            <span class="hall">O3</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro; Android 16 / API 36 ·
+            emulador de Pixel 8; el servicio, por HTTP directo (sin app).
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-18">COCOS-18</a></dd>
+        </dl>
+
+        <div class="body">
+          <p>No encuentra el resultado.</p>
+          <p>
+            — Ampliado con la ejecución manual del 21 y 22/09/2026 (bugs=off) —
+          </p>
+          <h4>Confirmado en las dos plataformas</h4>
+          <p>
+            El campo está rotulado &quot;TICKER O EMPRESA&quot; y la propia fila
+            de resultados muestra el nombre de la empresa, pero buscar por ese
+            nombre no devuelve nada. Al escribir &quot;Telecom&quot; — el nombre
+            real de TECO2 — la pantalla responde &quot;Sin resultados para
+            &#x27;Telecom&#x27; · Probá con otro ticker del mercado o revisá la
+            ortografía&quot;. Con TECO2 el mismo instrumento aparece sin
+            problema.
+          </p>
+          <p><strong>Origen:</strong> ESTÁ EN LA API, NO EN LA APP</p>
+          <pre><code>GET /search?query=Telecom → []
+GET /search?query=telecom → []
+GET /search?query=Dycasa → []
+GET /search?query=teco2 → devuelve el instrumento</code></pre>
+          <p>
+            El servicio sólo hace coincidencia por ticker (por fragmento y sin
+            distinguir mayúsculas). La app promete en la etiqueta y en el copy
+            algo que el servicio no ofrece.
+          </p>
+          <h4>Dos arreglos posibles</h4>
+          <p>
+            a) Que /search también busque por <code>name</code>, que es lo que
+            espera el usuario.<br />b) Si el servicio no va a cambiar, corregir
+            la etiqueta y el copy para que digan sólo &quot;Ticker&quot; y no
+            prometan la búsqueda por empresa.
+          </p>
+          <h4>Caso que lo destapa</h4>
+          <p>
+            COCOS-18 (falla en iOS y en Android). Corresponde al hallazgo O3.
+          </p>
+        </div>
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a
+            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ad72892e086c297c514281d6e89a51b0e09f3e1c/CleanShot%202026-09-20%20at%2017.59.39.png"
+            ><img
+              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ad72892e086c297c514281d6e89a51b0e09f3e1c/CleanShot%202026-09-20%20at%2017.59.39.png"
+              alt="Búsqueda por el nombre de la empresa sin resultados"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Evidencia adjunta en Qase: Búsqueda por el nombre de la empresa sin
+            resultados.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí. COCOS-18 falla en iOS y en Android con los binarios de release.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d2">
+        <header>
+          <h3>
+            <span class="did">#2</span> Llegar al final del listado no se ve la
+            ultima fila
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · Android</span>
+            <span class="chip chip--neutral">Riesgo R17</span>
+            <span class="hall">O12</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro; Android 16 / API 36 ·
+            emulador de Pixel 8.
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-16">COCOS-16</a>,
+            <a href="https://app.qase.io/case/COCOS-19">COCOS-19</a>,
+            <a href="https://app.qase.io/case/COCOS-22">COCOS-22</a>,
+            <a href="https://app.qase.io/case/COCOS-26">COCOS-26</a>,
+            <a href="https://app.qase.io/case/COCOS-48">COCOS-48</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            En Android cuando llegamos a la final del listado no se ve la ultima
+            fila.
+          </p>
+          <p>
+            — Ampliado con la ejecución manual del 21 y 22/09/2026 (corridas
+            &quot;Manual — iOS&quot; y &quot;Manual — Android&quot;, bugs=off) —
+          </p>
+          <h4>
+            Se reproduce en las dos plataformas y en tres pantallas distintas
+          </h4>
+          <p>
+            1) Listado de Mercados, Android: la última fila (ARS) queda
+            íntegramente debajo de la barra de pestañas. El árbol de
+            accesibilidad la ubica en y≈2160-2230, justo donde arranca la barra
+            (íconos en 2231): el usuario sólo ve el borde superior de la tarjeta
+            y no hay más scroll disponible.
+          </p>
+          <p>
+            2) Listado de Mercados, iOS: mismo síntoma con la barra flotante — a
+            la fila de ARS se le cortan el chip de variación y parte del nombre.
+          </p>
+          <p>
+            3) Historial de Órdenes, las dos plataformas: con doce órdenes en la
+            lista, la duodécima queda tapada igual.
+          </p>
+          <p>
+            4) Detalle de una posición, las dos plataformas: el botón
+            &quot;Operar esta posición&quot; queda debajo de la barra. En iOS
+            todavía se puede tocar el centro del botón, que asoma entre los
+            elementos de la barra. En Android es peor: el botón está en y≈2274,
+            exactamente donde están las etiquetas de la barra, y al tocarlo la
+            app navega a la pestaña Órdenes en vez de abrir el ticket. El camino
+            &quot;vender desde la posición&quot; queda inutilizable y hay que ir
+            por Mercados → ficha → Operar ahora.
+          </p>
+          <h4>Causa raíz común</h4>
+          <p>
+            Las superficies fijas o flotantes de abajo (barra de pestañas) se
+            superponen al contenido final de las listas y pantallas: falta
+            padding inferior equivalente a la altura de la barra en los
+            contenedores scrolleables.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <p>
+            COCOS-19 (paso 5), COCOS-26 (paso 6), COCOS-48 (paso 6), COCOS-16
+            (pasos 3 y 4) y COCOS-22 (paso 3, que en Android no se puede
+            ejecutar por esto).
+          </p>
+        </div>
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a
+            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ab783ceb8345e91a682fffbc80ca6b0a2cb02b52/CleanShot%202026-09-20%20at%2018.02.56.png"
+            ><img
+              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ab783ceb8345e91a682fffbc80ca6b0a2cb02b52/CleanShot%202026-09-20%20at%2018.02.56.png"
+              alt="Última fila del listado tapada por la barra de pestañas"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Evidencia adjunta en Qase: Última fila del listado tapada por la
+            barra de pestañas.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí. La suite lo esquiva en las dos plataformas (sube la fila o toca
+            la franja libre del botón) y, si no queda ninguna, falla
+            nombrándolo. En Android «Operar esta posición» es inalcanzable; en
+            iOS se puede tocar cuando la barra se colapsa.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d4">
+        <header>
+          <h3>
+            <span class="did">#4</span> El Valor total no refleja el valor del
+            efectivo
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · Android</span>
+            <span class="chip chip--neutral">Riesgo R7</span>
+            <span class="hall">O2</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro; Android 16 / API 36 ·
+            emulador de Pixel 8.
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-11">COCOS-11</a>,
+            <a href="https://app.qase.io/case/COCOS-31">COCOS-31</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            Cuando no hay posiciones abiertas el valor total no muestra el valor
+            del efectivo, muestra 0.
+          </p>
+          <p>
+            — Ampliado con la ejecución manual del 21 y 22/09/2026 (bugs=off) —
+          </p>
+          <h4>Confirmado en las dos plataformas, con y sin posiciones</h4>
+          <p>
+            Cuenta recién reiniciada (iOS y Android): el número dominante de la
+            pantalla, en tipografía grande y arriba de todo, bajo el rótulo
+            &quot;VALOR TOTAL&quot;, es $ 0,00. El millón disponible aparece en
+            letra chica dentro de la grilla inferior, como &quot;Efectivo $
+            1.000.000,00&quot;. La impresión inmediata es que la cuenta está
+            vacía.
+          </p>
+          <p>
+            Con una posición comprada la ambigüedad sigue: Valor total $ 457,20,
+            Efectivo $ 999.542,80, Costo invertido $ 457,20. Nada en pantalla
+            aclara si el valor total incluye o no el efectivo; el usuario tiene
+            que deducir la regla comparando números.
+          </p>
+          <h4>Por qué importa</h4>
+          <p>
+            &quot;Valor total&quot; es el primer dato que mira alguien al abrir
+            su portafolio y es el que usa para saber cuánto tiene. Mostrar $
+            0,00 con un millón disponible es inducir a error en la métrica más
+            visible de la app.
+          </p>
+          <h4>Dos arreglos posibles</h4>
+          <p>
+            a) Que el valor total sume efectivo + tenencias, que es lo que la
+            etiqueta sugiere.<br />b) Si la intención es mostrar sólo el valor
+            de las tenencias, renombrarlo (&quot;Valor de las tenencias&quot;) y
+            dar al efectivo la misma jerarquía visual.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <p>
+            COCOS-31 (falla en iOS y en Android) y COCOS-11 (paso 2, que ya pide
+            anotarlo). Corresponde al hallazgo O2.
+          </p>
+          <h4>Observación de copy en la misma pantalla</h4>
+          <p>
+            El estado vacío dice &quot;Cuando la API devuelva tenencias, van a
+            aparecer en esta lista&quot; — le habla al desarrollador, no al
+            usuario — y titula &quot;portfolio&quot; en inglés mientras la
+            pestaña se llama Portafolio.
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d20">
+        <header>
+          <h3>
+            <span class="did">#20</span> La moneda ARS se puede comprar como si
+            fuera una acción
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · API</span>
+            <span class="chip chip--neutral">Riesgo R16</span>
+            <span class="hall">O8</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro; el servicio, por HTTP directo
+            (sin app).
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-41">COCOS-41</a>,
+            <a href="https://app.qase.io/case/COCOS-42">COCOS-42</a>,
+            <a href="https://app.qase.io/case/COCOS-43">COCOS-43</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            ARS (el peso, type &quot;MONEDA&quot; en el catálogo) se opera igual
+            que una acción: se abre el ticket, se envía la orden, se ejecuta y
+            queda como una posición más del portafolio.
+          </p>
+          <h4>PASOS PARA REPRODUCIR (iOS 26.5, iPhone 17 Pro, bugs=off)</h4>
+          <ol>
+            <li>
+              Ir a Buscar y escribir ARS. Aparece &quot;ARS · Pesos · $
+              1,00&quot; con la etiqueta MONEDA.
+            </li>
+            <li>
+              Tocar la fila: se abre el panel de orden completo, con
+              Comprar/Vender, Market/Limit y el campo rotulado &quot;Cantidad de
+              acciones&quot; — pide una cantidad de acciones de pesos.
+            </li>
+            <li>Cargar 5 y tocar &quot;Enviar orden&quot;.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            El instrumento no debería ofrecerse como operable, o el envío
+            debería rechazarse con una explicación.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            La orden se crea y se ejecuta: 201 {id: 454633, instrument_id: 26,
+            quantity: 5, price: 1, status: &quot;FILLED&quot;}. En Portafolio
+            queda la posición &quot;ARS · 5 acciones · $ 5,00&quot; y el
+            efectivo baja a $ 999.995,00. Se compran pesos con pesos, uno a uno.
+          </p>
+          <h4>La api tampoco lo bloquea</h4>
+          <pre><code>POST /orders con instrument_id 26 (ARS) → 201 FILLED. GET /portfolio devuelve la tenencia de ARS. La misma orden sobre una acción normal responde igual, así que no existe ninguna restricción por tipo de instrumento.</code></pre>
+          <h4>Donde se pierde la información</h4>
+          <p>
+            La app ya tiene el dato: en Buscar muestra la etiqueta MONEDA. Pero
+            el listado de Mercados no renderiza el campo <code>type</code> en
+            ningún momento
+            (src/features/markets/components/instrument-list/MarketsInstrumentRow.tsx),
+            así que ahí ARS es una fila idéntica a las demás y se abre y se
+            opera como cualquier acción.
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            Ensucia el portafolio con una &quot;posición&quot; que no es una
+            inversión y distorsiona el valor total y el costo invertido.
+            Corresponde al hallazgo O8.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <h4>
+            COCOS-41 (falla), COCOS-42 (falla, nivel API), COCOS-43 (paso 3).
+          </h4>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí. COCOS-41 falla en iOS y en Android con el binario de release, y
+            COCOS-42 lo reproduce por API.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d21">
+        <header>
+          <h3>
+            <span class="did">#21</span> La API acepta cantidades coaccionadas y
+            precios límite menores o iguales a cero
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">API</span>
+            <span class="chip chip--neutral">Riesgo R5</span>
+            <span class="hall">O9</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con requests directos al servicio (sin app).</dd>
+          <dt>Plataforma</dt>
+          <dd>el servicio, por HTTP directo (sin app).</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-24">COCOS-24</a></dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            El servicio de órdenes valida bien casi todo, pero deja pasar dos
+            familias de cuerpos inválidos que su propio contrato dice rechazar.
+          </p>
+          <p>COACCIÓN DE TIPOS EN quantity</p>
+          <pre><code>POST /orders {&quot;instrument_id&quot;:1,&quot;side&quot;:&quot;BUY&quot;,&quot;type&quot;:&quot;MARKET&quot;,&quot;quantity&quot;:&quot;1e3&quot;}
+  esperado: 400 &quot;quantity must be a positive integer&quot;
+  obtenido: 201 {id: 593817, quantity: 1000, price: 45.72, status: &quot;FILLED&quot;}
+  → un texto en notación científica se convierte en una orden real de 1000 acciones: 45.720 ARS ejecutados.</code></pre>
+          <pre><code>POST /orders {... &quot;quantity&quot;: true}
+  esperado: 400
+  obtenido: 201 {id: 99575, quantity: 1, status: &quot;FILLED&quot;} — un booleano se interpreta como cantidad 1.</code></pre>
+          <h4>Precios límite inválidos</h4>
+          <pre><code>POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &quot;price&quot;:0}   → 201, orden PENDING con price 0
+POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &quot;price&quot;:-10} → 201, orden creada con price -10 (después REJECTED)
+  esperado en ambos: 400.</code></pre>
+          <h4>Contraste</h4>
+          <p>
+            Los mismos endpoints sí rechazan correctamente quantity ausente, 0,
+            negativa o decimal, side y type inválidos, LIMIT sin price e
+            instrument_id inexistente, siempre con el mensaje exacto del
+            contrato.
+          </p>
+          <h4>Postcondición incumplida</h4>
+          <p>
+            El caso exige que ninguna de estas tentativas cree órdenes. El
+            historial pasó de 0 a 5 órdenes, incluida una FILLED de 1000
+            acciones.
+          </p>
+          <h4>Dónde importa</h4>
+          <p>
+            El cliente hoy tapa el agujero: el ticket valida cantidades enteras
+            y precios mayores a cero (COCOS-6 y COCOS-47 pasan). Pero cualquier
+            otro cliente, un reintento con el cuerpo serializado distinto o una
+            integración futura pueden crear órdenes que el contrato dice que son
+            inválidas. Corresponde al hallazgo O9.
+          </p>
+          <h4>Caso que lo destapa</h4>
+          <p>
+            COCOS-24 (falla, pasos 7 y 8). Evidencia completa con requests y
+            respuestas adjunta en el resultado del caso.
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Es del servicio, sin app de por medio: COCOS-24 (test @defecto) lo
+            reproduce por API.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d22">
+        <header>
+          <h3>
+            <span class="did">#22</span> Con el teclado abierto el botón de
+            enviar queda tapado y deslizar dentro del ticket lo cierra perdiendo
+            lo cargado
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS</span>
+            <span class="chip chip--neutral">Riesgo R17, R5</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-23">COCOS-23</a></dd>
+        </dl>
+
+        <div class="body">
+          <h4>PASOS PARA REPRODUCIR (iOS 26.5, iPhone 17 Pro)</h4>
+          <ol>
+            <li>
+              Abrir un instrumento, tocar &quot;Operar ahora&quot; y tocar el
+              campo &quot;Cantidad de acciones&quot;.
+            </li>
+            <li>
+              Escribir una cantidad (por ejemplo 21) con el teclado numérico
+              abierto.
+            </li>
+            <li>Buscar el botón &quot;Enviar orden&quot;.</li>
+          </ol>
+          <h4>Obtenido</h4>
+          <p>
+            a) El botón &quot;Enviar orden&quot; queda íntegramente tapado por
+            el teclado: no hay forma de alcanzarlo sin cerrarlo antes.<br />b)
+            La línea del importe estimado queda cortada por el borde superior
+            del teclado (&quot;Estimado $ 960,1…&quot;) y el botón flotante de
+            la barra del teclado se superpone a esa misma tarjeta.<br />c) Al
+            intentar deslizar dentro del ticket para llegar al botón, el panel
+            entero se cierra y se pierde todo lo cargado. Reproducido tres veces
+            seguidas con gestos distintos (400→250, 480→400 y 300→200 puntos),
+            siempre con el mismo resultado.<br />d) Con el teclado abierto el
+            panel se extiende hasta el borde superior y el rótulo &quot;TICKET
+            DE TRADING&quot; queda pisado por el reloj del sistema.
+          </p>
+          <h4>Esperado</h4>
+          <p>
+            Con el teclado abierto, el resumen y el botón de enviar tienen que
+            seguir alcanzables — visibles o accesibles deslizando dentro del
+            panel, sin que el gesto cierre el ticket.
+          </p>
+          <h4>Qué sí funciona</h4>
+          <p>
+            Tocando fuera de los campos el teclado se cierra sin saltos y el
+            panel vuelve a su posición con todo legible. Ese es hoy el único
+            camino para enviar: escribir, tocar afuera y recién después tocar el
+            botón. El primer toque después de escribir siempre se consume en
+            cerrar el teclado.
+          </p>
+          <h4>Riesgo asociado, verificado</h4>
+          <p>
+            El botón de la barra del teclado (la tecla de retorno con acción de
+            envío) no cierra el teclado: envía la orden. Se comprobó sin
+            intención y quedó una orden real de 21 acciones creada (id 276395).
+            Un usuario que lo toque esperando &quot;listo&quot; opera de verdad.
+          </p>
+          <h4>Caso que lo destapa</h4>
+          <h4>COCOS-23 (falla, pasos 2 y 3).</h4>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Parcial. La tecla de retorno de los campos del ticket envía la
+            orden, y la suite cierra el teclado tocando el título del ticket
+            para no dispararla.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d23">
+        <header>
+          <h3>
+            <span class="did">#23</span> Con la lista scrolleada, los toques
+            atraviesan la barra de pestañas y abren el instrumento de abajo
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS</span>
+            <span class="chip chip--neutral">Riesgo R17, R11</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-34">COCOS-34</a></dd>
+        </dl>
+
+        <div class="body">
+          <h4>PASOS (iOS 26.5, iPhone 17 Pro, bugs=off)</h4>
+          <ol>
+            <li>
+              Abrir la app en Mercados y deslizar el listado hasta la mitad.
+            </li>
+            <li>
+              Tocar &quot;Portafolio&quot; en la barra de pestañas flotante.
+            </li>
+          </ol>
+          <p><strong>Esperado:</strong> cambiar a la pestaña Portafolio.</p>
+          <p>
+            <strong>Obtenido:</strong> no cambia de pestaña. El toque atraviesa
+            la barra y abre la ficha del instrumento que quedó debajo.
+            Reproducido dos veces: con la lista en GARO…LEDE se abrió la ficha
+            de CELU; con la lista en PATA…MTR se abrió la de MTR.
+          </p>
+          <p>
+            Además, con contenido debajo la barra pierde su fondo: los íconos de
+            Portafolio y Órdenes dejan de distinguirse y sólo se ve la píldora
+            de la pestaña activa y el botón circular de búsqueda. Con el listado
+            en el tope, la barra se dibuja completa y el cambio de pestaña
+            funciona bien.
+          </p>
+          <p>
+            <strong>Impacto:</strong> es la navegación principal. El usuario
+            cree que cambia de sección y termina en la ficha de un instrumento
+            cualquiera, a un toque del panel de orden.
+          </p>
+          <p>
+            MISMA CAUSA RAÍZ QUE LOS DEFECTOS #2 Y #3: superficies flotantes sin
+            fondo opaco ni área de toque protegida.
+          </p>
+          <p><strong>Caso que lo destapa:</strong> COCOS-34 (falla, paso 2).</p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí, en iOS 26. Con el binario de release la barra de pestañas se
+            colapsa a dos círculos al scrollear y un toque por geometría cae
+            sobre una fila; la suite expande la barra tocando el círculo de la
+            pestaña activa (COCOS-34).
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d43">
+        <header>
+          <h3>
+            <span class="did">#43</span> Android: nunca se muestra el aviso de
+            orden ejecutada
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">Android</span>
+            <span class="chip chip--neutral">Riesgo R13, R1</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>Android 16 / API 36 · emulador de Pixel 8.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-7">COCOS-7</a>,
+            <a href="https://app.qase.io/case/COCOS-8">COCOS-8</a>,
+            <a href="https://app.qase.io/case/COCOS-10">COCOS-10</a>,
+            <a href="https://app.qase.io/case/COCOS-44">COCOS-44</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            SÓLO EN ANDROID. En iOS el aviso aparece sin problemas (&quot;Orden
+            ejecutada · Orden #629857&quot;).
+          </p>
+          <p>
+            Al enviar una orden que se ejecuta correctamente, en Android no
+            aparece ningún aviso. El único indicio de que algo pasó es que el
+            botón cambia de &quot;Enviar orden&quot; a &quot;Enviar otra
+            orden&quot;.
+          </p>
+          <h4>
+            PASOS PARA REPRODUCIR (Android 16 / API 36, Pixel 8, bugs=off)
+          </h4>
+          <ol>
+            <li>
+              Abrir un instrumento, tocar &quot;Operar ahora&quot; y cargar
+              cualquier cantidad válida.
+            </li>
+            <li>Tocar &quot;Enviar orden&quot;.</li>
+            <li>Mirar la pantalla durante los siguientes segundos.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            El aviso &quot;Orden ejecutada&quot; con el número de orden, que el
+            código configura con 6 segundos de duración.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            Nada. Verificado sobre cuatro órdenes distintas, capturando la
+            pantalla a los 0,6 s y a los ~2 s de cada envío, y buscando además
+            el texto en el árbol de accesibilidad: no hay rastro del toast en
+            ningún momento. Sí se captura el estado intermedio del botón
+            (&quot;Enviando…&quot;), así que el envío ocurre.
+          </p>
+          <h4>No es un problema general de avisos</h4>
+          <p>
+            El toast de error sí se muestra en Android, y muy bien: &quot;No
+            pudimos enviar la orden — No tenés efectivo suficiente.&quot; Es
+            específicamente el aviso de éxito el que no aparece. Lo mismo pasa
+            con el aviso de orden límite enviada (&quot;Orden enviada ·
+            pendiente&quot;), que tampoco se ve.
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            El usuario no recibe confirmación de que operó ni puede anotar el
+            número de orden: tiene que ir al historial a verificar que la orden
+            existe. En los casos de prueba, el paso &quot;anotar el número de
+            orden del aviso&quot; es directamente imposible de cumplir en
+            Android.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <h4>
+            COCOS-10 (paso 2), COCOS-7, COCOS-8 (paso 4), COCOS-44 (paso 4).
+          </h4>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí, en Android. Con el binario de release el aviso tampoco aparece:
+            la suite usa como señal que el botón pase a «Enviar otra orden».
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d45">
+        <header>
+          <h3>
+            <span class="did">#45</span> La posición desaparece del portafolio
+            mientras una venta límite reserva todas las acciones
+          </h3>
+          <p class="chips">
+            <span class="chip chip--warn">Mayor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">Android · API</span>
+            <span class="chip chip--neutral">Riesgo R2, R6</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>
+            Android 16 / API 36 · emulador de Pixel 8; el servicio, por HTTP
+            directo (sin app).
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-53">COCOS-53</a></dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            Si una orden límite de venta pendiente cubre la totalidad de una
+            tenencia, la posición deja de existir para el usuario: el portafolio
+            muestra 0 posiciones, valor total $ 0,00 y el estado vacío &quot;No
+            hay posiciones en el portfolio&quot;. Las acciones siguen siendo
+            suyas y la orden sigue pendiente.
+          </p>
+          <h4>
+            PASOS PARA REPRODUCIR (Android 16 / API 36, Pixel 8, bugs=off; la
+            API se comporta igual para iOS)
+          </h4>
+          <ol>
+            <li>Comprar 30 acciones de DYCA a mercado.</li>
+            <li>
+              Crear una venta límite de las 30 acciones a un precio muy por
+              encima del mercado ($ 200), para que quede pendiente.
+            </li>
+            <li>
+              Ir a Portafolio y refrescar antes de que la orden se resuelva.
+            </li>
+          </ol>
+          <h4>Obtenido</h4>
+          <p>
+            VALOR TOTAL $ 0,00 · Ganancia $ 0,00 · Retorno 0.00% · Costo
+            invertido $ 0,00 · Posiciones 0, y el mensaje &quot;No hay
+            posiciones en el portfolio&quot;. El único rastro de que algo pasó
+            es el efectivo, que sigue en $ 998.628,40 en vez del millón inicial.
+          </p>
+          <h4>Esperado</h4>
+          <p>
+            Que la posición siga visible, con la cantidad reservada indicada de
+            alguna forma (&quot;30 acciones · 30 comprometidas en una orden
+            pendiente&quot;) o al menos con la tenencia en cero pero presente.
+            Desaparecer es la peor opción posible: el usuario no tiene forma de
+            saber si sus acciones se vendieron, se perdieron o están
+            comprometidas.
+          </p>
+          <h4>Mecanismo, verificado contra la api</h4>
+          <p>
+            Con la venta límite pendiente: GET /portfolio →
+            {&quot;cash&quot;:998628.4,&quot;holdings&quot;:[]}<br />Después de
+            leer GET /orders, que resuelve la orden (queda REJECTED):
+          </p>
+          <pre><code>                                    GET /portfolio → {&quot;cash&quot;:998628.4,&quot;holdings&quot;:[{&quot;ticker&quot;:&quot;DYCA&quot;,&quot;quantity&quot;:30,...}]}</code></pre>
+          <p>
+            La posición vuelve sola. El servicio devuelve la tenencia neta de
+            reservas y, cuando la reserva iguala a la tenencia, omite el
+            instrumento del arreglo en vez de devolverlo en cero. La app
+            renderiza lo que recibe, así que muestra su estado vacío.
+          </p>
+          <h4>Por qué no lo destapó ningún caso</h4>
+          <p>
+            COCOS-46 cubre la reserva parcial — 6 acciones reservadas de 10, y
+            ahí la app muestra correctamente &quot;4 acciones&quot; — pero
+            ningún caso cubre la reserva total, que es justo el escenario
+            natural: vender toda la posición con una orden límite. Conviene
+            agregar un caso para ese borde.
+          </p>
+          <p><strong>Reservas:</strong> LO QUE SÍ FUNCIONA BIEN</p>
+          <p>
+            En tres rondas controladas, con 10 acciones en cartera: una venta
+            límite de 6 se acepta, una segunda de 6 se rechaza con 400
+            &quot;Insufficient shares&quot;, y una de 4 — exactamente lo
+            disponible — se acepta. En una de las rondas las dos órdenes (6 y 4)
+            quedaron pendientes a la vez y el portafolio devolvió la tenencia en
+            cero: las reservas se acumulan bien y no se pueden comprometer dos
+            veces las mismas acciones.
+          </p>
+        </div>
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a
+            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/64e7d3426876a7affe50bfac694347453f8ec651/Android-posicion-desaparecida-por-reserva-total.png"
+            ><img
+              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/64e7d3426876a7affe50bfac694347453f8ec651/Android-posicion-desaparecida-por-reserva-total.png"
+              alt="Portafolio vacío con una venta límite que reserva todas las acciones"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Evidencia adjunta en Qase: Portafolio vacío con una venta límite que
+            reserva todas las acciones.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí, a nivel servicio: COCOS-53 (test @defecto) lo reproduce por API.
+          </p>
+        </div>
+      </article>
+      <h3 class="sev" id="sev-normal">Normales <span class="count">1</span></h3>
+      <article class="defect" id="d24">
+        <header>
+          <h3>
+            <span class="did">#24</span> El estado pendiente de una orden límite
+            nunca es observable en la app
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Normal</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS</span>
+            <span class="chip chip--neutral">Riesgo R6</span>
+            <span class="hall">O11</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-26">COCOS-26</a>,
+            <a href="https://app.qase.io/case/COCOS-29">COCOS-29</a>,
+            <a href="https://app.qase.io/case/COCOS-45">COCOS-45</a>,
+            <a href="https://app.qase.io/case/COCOS-46">COCOS-46</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            Una orden límite nace PENDING del lado del servicio, pero el usuario
+            nunca llega a verla en ese estado: para cuando el historial se
+            dibuja, ya figura rechazada.
+          </p>
+          <h4>PASOS (iOS 26.5, iPhone 17 Pro, bugs=off)</h4>
+          <ol>
+            <li>
+              Abrir un instrumento, elegir Comprar · Limit, cargar 10 acciones y
+              un precio límite muy por debajo del mercado ($ 22 contra $ 45,72).
+            </li>
+            <li>Enviar la orden.</li>
+            <li>Ir a la pestaña Órdenes.</li>
+          </ol>
+          <p>
+            <strong>Obtenido:</strong> la orden figura &quot;10 x $ 22,00 ·
+            Límite · Rechazada&quot; y el encabezado dice &quot;Sin órdenes
+            pendientes&quot;. El aviso de envío alcanza a decir que la orden
+            quedó pendiente, pero la lista ya la muestra resuelta.
+          </p>
+          <p>
+            <strong>Por qué pasa:</strong> la API resuelve las órdenes límite de
+            forma perezosa, al recibir el siguiente request. La app, al enviar,
+            invalida y vuelve a leer el historial (useCreateOrderMutation
+            invalida ordersQueries y portfolioQueries), y esa misma lectura
+            dispara la resolución. El usuario no tiene ninguna ventana para ver
+            el estado intermedio.
+          </p>
+          <h4>Consecuencias verificadas</h4>
+          <ul>
+            <li>
+              La etiqueta celeste de &quot;pendiente&quot; del historial no se
+              puede ver nunca (COCOS-26, paso 4).
+            </li>
+            <li>
+              La reserva de efectivo de una compra límite sólo es observable si
+              la orden se crea por fuera de la app (COCOS-29): enviada desde el
+              panel, el efectivo ya vuelve completo.
+            </li>
+            <li>
+              Los casos que dependen de una venta límite pendiente quedan sin
+              poder ejecutarse desde la interfaz (COCOS-45 y COCOS-46,
+              bloqueados).
+            </li>
+          </ul>
+          <p>
+            <strong>A nivel de servicio el mecanismo funciona bien:</strong> con
+            la orden creada por API, GET /portfolio muestra la reserva (efectivo
+            $ 999.800,00 con una límite de 10 × $ 20) y la tenencia baja en las
+            acciones reservadas en una venta límite; al resolverse, todo vuelve.
+          </p>
+          <p>
+            <strong>Impacto:</strong> la app promete en su copy un ciclo de vida
+            (enviada → pendiente → ejecutada/rechazada) que el usuario no puede
+            seguir. Corresponde al hallazgo O11.
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Parcial. COCOS-8, 29 y 46 aceptan «reservado o ya liberado» porque
+            el estado pendiente depende de cuándo se lee; con el binario de
+            release se vieron las dos variantes.
+          </p>
+        </div>
+      </article>
+      <h3 class="sev" id="sev-minor">Menores <span class="count">6</span></h3>
+      <article class="defect" id="d3">
+        <header>
+          <h3>
+            <span class="did">#3</span> El panel de instrumentos no se ve bien
+            cuando bajamos en la lista
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · Android</span>
+            <span class="chip chip--neutral">Riesgo R17</span>
+            <span class="hall">O13</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro; Android 16 / API 36 ·
+            emulador de Pixel 8.
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-19">COCOS-19</a>,
+            <a href="https://app.qase.io/case/COCOS-23">COCOS-23</a>,
+            <a href="https://app.qase.io/case/COCOS-26">COCOS-26</a>,
+            <a href="https://app.qase.io/case/COCOS-28">COCOS-28</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            No se ve bien ya que la barra de estado no tiene fondo opaco y no
+            hay una división clara con la app.
+          </p>
+          <p>
+            — Ampliado con la ejecución manual del 21 y 22/09/2026 (bugs=off) —
+          </p>
+          <h4>Confirmado en las dos plataformas y en varias pantallas</h4>
+          <p>
+            Android, listado de Mercados: al deslizar, la fila de MOLA queda
+            pisando el reloj (2:05) y los íconos de wifi y batería.<br />iOS,
+            listado de Mercados: el texto &quot;Instrumentos&quot; y los chips
+            &quot;92% del panel&quot; y &quot;Volatilidad&quot; quedan a la
+            altura del reloj.<br />iOS, ticket de trading con el teclado
+            abierto: el panel se extiende hasta el borde superior y el rótulo
+            &quot;TICKET DE TRADING&quot; queda pisado por el reloj.<br />Las
+            dos plataformas, detalle de una posición y pantalla de
+            &quot;Posición no encontrada&quot;: el encabezado se superpone con
+            la barra de estado al scrollear.
+          </p>
+          <h4>EN HORIZONTAL (Android) ES PEOR</h4>
+          <p>
+            Girando el dispositivo, la primera fila del listado vuelve a
+            superponerse con el reloj y además la barra de pestañas se come casi
+            un cuarto de la pantalla, dejando la fila inferior cortada por la
+            mitad.
+          </p>
+          <h4>Causa raíz</h4>
+          <p>
+            Los contenedores scrolleables no respetan el área segura superior:
+            falta fondo opaco o padding por encima del contenido a la altura de
+            la barra de estado.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <p>
+            COCOS-19 (pasos 2 y 6), y se ve de paso en COCOS-23, COCOS-26 y
+            COCOS-28.
+          </p>
+        </div>
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a
+            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/5df6bc516de675737df567b6056f16f4bd4d135a/CleanShot%202026-09-20%20at%2018.05.55.png"
+            ><img
+              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/5df6bc516de675737df567b6056f16f4bd4d135a/CleanShot%202026-09-20%20at%2018.05.55.png"
+              alt="Contenido pisando la barra de estado"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Evidencia adjunta en Qase: Contenido pisando la barra de estado.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d25">
+        <header>
+          <h3>
+            <span class="did">#25</span> Los porcentajes usan punto decimal
+            mientras los importes usan coma
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS</span>
+            <span class="chip chip--neutral">Riesgo R14</span>
+            <span class="hall">O4</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-15">COCOS-15</a>,
+            <a href="https://app.qase.io/case/COCOS-30">COCOS-30</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            En la misma pantalla conviven dos convenciones numéricas distintas.
+          </p>
+          <h4>OBTENIDO (iOS 26.5, iPhone 17 Pro)</h4>
+          <ul>
+            <li>
+              Importes con formato argentino, correcto: &quot;$ 45,72&quot;,
+              &quot;$ 1.000.000,00&quot;, &quot;$ 999.571,40&quot;,
+              &quot;10.020&quot; con punto de miles.
+            </li>
+            <li>
+              Porcentajes con punto decimal: &quot;-8.69%&quot;,
+              &quot;+7.99%&quot;, &quot;+11.83%&quot; en Mercados; &quot;Retorno
+              0.00%&quot; en Portafolio; &quot;0.00%&quot; en el detalle de la
+              posición.
+            </li>
+          </ul>
+          <p>
+            En la fila de DYCA se lee &quot;$ 45,72&quot; y justo al lado
+            &quot;-8.69%&quot;: coma y punto decimal a cinco milímetros de
+            distancia.
+          </p>
+          <p>
+            <strong>Esperado:</strong> en es-AR el separador decimal es la coma
+            también en los porcentajes (&quot;-8,69%&quot;).
+          </p>
+          <p>
+            <strong>Impacto:</strong> es cosmético, pero es la clase de detalle
+            que se nota en una app financiera y que además delata que el
+            porcentaje no pasa por el mismo formateador que los importes.
+          </p>
+          <p><strong>Caso que lo destapa:</strong> COCOS-15 (falla, paso 1).</p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Sí. COCOS-15 y COCOS-30 fallan en iOS y en Android con el binario de
+            release.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d26">
+        <header>
+          <h3>
+            <span class="did">#26</span> UX: la confirmación de la orden no dice
+            a qué precio se ejecutó
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · UX</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-44">COCOS-44</a></dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            El aviso que aparece al enviar una orden dice &quot;Orden
+            ejecutada&quot; y el número de orden (por ejemplo &quot;Orden
+            #629857&quot;), nada más.
+          </p>
+          <p>
+            Para saber a qué precio se ejecutó, cuántas acciones entraron y
+            cuánto dinero se movió, el usuario tiene que cerrar el panel, ir a
+            Órdenes y buscar la fila. En una operación a mercado, que es
+            justamente donde el precio no se elige, esa es la información que
+            uno quiere confirmar en el momento.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Incluir en el aviso el ticker, la cantidad, el precio de ejecución y
+            el importe total: &quot;Orden ejecutada · 21 DYCA a $ 45,72 · $
+            960,12&quot;. El dato ya viene en la respuesta de la API (la orden
+            vuelve con price y quantity).
+          </p>
+          <h4>Dónde se notó</h4>
+          <p>
+            COCOS-44, paso 4: el caso pide anotar el precio que informa el aviso
+            y el aviso no lo informa. El caso igual pasa porque el precio de
+            ejecución coincide con el estimado, pero la comparación hay que
+            hacerla contra el historial.
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d28">
+        <header>
+          <h3>
+            <span class="did">#28</span> UX: el gráfico de variación del día se
+            dibuja en verde aunque la variación sea negativa
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · UX</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-3">COCOS-3</a></dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            En la ficha de DYCA, con una variación de -8,69%, el chip del
+            encabezado se muestra en rojo — correcto — pero la línea del gráfico
+            &quot;Variación del día&quot; se dibuja en verde agua, el mismo
+            color que usa una variación positiva.
+          </p>
+          <p>
+            El gráfico es lo primero que mira el ojo y contradice al indicador
+            que está justo arriba: la línea baja pero el color dice que todo
+            bien.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Teñir la serie con el mismo criterio que el chip: verde cuando el
+            último precio supera al cierre anterior, rojo cuando no. El dato ya
+            está calculado para el chip.
+          </p>
+          <h4>Dónde se notó</h4>
+          <p>
+            COCOS-3, al revisar la ficha del instrumento (el caso pasa: el
+            gráfico existe y los valores son correctos).
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d29">
+        <header>
+          <h3>
+            <span class="did">#29</span> UX: al volver a Órdenes se ven datos
+            viejos hasta refrescar a mano
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · UX</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-34">COCOS-34</a>,
+            <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            Al entrar a la pestaña Órdenes, la pantalla muestra el contenido
+            cacheado de la visita anterior y no se actualiza sola: hay que tirar
+            hacia abajo para ver el estado real.
+          </p>
+          <h4>CASOS CONCRETOS OBSERVADOS (iOS 26.5)</h4>
+          <ul>
+            <li>
+              Después de reiniciar la cuenta desde la propia app, Órdenes seguía
+              mostrando &quot;12 órdenes&quot; con sus doce filas.
+            </li>
+            <li>
+              Después de crear órdenes nuevas, el conteo seguía en el valor
+              anterior hasta refrescar.
+            </li>
+            <li>
+              Lo mismo en Portafolio: mostraba una posición y un efectivo que ya
+              no correspondían.
+            </li>
+          </ul>
+          <p>
+            El dato termina siendo correcto apenas se refresca, así que no es
+            una inconsistencia de datos sino de momento: la app muestra como
+            actual algo que ya no lo es, sin ninguna señal de que está
+            desactualizado.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Refrescar al enfocar la pestaña (refetchOnMount / refetchOnFocus en
+            las queries de órdenes y portafolio), o al menos mostrar el
+            indicador de actualización mientras revalida.
+          </p>
+          <h4>Dónde se notó</h4>
+          <p>COCOS-34 (paso 6) y COCOS-50 (paso 3).</p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d44">
+        <header>
+          <h3>
+            <span class="did">#44</span> El error de red llega al usuario sin
+            traducir: &quot;Network Error&quot;
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">Android</span>
+            <span class="chip chip--neutral">Riesgo R14</span>
+            <span class="hall">O4</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>Android 16 / API 36 · emulador de Pixel 8.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-14">COCOS-14</a>,
+            <a href="https://app.qase.io/case/COCOS-15">COCOS-15</a>,
+            <a href="https://app.qase.io/case/COCOS-33">COCOS-33</a>,
+            <a href="https://app.qase.io/case/COCOS-38">COCOS-38</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>
+            Cuando falla la conexión, la app muestra el mensaje crudo de axios
+            en inglés dentro de una tarjeta que por lo demás está en español.
+          </p>
+          <h4>PASOS PARA REPRODUCIR (Android 16 / API 36, Pixel 8)</h4>
+          <ol>
+            <li>
+              Con la app abierta, cortar la conexión del dispositivo (<code
+                >adb shell svc wifi disable</code
+              >
+              y <code>svc data disable</code>).
+            </li>
+            <li>Ir a Mercados y refrescar tirando hacia abajo.</li>
+          </ol>
+          <h4>Obtenido</h4>
+          <p>
+            Tarjeta de error con el título &quot;No pudimos cargar el
+            mercado&quot; y, debajo, el detalle &quot;Network Error&quot;. En
+            Portafolio, lo mismo: &quot;No pudimos cargar el portfolio&quot; +
+            &quot;Network Error&quot;. Al intentar enviar una orden sin
+            conexión, el aviso dice &quot;No pudimos enviar la orden&quot; +
+            &quot;Network Error&quot;.
+          </p>
+          <h4>Esperado</h4>
+          <p>
+            El detalle también en español: &quot;Revisá tu conexión e intentá de
+            nuevo&quot;, o similar. El título ya está traducido; lo que se
+            filtra es el <code>error.message</code> del cliente HTTP.
+          </p>
+          <h4>De paso, dos palabras en inglés más</h4>
+          <p>
+            El título &quot;No pudimos cargar el portfolio&quot; y el estado
+            vacío &quot;No hay posiciones en el portfolio&quot; usan
+            &quot;portfolio&quot; mientras la pestaña se llama
+            &quot;Portafolio&quot;.
+          </p>
+          <h4>Lo que sí está bien</h4>
+          <p>
+            Las tarjetas de error tienen ícono, título y botón
+            &quot;Reintentar&quot;, y al restaurar la conexión el reintento
+            funciona. La app no queda en blanco ni con un spinner infinito.
+          </p>
+          <h4>Dónde se verificó</h4>
+          <p>
+            En Android, que es donde se puede cortar la red del dispositivo. En
+            iOS los casos equivalentes (COCOS-14, COCOS-38 y los pasos 3 y 4 de
+            COCOS-33) quedaron bloqueados porque el simulador no tiene modo
+            avión; el código es compartido, así que lo más probable es que se
+            reproduzca igual.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <p>COCOS-33 (pasos 3 y 4), COCOS-15 (paso 4), COCOS-14 y COCOS-38.</p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <h3 class="sev" id="sev-trivial">
+        Triviales <span class="count">1</span>
+      </h3>
+      <article class="defect" id="d27">
+        <header>
+          <h3>
+            <span class="did">#27</span> UX: el estado vacío del portafolio le
+            habla al usuario de la API
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Trivial</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · UX</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-11">COCOS-11</a>,
+            <a href="https://app.qase.io/case/COCOS-31">COCOS-31</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <p>Con la cuenta sin posiciones, el portafolio muestra:</p>
+          <pre><code>  &quot;No hay posiciones en el portfolio
+   Cuando la API devuelva tenencias, van a aparecer en esta lista.&quot;</code></pre>
+          <p>
+            El texto le explica al usuario final el funcionamiento interno de la
+            app. &quot;La API&quot; no significa nada para quien opera, y
+            sugiere que la lista depende de que un sistema externo responda, no
+            de que la persona compre algo.
+          </p>
+          <p>
+            Además, &quot;portfolio&quot; aparece en inglés en el título
+            mientras la pestaña se llama &quot;Portafolio&quot;.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            &quot;Todavía no tenés posiciones. Cuando compres tu primer
+            instrumento, va a aparecer acá.&quot; Y unificar la palabra:
+            Portafolio en los dos lugares.
+          </p>
+          <h4>Dónde se notó</h4>
+          <p>
+            COCOS-11 y COCOS-31, al revisar el estado vacío del listado de
+            posiciones.
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p class="muted">
+            No lo cubre la suite automatizada: se observó solo a mano, con el
+            build de desarrollo.
+          </p>
+        </div>
+      </article>
+      <h3 class="sev" id="sev-resuelto">
+        Resueltos <span class="count">1</span>
+      </h3>
+      <article class="defect" id="d46">
+        <header>
+          <h3>
+            <span class="did">#46</span> iOS: el ticket de trading es inoperable
+            con VoiceOver — el bottom sheet colapsa todo su contenido en un solo
+            elemento
+          </h3>
+          <p class="chips">
+            <span class="chip chip--bad">Crítica</span>
+            <span class="chip chip--ok">Resuelto</span>
+            <span class="chip chip--neutral">iOS · accesibilidad</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Suite E2E, con el binario de release.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Caso que verifica el arreglo</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-52">COCOS-52</a>
+            <span class="muted">(con VoiceOver; todavía sin ejecutar)</span>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <h4>Actualización (24/09/2026): resuelto en el código</h4>
+          <p>
+            Corregido con <code>accessible={false}</code> en el
+            <code>&lt;BottomSheetModal&gt;</code> de
+            <code>src/components/modals/ModalContext.tsx</code> (commit
+            <code>aa5a2fb</code>). Con eso el contenido del ticket vuelve a
+            aparecer en el árbol de accesibilidad de iOS y la suite E2E corre en
+            esa plataforma: de los 26 casos nuevos, 22 pasan, y los 4 que fallan
+            lo hacen por otros defectos (#1, #20 y #25), no por este. El punto 2
+            de «Impacto» (cobertura automatizada de iOS en cero) ya no aplica.
+          </p>
+          <p>
+            Qué queda sin verificar: la comprobación se hizo por el árbol de
+            accesibilidad de XCUITest, no con VoiceOver activado. Conviene una
+            prueba manual con el lector de pantalla antes de darlo por cerrado
+            del lado de accesibilidad.
+          </p>
+          <hr />
+          <h4>Qué pasa</h4>
+          <p>
+            En iOS, todo el contenido del ticket de trading es invisible para la
+            capa de accesibilidad. Para VoiceOver el panel que mueve plata
+            <strong>no se puede operar</strong>: no hay forma de elegir
+            Comprar/Vender, ni Market/Limit, ni Acciones/Pesos, ni de escribir
+            una cantidad, ni de tocar &quot;Enviar orden&quot;, ni de enterarse
+            de los mensajes de validación.
+          </p>
+          <h4>Evidencia</h4>
+          <p>
+            Árbol de accesibilidad de XCUITest con el ticket ABIERTO en pantalla
+            (iPhone 17 Pro, iOS 26.5, build de release):
+          </p>
+          <pre><code>&lt;XCUIElementTypeOther name=&quot;Bottom Sheet&quot; label=&quot;Bottom Sheet&quot;
+                      enabled=&quot;true&quot; visible=&quot;true&quot; accessible=&quot;true&quot;
+                      x=&quot;0&quot; y=&quot;245&quot; width=&quot;402&quot; height=&quot;712&quot; traits=&quot;Adjustable&quot;/&gt;</code></pre>
+          <p>
+            El nodo se cierra sobre sí mismo:
+            <strong>no tiene un solo hijo</strong>. En la misma captura de
+            pantalla se ven perfectamente &quot;Nueva orden&quot;,
+            &quot;Comprar&quot;, &quot;Vender&quot;, &quot;Market&quot;,
+            &quot;Limit&quot;, &quot;Acciones&quot;, &quot;Pesos&quot;,
+            &quot;Cantidad de acciones&quot;, &quot;Acciones a enviar&quot; y
+            &quot;Enviar orden&quot;. Ninguno existe en el árbol.
+          </p>
+          <p>
+            La pantalla de atrás (ficha del instrumento) sí expone sus 24 textos
+            con normalidad, así que no es un problema general de la app ni del
+            snapshot: es específico del sheet.
+          </p>
+          <h4>Causa</h4>
+          <p>
+            <code>@gorhom/bottom-sheet</code> pone
+            <code>accessible={true}</code> por defecto en el contenedor del
+            sheet (<code>DEFAULT_ACCESSIBLE</code> en
+            <code>BottomSheet.tsx</code>, aplicado en la línea 1829) junto con
+            <code>accessibilityLabel=&quot;Bottom Sheet&quot;</code>.
+            <code>src/components/modals/ModalContext.tsx</code> monta el
+            <code>&lt;BottomSheetModal&gt;</code> sin sobreescribir esa prop.
+          </p>
+          <p>
+            En iOS, <code>accessible={true}</code> sobre un contenedor
+            <strong>colapsa todo el subárbol</strong> en un único elemento de
+            accesibilidad. En Android no se nota, porque el dump de uiautomator
+            sigue viendo los <code>TextView</code> hijos — por eso el defecto
+            pasa desapercibido si sólo se prueba en Android.
+          </p>
+          <h4>Impacto</h4>
+          <ol>
+            <li>
+              <strong>Accesibilidad</strong>: el flujo más crítico de la app
+              —enviar una orden— es inutilizable con VoiceOver en iOS.
+            </li>
+            <li>
+              <strong>Automatización</strong>: bloquea por completo la suite E2E
+              en iOS. Los 8 casos automatizados (COCOS-5, 6, 7, 10, 25, 28, 47,
+              49) pasan por el ticket, así que la cobertura automatizada de iOS
+              queda en cero. Hoy se reportan como salteados con este motivo.
+            </li>
+          </ol>
+          <p>
+            No se puede sortear tocando por coordenadas: lo que falta no son los
+            taps sino las <strong>lecturas</strong> — el importe estimado, las
+            acciones a enviar, los mensajes de error —, y ese texto no está en
+            el árbol.
+          </p>
+          <h4>Arreglo propuesto</h4>
+          <p>
+            Una prop en <code>src/components/modals/ModalContext.tsx</code>:
+          </p>
+          <pre><code>&lt;BottomSheetModal
+  ref={bottomSheetRef}
+  accessible={false}
+  ...
+&gt;</code></pre>
+          <p>
+            Es un atributo de accesibilidad, no un cambio de funcionalidad.
+            Destraba las dos cosas a la vez: la app se vuelve operable con
+            VoiceOver y la suite automatizada corre en iOS.
+          </p>
+          <h4>Cómo reproducir</h4>
+          <ol>
+            <li>
+              Compilar la app de release para simulador y abrirla en un iPhone
+              con iOS 26.5.
+            </li>
+            <li>
+              Ir a Mercados → abrir un instrumento → &quot;Operar ahora&quot;.
+            </li>
+            <li>
+              Con el ticket abierto, pedir el árbol de accesibilidad (<code
+                >driver.getPageSource()</code
+              >
+              o Accessibility Inspector).
+            </li>
+            <li>
+              Buscar &quot;Nueva orden&quot; o &quot;Enviar orden&quot;: no
+              aparecen. Sólo está el nodo <code>Bottom Sheet</code>, sin hijos.
+            </li>
+          </ol>
+          <p>
+            Alternativa sin herramientas: activar VoiceOver y tratar de enviar
+            una orden.
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            Se encontró justamente con el binario de release, al automatizar en
+            iOS. Corregido; la suite de iOS corre desde entonces.
+          </p>
+        </div>
+      </article>
+
+      <h2 id="fuera">5 · Qué no está en este reporte</h2>
+      <ul>
+        <li>
+          <strong>27 defectos en estado «Invalid» en Qase.</strong>
+          Se crearon al registrar los resultados fallidos de las corridas
+          manuales (llevan el título del caso y el comentario del resultado) y
+          quedaron marcados como inválidos porque los defectos de arriba los
+          reemplazan. No se repiten acá.
+        </li>
+        <li>
+          <strong
+            >Los niveles <code>easy</code>, <code>medium</code> y
+            <code>hard</code></strong
+          >
+          de la API: inyectan defectos a propósito, y la suite de API los corre
+          aparte como hallazgos.
+        </li>
+        <li>
+          <strong>Los hallazgos O1 a O14</strong> del análisis inicial que no se
+          reprodujeron o que quedaron dentro de estos defectos:
+          <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
+        </li>
+      </ul>
+
+      <footer class="footer">
+        Reporte de defectos del challenge de QA de Cocos · Contrastado con el
+        proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase
+        al 24/09/2026: 18 defectos abiertos y 1 resuelto. Las capturas se
+        enlazan desde Qase. Documento vivo: se actualiza cuando cambian los
+        defectos.
+      </footer>
+    </div>
+  </body>
+</html>
