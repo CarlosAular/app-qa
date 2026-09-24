@@ -31,6 +31,27 @@ navegador, no necesitan servidor ni build.
   reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
   diferencias entre niveles de defectos.
 
+## Correr todo
+
+Un solo comando:
+
+```sh
+bun install
+bun run qa
+```
+
+Corre, en este orden: lint, formato, tipos, tests unitarios, la suite de API y
+la de UI en Android y en iOS. La de UI necesita un emulador de Android y un
+simulador de iOS ya arrancados, y compila antes los binarios que falten: un
+build de release en frío tarda entre 30 y 45 minutos, y las corridas siguientes
+reusan el binario. iOS solo corre en macOS.
+
+Sin dispositivos:
+
+```sh
+bun run qa:rapido   # todo menos la UI: unos 20 segundos
+```
+
 ## Suite E2E automatizada (Appium)
 
 Suite de regresión en TypeScript sobre **Appium + WebdriverIO**, con un Page
@@ -330,6 +351,16 @@ QASE_MODE=testops QASE_TESTOPS_API_TOKEN=<token> bun run e2e:android
 En CI el workflow lo hace solo con el secret `QASE_TESTOPS_API_TOKEN`.
 
 ### CI
+
+Dos workflows.
+
+`.github/workflows/api.yml`: calidad (lint, formato, tipos y tests unitarios) y
+la suite de API en el nivel `off`, en cada push y PR. Es rápido porque no
+necesita dispositivo: solo el cliente HTTP de Playwright. Publica el reporte de
+Allure y el de JUnit como artefacto, y solo publica en Qase si se lo pide a mano.
+De noche y a pedido corre además los niveles con defectos inyectados y los tests
+`@defecto`: fallan porque el servicio no cumple lo que afirman, así que ese job
+no rompe el build y solo deja los reportes.
 
 `.github/workflows/e2e.yml`: Android en cada push y PR (runner Linux), iOS por
 cron nocturno y a pedido (runner macOS, que se factura 10x y tiene 3 vCPU). El

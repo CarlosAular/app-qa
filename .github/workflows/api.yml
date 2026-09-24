@@ -1,0 +1,163 @@
+name: API + calidad
+
+# La suite de API no necesita dispositivo ni binario: es el cliente HTTP de
+# Playwright contra el servicio, así que corre en segundos en un runner de Linux
+# común. Por eso va en cada push y PR, aparte de la de UI (e2e.yml), que es
+# lenta y cara.
+#
+#   quality  lint, formato, tipos y tests unitarios de la app
+#   api      la suite de API en el nivel `off` (la línea base: tiene que pasar)
+#   hallazgos  de noche y a pedido: los niveles con defectos inyectados y los
+#              tests @defecto. Fallan porque el servicio no cumple lo que
+#              afirman (los fallos son los hallazgos), así que el job no rompe
+#              el build y solo deja reportes.
+on:
+  push:
+    branches: [main, "ca/**"]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "30 6 * * *"
+  workflow_dispatch:
+    inputs:
+      qase:
+        description: Publicar los resultados de la línea base en Qase
+        type: boolean
+        default: false
+
+concurrency:
+  group: api-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: "17"
+
+jobs:
+  # ------------------------------------------------------------------ calidad --
+  quality:
+    name: Calidad · lint, formato, tipos y unitarios
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cachear el store de Bun
+        uses: actions/cache@v4
+        with:
+          # El store, NO node_modules: pesa 4,1 GB y se comería la cuota de 10 GB.
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run format:check
+      - run: bun run typecheck
+      - run: bun test
+
+  # ---------------------------------------------------------------------- API --
+  api:
+    name: API · nivel off
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cachear el store de Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+
+      # Sin `playwright install`: la suite usa solo el cliente HTTP, no un navegador.
+      - name: Correr la suite de API
+        env:
+          # Apagado salvo que se pida a mano y haya token: cada push crearía una
+          # corrida en Qase y la llenaría de ruido.
+          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && inputs.qase && secrets.QASE_TESTOPS_API_TOKEN != '') && 'testops' || 'off' }}
+          QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+          QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · API"
+          QASE_TESTOPS_RUN_DESCRIPTION: "${{ github.sha }} · ${{ github.ref_name }}"
+        run: bun run test:api
+
+      - uses: actions/setup-java@v4
+        if: always()
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Generar el HTML de Allure
+        if: always()
+        run: |
+          if [ -z "$(ls -A api-tests/reports/allure-results 2>/dev/null)" ]; then
+            echo "No hay resultados que reportar."; exit 0
+          fi
+          # El paquete allure-commandline expone el binario `allure`.
+          node_modules/.bin/allure generate api-tests/reports/allure-results --clean -o api-tests/reports/allure
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-reporte
+          path: |
+            api-tests/reports/allure
+            api-tests/reports/junit
+          retention-days: 30
+
+  # ---------------------------------------------------------------- hallazgos --
+  hallazgos:
+    name: Hallazgos · ${{ matrix.nombre }}
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Fallan porque los tests afirman el comportamiento correcto y el servicio
+    # no lo cumple (niveles con defectos inyectados y defectos conocidos).
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nombre: los cuatro niveles de defectos
+            script: test:api:tiers
+            artefacto: hallazgos-niveles
+          - nombre: defectos conocidos en el nivel off
+            script: test:api:defectos
+            artefacto: hallazgos-defectos
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cachear el store de Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+      - run: bun install --frozen-lockfile
+
+      - name: Correr la suite
+        continue-on-error: true
+        env:
+          QASE_MODE: "off"
+        run: bun run ${{ matrix.script }}
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artefacto }}
+          path: |
+            api-tests/reports/allure-results
+            api-tests/reports/junit
+          retention-days: 30
