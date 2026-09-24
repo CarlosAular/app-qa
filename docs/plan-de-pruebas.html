@@ -660,7 +660,7 @@
           <b>17</b><span>riesgos, todos con cobertura mínima cumplida</span>
         </div>
         <div class="kpi">
-          <b>19</b><span>defectos abiertos, 2 críticos</span>
+          <b>18</b><span>defectos abiertos, 1 crítico; 1 más resuelto</span>
         </div>
         <div class="kpi">
           <b>3</b><span>niveles automatizados: unitario, API y UI</span>
@@ -2710,9 +2710,9 @@
 
       <h2 id="defectos">11 · Hallazgos y defectos</h2>
       <p class="h2sub">
-        19 defectos abiertos en Qase: 2 críticos, 9 mayores, 1 normal, 6 menores
-        y 1 trivial. Cada ficha documenta qué pasa, cómo reproducirlo o dónde se
-        notó, la plataforma y el impacto.
+        19 defectos en Qase: 18 abiertos (1 crítico, 9 mayores, 1 normal, 6
+        menores y 1 trivial) y 1 resuelto (#46). Cada ficha documenta qué pasa,
+        cómo reproducirlo o dónde se notó, la plataforma y el impacto.
       </p>
 
       <div class="tablewrap dense">
@@ -2745,12 +2745,16 @@
             </tr>
             <tr>
               <td class="num">#46</td>
-              <td><span class="chip chip--bad">Crítica</span></td>
+              <td>
+                <span class="chip chip--bad">Crítica</span>
+                <span class="chip chip--ok">Resuelto</span>
+              </td>
               <td>
                 El ticket es inoperable con VoiceOver: el bottom sheet colapsa
-                todo su contenido en un elemento.
-                <strong>Corregido en el código</strong> (una prop en
-                <code>ModalContext.tsx</code>); en Qase sigue abierto
+                todo su contenido en un elemento. <strong>Resuelto</strong>:
+                corregido en el código con una prop en
+                <code>ModalContext.tsx</code>. Falta una prueba manual con
+                VoiceOver
               </td>
               <td>iOS</td>
               <td class="riesgos">accesibilidad</td>
@@ -3111,9 +3115,11 @@
           otros tamaños ni versiones.
         </li>
         <li>
-          <strong>Estado de Qase por ordenar:</strong> los casos de Appium
-          figuran como manuales en el campo de automatización, y el defecto #46
-          sigue abierto aunque ya está corregido en el código.
+          <strong
+            >El defecto #46 (VoiceOver) está resuelto en Qase, pero solo se
+            verificó por el árbol de accesibilidad,</strong
+          >
+          no con VoiceOver activado. Falta esa prueba manual.
         </li>
         <li>
           <strong>Sin Postman:</strong> lo opcional del contrato queda cubierto
@@ -3173,8 +3179,8 @@ bun run format:check</code></pre>
             <tr>
               <td>Reporte de bugs</td>
               <td>
-                Los 19 defectos de Qase (sección 11) y los hallazgos con
-                evidencia en
+                Los 19 defectos de Qase, 18 abiertos y 1 resuelto (sección 11) y
+                los hallazgos con evidencia en
                 <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
               </td>
             </tr>
@@ -3215,7 +3221,7 @@ bun run format:check</code></pre>
         Plan de pruebas del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
         con las suites del repositorio al 24/09/2026: 51 casos, 42
-        automatizados, 19 defectos abiertos. Documento vivo: se actualiza cuando
+        automatizados, 18 defectos abiertos. Documento vivo: se actualiza cuando
         cambian el alcance o los resultados.
       </footer>
     </div>

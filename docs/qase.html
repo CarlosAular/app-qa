@@ -678,6 +678,12 @@
           <span class="hall">amarillo</span> y se detallan en
           <a href="producto-y-qa.html#hallazgos">los hallazgos</a>.
         </li>
+        <li>
+          <code>automatizado:</code> — qué herramienta lo automatiza:
+          <code>appium</code> (34 casos) o <code>playwright</code> (8). Va junto
+          con el campo de automatización del caso, que pasa a «Automated». Los 9
+          restantes siguen manuales, cada uno con su motivo.
+        </li>
       </ul>
 
       <h2 id="casos">3 · Los 51 casos</h2>
@@ -1856,8 +1862,9 @@
             <tr>
               <td>Defectos abiertos</td>
               <td>
-                <span class="chip chip--warn">19</span> — 15 funcionales o
-                visuales y 4 de UX, todos con pasos, evidencia y severidad
+                <span class="chip chip--warn">18</span> — 14 funcionales o
+                visuales y 4 de UX, más el #46 (VoiceOver), ya resuelto, todos
+                con pasos, evidencia y severidad
               </td>
             </tr>
             <tr>
@@ -1905,13 +1912,19 @@
             <tr>
               <td class="num">2026-09-24</td>
               <td>
-                Conteos alineados con Qase: 51 casos, 42 automatizados (34
-                Appium y 8 de API, COCOS-42 incluido) y 19 defectos abiertos.
+                Qase ordenado y conteos alineados: los 34 casos de Appium
+                pasaron a «Automated» con la etiqueta
+                <code>automatizado:appium</code> (los 8 de API ya lo estaban,
+                con <code>automatizado:playwright</code>) y el defecto #46 quedó
+                resuelto. Resultado: 51 casos, 42 automatizados y 18 defectos
+                abiertos.
               </td>
               <td>
-                Los documentos decían 41 automatizados y 18 defectos: no
-                contaban COCOS-42, que la suite de API corre como defecto, ni el
-                defecto más reciente.
+                Qase marcaba 8 casos como automatizados y los documentos decían
+                41 (sin contar COCOS-42, que la suite de API corre como
+                defecto). El #46 seguía abierto aunque ya estaba corregido en el
+                código; falta una prueba manual con VoiceOver para cerrarlo del
+                todo.
               </td>
             </tr>
             <tr>
