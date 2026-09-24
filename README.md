@@ -122,10 +122,12 @@ de ejecución.
 | `12-order-resubmission`   | `COCOS-36`, `37`, `40`      | Doble toque, arrastre de estado entre instrumentos y reenvío fantasma al reabrir.                                              |
 | `13-portfolio-derived`    | `COCOS-11`, `12`, `30`      | Efectivo/posiciones reflejan el servicio; signo de la ganancia en cero (rendimiento en rojo, mismo defecto de formato que O4). |
 | `14-account-behavior`     | `COCOS-34`, `15`            | Cambiar de pestaña conserva el estado; formato argentino (hallazgo O4, porcentaje en rojo).                                    |
-| `15-account-reset`        | `COCOS-13`, `50`            | Reiniciar deja el saldo inicial y borra las órdenes límite pendientes. Corre último: nuclea la cuenta compartida.              |
+| `15-order-history-order`  | `COCOS-48`                  | Con doce órdenes seguidas, el historial muestra las más nuevas primero y en orden inverso al de envío.                         |
+| `16-limit-orders`         | `COCOS-8`, `29`, `46`       | Órdenes límite no ejecutables: nunca se ejecutan, terminan rechazadas y liberan la reserva de efectivo o de acciones.          |
+| `17-account-reset`        | `COCOS-13`, `50`            | Reiniciar deja el saldo inicial y borra las órdenes límite pendientes. Corre último: nuclea la cuenta compartida.              |
 
 **Un instrumento distinto por caso** (DYCA, CAPX, MIRG, TECO2, PATA, FERR,
-SAMI, y doce más agregados para los specs `06`–`15`), a propósito: todos los
+SAMI, y dieciséis más agregados para los specs `06`–`16`), a propósito: todos los
 specs de una corrida comparten tenant, así que si dos casos operaran el mismo
 ticker el delta de uno mediría el movimiento del otro.
 
@@ -147,10 +149,12 @@ No son bugs de la suite.
 
 ### Estado por plataforma
 
-**Android** (Pixel 8, API 36): los 30 casos, 26 verdes y los 4 rojos de arriba.
-La primera corrida completa de los 15 specs en una sola sesión (27 minutos) dio
-además dos fallos propios de la suite, `COCOS-36` y `COCOS-50`; se estabilizaron
-y pasan en verde por separado, pero no se repitió la corrida completa.
+**Android** (Pixel 8, API 36): los 34 casos, 30 verdes y los 4 rojos de arriba.
+La primera corrida completa de los primeros 30 casos en una sola sesión (27
+minutos) dio además dos fallos propios de la suite, `COCOS-36` y `COCOS-50`; se
+estabilizaron y pasan en verde por separado, y los cuatro casos siguientes
+(`COCOS-48`, `8`, `29` y `46`) también se verificaron por spec. No se repitió la
+corrida completa de los 34, que ronda los 45 minutos.
 
 **iOS** (iPhone 17 Pro, iOS 26.5): los 22 casos nuevos se verificaron spec por
 spec, no en una sola corrida.
@@ -162,6 +166,8 @@ spec, no en una sola corrida.
   "max scroll count reached"), `COCOS-34` y `COCOS-15` no llegan a cargar el
   listado del Portafolio, y el spec `13` (`COCOS-11, 12, 30`) no se llegó a
   completar.
+- `COCOS-48`, `8`, `29` y `46` se sumaron después y todavía no se probaron en
+  iOS.
 - Los 4 fallos originales de iOS se atribuyeron al desajuste entre Xcode y el
   runtime. En esta ronda apareció además un defecto propio, ya corregido: dos
   scrolls simultáneos al leer la ficha de la posición. No se re-verificó si eso
@@ -172,14 +178,33 @@ La config elige el simulador que ya esté booteado; si hay varios, se fija con
 
 ### Qué NO se automatiza, y por qué
 
-- **Órdenes límite** (`COCOS-8, 29, 45, 46, 48`): la API las resuelve con un
-  factor aleatorio ante cualquier request posterior. Son flaky por diseño del
-  servicio, no del test.
+- **Doble reserva de acciones** (`COCOS-45`): exige que la primera venta límite
+  siga pendiente cuando se envía la segunda, y la API resuelve las límite al
+  leer la cuenta, con un factor aleatorio: cualquier lectura intermedia la
+  deshace. Se cubre mejor a nivel API, sin lecturas entre las dos órdenes.
 - **Casos `tipo:visual`** (`COCOS-16, 19, 23, 26, 31`): superposiciones y
   recortes. Appium valida jerarquía, no píxeles.
 - **Casos de red caída** (`COCOS-14, 33, 38`): en Android se haría con
   `adb shell svc wifi disable`, pero en el simulador de iOS no hay equivalente.
   Sin paridad entre plataformas, no entran.
+
+### Órdenes límite: invariantes, no estados
+
+La API resuelve las órdenes límite al **leer** la cuenta y con un factor
+aleatorio, así que un estado puntual (pendiente, ejecutada, rechazada) no se
+puede afirmar. Lo que sí se mantiene es un invariante que se midió: una orden
+**no ejecutable** (compra por debajo del mercado, venta por encima) nunca se
+ejecuta (0 de 40 observadas) y termina rechazada. Los specs `16-limit-orders` y
+`15-order-history-order` se apoyan en eso:
+
+- Los pasos intermedios afirman **pertenencia a un conjunto**: el efectivo o las
+  acciones están reservados **o** ya liberados, y se deja constancia en Qase de
+  cuál de los dos se vio.
+- Los pasos finales afirman el estado terminal: rechazada, nunca ejecutada, y
+  efectivo y cantidad exactamente iguales a los del principio.
+- Para llegar al estado final se sondea la API (unos 300 ms por lectura, hasta
+  40): es lo mismo que refrescar la pantalla, pero sin pagar ~5 s por refresco.
+- `COCOS-48` no depende de esto: son doce órdenes a mercado, determinísticas.
 
 ### Aislamiento sin `POST /reset`
 

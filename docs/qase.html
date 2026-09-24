@@ -1471,10 +1471,36 @@
             </tr>
             <tr>
               <td class="num">
+                <a href="https://app.qase.io/case/COCOS-48">COCOS-48</a>
+              </td>
+              <td><code>15-order-history-order</code></td>
+              <td>
+                Doce órdenes a mercado seguidas: el historial las muestra de la
+                más nueva a la más vieja, en orden inverso al de envío, sin
+                huecos ni duplicados. Determinístico: no usa órdenes límite.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
+                <a href="https://app.qase.io/case/COCOS-8">COCOS-8</a>,
+                <a href="https://app.qase.io/case/COCOS-29">COCOS-29</a>,
+                <a href="https://app.qase.io/case/COCOS-46">COCOS-46</a>
+              </td>
+              <td><code>16-limit-orders</code></td>
+              <td>
+                Órdenes límite no ejecutables (compra por debajo del mercado,
+                venta por encima): nunca se ejecutan, terminan rechazadas y
+                liberan la reserva de efectivo o de acciones. Afirman
+                invariantes y no un estado puntual, porque la API las resuelve
+                al azar al leer la cuenta.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">
                 <a href="https://app.qase.io/case/COCOS-13">COCOS-13</a>,
                 <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
               </td>
-              <td><code>15-account-reset</code></td>
+              <td><code>17-account-reset</code></td>
               <td>
                 Reiniciar deja el saldo inicial sin posiciones ni historial, y
                 también borra las órdenes límite pendientes. Último spec de la
@@ -1596,11 +1622,13 @@
           </thead>
           <tbody>
             <tr>
-              <td class="num">COCOS-8, 29, 45, 46, 48</td>
+              <td class="num">COCOS-45</td>
               <td>
-                Órdenes límite. La API las resuelve con un factor aleatorio ante
-                cualquier request posterior: son flaky por diseño del servicio,
-                no del test.
+                Doble reserva de acciones. Exige que la primera venta límite
+                siga pendiente cuando se envía la segunda, y la API resuelve las
+                límite al leer la cuenta, con un factor aleatorio: cualquier
+                lectura intermedia la deshace. Se cubre mejor a nivel API, sin
+                lecturas entre las dos órdenes.
               </td>
             </tr>
             <tr>
@@ -1685,19 +1713,20 @@
                 >
               </td>
               <td class="num">2026-09-23</td>
+              <td class="num">34</td>
               <td class="num">30</td>
-              <td class="num">26</td>
               <td class="num">4</td>
               <td>
-                <span class="chip chip--ok">26 verdes</span> y
+                <span class="chip chip--ok">30 verdes</span> y
                 <span class="chip chip--warn">4 rojos a propósito</span>:
                 COCOS-18 (O3), COCOS-41 (O8), COCOS-15 y COCOS-30 (formato de
                 porcentaje, O4). Fallan porque el comportamiento esperado no
                 existe todavía en la app, no por la suite. La primera corrida
-                completa (27 min, los 15 specs en una sola sesión) dio además 2
-                fallos propios de la suite, COCOS-36 y COCOS-50: se
+                completa de los primeros 30 casos (27 min, en una sola sesión)
+                dio además 2 fallos propios de la suite, COCOS-36 y COCOS-50: se
                 estabilizaron y ambos pasan en verde al correrlos nuevamente por
-                separado.
+                separado. Los 4 casos siguientes (COCOS-48, 8, 29 y 46) también
+                se verificaron spec por spec, en verde.
               </td>
             </tr>
             <tr>
@@ -1737,7 +1766,9 @@
                 llega a la etiqueta), COCOS-34 y COCOS-15 no llegaron a cargar
                 el listado del Portafolio, y el spec 13 (COCOS-11, 12 y 30) no
                 se llegó a completar. Ninguno está verificado como defecto de la
-                app: en iOS quedan pendientes de reproducir.
+                app: en iOS quedan pendientes de reproducir. Los 4 casos que se
+                sumaron después (COCOS-48, 8, 29 y 46) todavía no se probaron en
+                iOS.
               </td>
             </tr>
             <tr>
@@ -1798,7 +1829,7 @@
             <tr>
               <td>Casos automatizados</td>
               <td>
-                <span class="chip chip--ok">37</span> — 30 por la suite Appium y
+                <span class="chip chip--ok">41</span> — 34 por la suite Appium y
                 7 por la de API con Playwright (sección 4); el resto sigue
                 manual
               </td>
@@ -1808,7 +1839,7 @@
               <td>
                 <span class="chip chip--ok">6</span> — 2 manuales (catálogo
                 completo, una por plataforma) y 4 automatizadas: Appium en
-                Android (30 casos: 26 verdes y 4 rojos a propósito), Appium en
+                Android (34 casos: 30 verdes y 4 rojos a propósito), Appium en
                 iOS (los 8 originales, 4/8, y los 22 nuevos verificados spec por
                 spec: 14 verdes, 2 rojos a propósito y 6 sin resolver) y la de
                 API con Playwright, la única publicada en Qase
@@ -1835,9 +1866,9 @@
       <div class="note">
         <span class="note__label">Qué cambió con la suite automatizada</span>
         <p>
-          37 de los 51 casos (sección 4) ya corren solos: 30 vía Appium y 7 vía
+          41 de los 51 casos (sección 4) ya corren solos: 34 vía Appium y 7 vía
           Playwright (API), con su resultado atado al mismo ID de Qase que usa
-          la corrida manual. Cuatro de los 30 de Appium están en rojo a
+          la corrida manual. Cuatro de los 34 de Appium están en rojo a
           propósito (COCOS-15, 18, 30 y 41): automatizan el comportamiento
           correcto de un defecto todavía abierto, así que se ponen en verde
           solos el día que se arregle la app. Las corridas de Appium quedan
@@ -1863,6 +1894,25 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-24</td>
+              <td>
+                Cuatro casos más pasaron a automatizados: COCOS-48 (historial
+                con doce órdenes) y COCOS-8, 29 y 46 (órdenes límite no
+                ejecutables). Salieron del grupo "órdenes límite, flaky por
+                diseño"; sólo COCOS-45 queda afuera.
+              </td>
+              <td>
+                La exclusión era demasiado amplia. COCOS-48 usa órdenes a
+                mercado y es determinístico. Los otros tres usan precios que
+                nunca se ejecutan (0 de 40 medidas), así que se afirman
+                invariantes en vez de un estado puntual: reservado o ya liberado
+                en el paso intermedio, rechazada y con el efectivo o las
+                acciones exactamente iguales al final. El sondeo por API lleva
+                la orden a su estado final, y el tope del job de Android en CI
+                subió de 45 a 75 minutos porque estos flujos son largos.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-23</td>
               <td>
@@ -1989,7 +2039,7 @@
       <footer class="footer">
         Catálogo de casos del challenge de QA de Cocos · Foto del proyecto
         <a href="https://app.qase.io/project/COCOS">COCOS</a> tomada el
-        23/09/2026: 51 casos, 5 suites, 37 automatizados, 6 corridas. Documento
+        23/09/2026: 51 casos, 5 suites, 41 automatizados, 6 corridas. Documento
         vivo: se actualiza con cada corrida que se ejecute.
       </footer>
     </div>
