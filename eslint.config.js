@@ -118,11 +118,6 @@ module.exports = defineConfig([
   },
   {
     files: [ "e2e/**/*.ts" ],
-    languageOptions: {
-      parserOptions: {
-        project: [ "./e2e/tsconfig.json" ],
-      },
-    },
     rules: {
       "no-console": "off",
     },
@@ -166,6 +161,17 @@ module.exports = defineConfig([
           fixStyle: "inline-type-imports",
         },
       ],
+    },
+  },
+  // Va DESPUÉS del bloque genérico de TypeScript: si no, éste le pisa el
+  // `project` y los .ts de e2e/ quedan fuera del tsconfig raíz, que los excluye
+  // porque necesitan los tipos globales de WebdriverIO.
+  {
+    files: [ "e2e/**/*.ts" ],
+    languageOptions: {
+      parserOptions: {
+        project: [ "./e2e/tsconfig.json" ],
+      },
     },
   },
 ])

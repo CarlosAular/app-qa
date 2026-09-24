@@ -8,5 +8,10 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": [".expo/**", "**/*.test.ts", "src/features/home-example/**"]
+  "exclude": [
+    ".expo/**",
+    "**/*.test.ts",
+    "src/features/home-example/**",
+    "e2e/**"
+  ]
 }
