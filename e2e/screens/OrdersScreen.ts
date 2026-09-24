@@ -23,6 +23,7 @@ const STATUS_LABELS: OrderStatusLabel[] = [
   "Rechazada",
 ]
 const ORDER_ID_PATTERN = /#(\d+)/
+const HEADER_SUBTITLE = "Historial completo de órdenes"
 
 /**
  * El botón y el título del diálogo nativo comparten el MISMO texto
@@ -37,7 +38,7 @@ const RESET_PENDING_LABEL = "Reiniciando…"
 
 class OrdersScreen {
   async waitUntilLoaded() {
-    await waitForVisible(byTextContains("Historial completo de órdenes"), {
+    await waitForVisible(byTextContains(HEADER_SUBTITLE), {
       message: "No cargó la pantalla de Órdenes.",
     })
   }
@@ -45,6 +46,17 @@ class OrdersScreen {
   async refresh() {
     await scrollToTop()
     await pullToRefresh()
+
+    /*
+     * Si el refresco trajo órdenes nuevas, la lista se corre hacia abajo: en iOS
+     * (FlashList mantiene el contenido visible al insertar filas arriba) el
+     * encabezado queda fuera de pantalla aunque se haya vuelto al tope antes.
+     * Con doce órdenes nuevas de golpe es lo que pasaba en COCOS-48.
+     */
+    if (!(await isVisible(byTextContains(HEADER_SUBTITLE), 2_500))) {
+      await scrollToTop()
+    }
+
     await this.waitUntilLoaded()
   }
 

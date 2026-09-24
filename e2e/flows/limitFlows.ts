@@ -34,7 +34,7 @@ export const submitLimitOrderFromMarkets = async ({
   const estimate = await orderTicket.readEstimate()
 
   await orderTicket.submit()
-  await orderTicket.waitForSubmitted()
+  await orderTicket.waitForSubmittedOrClosed()
   await orderTicket.close()
 
   return {lastPrice, estimate}

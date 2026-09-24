@@ -146,6 +146,37 @@ class OrderTicket {
     })
   }
 
+  /**
+   * Como `waitForSubmitted`, pero da por procesada la orden también si el sheet
+   * ya se cerró solo.
+   *
+   * Observado en iOS con las VENTAS límite: pasados unos segundos del envío el
+   * sheet se cierra por su cuenta y aparece el toast "Orden enviada", en vez de
+   * quedar abierto con "Enviar otra orden" (las compras límite sí quedan abiertas).
+   * La orden llegó igual: el servicio la muestra pendiente. No se confirmó la
+   * causa; la hipótesis es que el refresco de la posición, ya con la reserva
+   * descontada, desmonta el sheet. Que la orden existió lo verifican los pasos
+   * siguientes del caso contra la API, no esta espera.
+   */
+  async waitForSubmittedOrClosed(timeout = 20_000) {
+    await eventually(
+      async () => {
+        if (await isVisible(byTextInsensitive(TICKET.submitDone), 800)) {
+          return
+        }
+
+        if (!(await this.isOpen())) {
+          return
+        }
+
+        throw new Error(
+          'La orden no llegó a procesarse: el ticket sigue en "Enviando…".'
+        )
+      },
+      {timeout, interval: 300}
+    )
+  }
+
   /** Mensaje de validación bajo un campo. */
   async expectFieldError(message: string) {
     await eventually(async () => {
