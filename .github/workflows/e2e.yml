@@ -97,7 +97,9 @@ jobs:
     name: Android · suite
     needs: android-build
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 34 casos de UI tardan ~45 min en el emulador (los de órdenes límite
+    # reproducen flujos de seis pasos con sondeo), más el arranque del AVD.
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
