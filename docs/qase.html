@@ -1375,8 +1375,8 @@
               <td><code>06-search</code></td>
               <td>
                 Buscar por ticker, por sugerencia de "Más movidos", por nombre
-                de empresa (hallazgo O3, rojo a propósito) y distinguir ACCIONES
-                de MONEDA en el resultado.
+                de empresa (hallazgo O3, falla por un defecto de la app) y
+                distinguir ACCIONES de MONEDA en el resultado.
               </td>
             </tr>
             <tr>
@@ -1418,7 +1418,7 @@
               <td><code>10-ticket-non-stock</code></td>
               <td>
                 ARS no debería poder comprarse (hallazgo O8: hoy la API la
-                ejecuta igual, rojo a propósito).
+                ejecuta igual, falla por un defecto de la app).
               </td>
             </tr>
             <tr>
@@ -1466,7 +1466,8 @@
               <td><code>14-account-behavior</code></td>
               <td>
                 Cambiar de pestaña conserva el estado, e importes/porcentajes en
-                formato argentino (hallazgo O4, el porcentaje rojo a propósito).
+                formato argentino (hallazgo O4, el porcentaje falla por un
+                defecto de la app).
               </td>
             </tr>
             <tr>
@@ -1599,8 +1600,8 @@
               </td>
               <td><code>defects</code></td>
               <td>
-                Defectos conocidos en off (@defecto): fallan a propósito, corren
-                aparte.
+                Defectos conocidos en off (@defecto): fallan porque el servicio
+                no los cumple, corren aparte.
               </td>
             </tr>
           </tbody>
@@ -1718,8 +1719,9 @@
               <td class="num">4</td>
               <td>
                 <span class="chip chip--ok">30 verdes</span> y
-                <span class="chip chip--warn">4 rojos a propósito</span>:
-                COCOS-18 (O3), COCOS-41 (O8), COCOS-15 y COCOS-30 (formato de
+                <span class="chip chip--warn"
+                  >4 que fallan por un defecto de la app</span
+                >: COCOS-18 (O3), COCOS-41 (O8), COCOS-15 y COCOS-30 (formato de
                 porcentaje, O4). Fallan porque el comportamiento esperado no
                 existe todavía en la app, no por la suite. La primera corrida
                 completa de los primeros 30 casos (27 min, en una sola sesión)
@@ -1760,16 +1762,17 @@
               <td class="num">4</td>
               <td>
                 <span class="chip chip--ok">22 verdes</span> y
-                <span class="chip chip--warn">4 rojos a propósito</span>, los
-                mismos que en Android: COCOS-18 (O3), COCOS-41 (O8), COCOS-15 y
-                COCOS-30 (formato de porcentaje, O4). Los fallos que había en
-                iOS eran de la suite y ya se corrigieron: la barra de pestañas
-                colapsada de iOS 26 (el toque caía sobre una fila), la ficha de
-                la posición (el scroll de WDA no converge y el botón "Operar
-                esta posición" figura invisible aunque esté libre) y el refresco
-                de Órdenes con filas nuevas. Se verificó por spec, no en una
-                sola corrida. En iOS la venta límite (COCOS-46) cierra el ticket
-                sola tras enviarse: comportamiento observado, causa sin
+                <span class="chip chip--warn"
+                  >4 que fallan por un defecto de la app</span
+                >, los mismos que en Android: COCOS-18 (O3), COCOS-41 (O8),
+                COCOS-15 y COCOS-30 (formato de porcentaje, O4). Los fallos que
+                había en iOS eran de la suite y ya se corrigieron: la barra de
+                pestañas colapsada de iOS 26 (el toque caía sobre una fila), la
+                ficha de la posición (el scroll de WDA no converge y el botón
+                "Operar esta posición" figura invisible aunque esté libre) y el
+                refresco de Órdenes con filas nuevas. Se verificó por spec, no
+                en una sola corrida. En iOS la venta límite (COCOS-46) cierra el
+                ticket sola tras enviarse: comportamiento observado, causa sin
                 confirmar (detalle en el README).
               </td>
             </tr>
@@ -1801,7 +1804,8 @@
         <li>
           Contra qué <strong>nivel de defectos</strong> se corrió — el header
           <code>X-Enable-Bugs</code>: <code>off</code> es la línea base, y los
-          niveles superiores tienen que empezar a fallar a propósito.
+          niveles superiores tienen que empezar a fallar, porque inyectan
+          defectos.
         </li>
         <li>
           Cuántos casos pasaron, fallaron o quedaron bloqueados, y los
@@ -1833,8 +1837,8 @@
               <td>
                 <span class="chip chip--ok">42</span> — 34 por la suite Appium y
                 8 por la de API con Playwright (sección 4, COCOS-42 corre como
-                defecto y falla a propósito); los 9 restantes quedan manuales,
-                cada uno con su motivo
+                defecto y falla porque el servicio no lo cumple); los 9
+                restantes quedan manuales, cada uno con su motivo
               </td>
             </tr>
             <tr>
@@ -1842,10 +1846,11 @@
               <td>
                 <span class="chip chip--ok">6</span> — 2 manuales (catálogo
                 completo, una por plataforma) y 4 automatizadas: Appium en
-                Android (34 casos: 30 verdes y 4 rojos a propósito), Appium en
-                iOS (los 8 originales, 4/8, y los 26 nuevos verificados spec por
-                spec: 22 verdes y 4 rojos a propósito) y la de API con
-                Playwright, la única publicada en Qase
+                Android (34 casos: 30 verdes y 4 que fallan por un defecto de la
+                app), Appium en iOS (los 8 originales, 4/8, y los 26 nuevos
+                verificados spec por spec: 22 verdes y 4 que fallan por un
+                defecto de la app) y la de API con Playwright, la única
+                publicada en Qase
               </td>
             </tr>
             <tr>
@@ -1869,14 +1874,14 @@
       <div class="note">
         <span class="note__label">Qué cambió con la suite automatizada</span>
         <p>
-          41 de los 51 casos (sección 4) ya corren solos: 34 vía Appium y 7 vía
+          41 de los 51 casos (sección 4) ya corren solos: 34 vía Appium y 8 vía
           Playwright (API), con su resultado atado al mismo ID de Qase que usa
-          la corrida manual. Cuatro de los 34 de Appium están en rojo a
-          propósito (COCOS-15, 18, 30 y 41): automatizan el comportamiento
-          correcto de un defecto todavía abierto, así que se ponen en verde
-          solos el día que se arregle la app. Las corridas de Appium quedan
-          locales (sección 5, <code>QASE_MODE=off</code>) y sólo la de API está
-          publicada en Qase; publicar las de Appium es opcional y se hace con
+          la corrida manual. Cuatro de los 34 de Appium fallan por un defecto de
+          la app (COCOS-15, 18, 30 y 41): automatizan el comportamiento correcto
+          de un defecto todavía abierto, así que se ponen en verde solos el día
+          que se arregle la app. Las corridas de Appium quedan locales (sección
+          5, <code>QASE_MODE=off</code>) y sólo la de API está publicada en
+          Qase; publicar las de Appium es opcional y se hace con
           <code>QASE_MODE=testops</code> y un token, como describe el README.
         </p>
       </div>
@@ -1913,11 +1918,11 @@
               <td class="num">2026-09-24</td>
               <td>
                 Los 26 casos nuevos quedaron verificados en iOS: 22 verdes y 4
-                rojos a propósito (COCOS-15, 18, 30 y 41), los mismos que en
-                Android. Los seis que estaban sin resolver (COCOS-22, 34, 15,
-                11, 12 y 30) se diagnosticaron: cuatro eran defectos de la suite
-                y ya pasan, y los otros dos son rojos a propósito por el formato
-                de porcentaje (defecto #25).
+                que fallan por un defecto de la app (COCOS-15, 18, 30 y 41), los
+                mismos que en Android. Los seis que estaban sin resolver
+                (COCOS-22, 34, 15, 11, 12 y 30) se diagnosticaron: cuatro eran
+                defectos de la suite y ya pasan, y los otros dos fallan por el
+                formato de porcentaje (defecto #25).
               </td>
               <td>
                 Se corrigieron tres problemas de la suite en iOS: la barra de
@@ -1958,15 +1963,15 @@
               <td>
                 Eran la zona de mayor riesgo de la matriz (integridad de la
                 orden, portafolio, reenvíos, reinicio) y salían casi gratis con
-                los page objects existentes. Cuatro casos quedaron en rojo a
-                propósito porque el comportamiento correcto todavía no existe en
-                la app: COCOS-18 (búsqueda por nombre, O3), COCOS-41 (ARS
-                comprable, O8) y COCOS-15 y COCOS-30 (porcentaje con punto
-                decimal, O4, que ya incluye al portafolio: defecto #25 en Qase).
-                La verificación cruzada Android e iOS corrigió además varios
-                defectos propios de la suite, entre ellos el tap sobre la última
-                fila del portafolio (tapada por la barra de pestañas) y dos
-                scrolls simultáneos en la misma sesión de WebDriver.
+                los page objects existentes. Cuatro casos fallan por un defecto
+                de la app: el comportamiento correcto todavía no existe:
+                COCOS-18 (búsqueda por nombre, O3), COCOS-41 (ARS comprable, O8)
+                y COCOS-15 y COCOS-30 (porcentaje con punto decimal, O4, que ya
+                incluye al portafolio: defecto #25 en Qase). La verificación
+                cruzada Android e iOS corrigió además varios defectos propios de
+                la suite, entre ellos el tap sobre la última fila del portafolio
+                (tapada por la barra de pestañas) y dos scrolls simultáneos en
+                la misma sesión de WebDriver.
               </td>
             </tr>
             <tr>

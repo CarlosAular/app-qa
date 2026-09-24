@@ -49,7 +49,7 @@ process.env.QASE_REPORT_CONNECTION_FORMAT ??= "json"
 export default defineConfig<{tier: BugsTier}>({
   testDir: "./specs",
   testMatch: "**/*.api.ts",
-  // Los tests @defecto afirman el comportamiento correcto y hoy fallan a propósito:
+  // Los tests @defecto afirman el comportamiento correcto y hoy fallan porque el servicio no lo cumple:
   // no van en la corrida base, sólo con API_DEFECTS=1 (bun run test:api:defectos).
   ...(defects ? {grep: /@defecto/} : {grepInvert: /@defecto/}),
   outputDir: "./reports/test-output",

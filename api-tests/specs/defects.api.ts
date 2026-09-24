@@ -4,7 +4,7 @@ import {expect, tag, test} from "../fixtures"
 
 /*
  * Defectos conocidos del servicio, en tier `off`. Cada test afirma el
- * comportamiento ESPERADO, así que hoy FALLA a propósito. Están etiquetados
+ * comportamiento ESPERADO, así que hoy FALLA porque el servicio no lo cumple. Están etiquetados
  * @defecto y quedan fuera de la corrida base: se ejecutan con
  * `bun run test:api:defectos`, donde su resultado en Qase es "failed" hasta que
  * el servicio se corrija.

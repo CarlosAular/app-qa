@@ -110,32 +110,32 @@ de ejecución.
 
 ### Casos automatizados
 
-| Spec                      | Casos de Qase               | Qué protege                                                                                                                    |
-| ------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `01-market-buy`           | `COCOS-7`                   | Compra a mercado end-to-end: estimado, ejecución al precio vigente, efectivo y posición.                                       |
-| `02-amount-pesos`         | `COCOS-5`, `COCOS-49`       | Conversión de pesos a acciones enteras: nunca redondea hacia arriba, acepta coma decimal.                                      |
-| `03-ticket-validation`    | `COCOS-6`, `COCOS-47`       | Los tres mensajes de validación del ticket, sin crear ninguna orden.                                                           |
-| `04-sell-partial`         | `COCOS-25`, `COCOS-28`      | Venta a mercado y venta parcial: el PPP no cambia al vender.                                                                   |
-| `05-order-history`        | `COCOS-10`                  | La orden recién enviada aparece primera con sus datos.                                                                         |
-| `06-search`               | `COCOS-1`, `17`, `18`, `43` | Buscar por ticker, por sugerencia, por nombre de empresa (hallazgo O3, rojo a propósito) y distinguir ACCIONES de MONEDA.      |
-| `07-market-catalog`       | `COCOS-3`, `2`              | Abrir la ficha desde el panel; precio y retorno diario coinciden entre panel y ficha.                                          |
-| `08-ticket-setup`         | `COCOS-4`, `22`             | El panel abre con los valores por defecto correctos, y sobre el instrumento correcto desde los tres accesos.                   |
-| `09-ticket-limit-pricing` | `COCOS-21`                  | El estimado de una orden límite usa el precio límite, no el de mercado.                                                        |
-| `10-ticket-non-stock`     | `COCOS-41`                  | ARS no debería poder comprarse (hallazgo O8, rojo a propósito).                                                                |
-| `11-order-integrity`      | `COCOS-9`, `44`             | No comprar por más efectivo del disponible; el precio confirmado es el que se ejecuta.                                         |
-| `12-order-resubmission`   | `COCOS-36`, `37`, `40`      | Doble toque, arrastre de estado entre instrumentos y reenvío fantasma al reabrir.                                              |
-| `13-portfolio-derived`    | `COCOS-11`, `12`, `30`      | Efectivo/posiciones reflejan el servicio; signo de la ganancia en cero (rendimiento en rojo, mismo defecto de formato que O4). |
-| `14-account-behavior`     | `COCOS-34`, `15`            | Cambiar de pestaña conserva el estado; formato argentino (hallazgo O4, porcentaje en rojo).                                    |
-| `15-order-history-order`  | `COCOS-48`                  | Con doce órdenes seguidas, el historial muestra las más nuevas primero y en orden inverso al de envío.                         |
-| `16-limit-orders`         | `COCOS-8`, `29`, `46`       | Órdenes límite no ejecutables: nunca se ejecutan, terminan rechazadas y liberan la reserva de efectivo o de acciones.          |
-| `17-account-reset`        | `COCOS-13`, `50`            | Reiniciar deja el saldo inicial y borra las órdenes límite pendientes. Corre último: nuclea la cuenta compartida.              |
+| Spec                      | Casos de Qase               | Qué protege                                                                                                                             |
+| ------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `01-market-buy`           | `COCOS-7`                   | Compra a mercado end-to-end: estimado, ejecución al precio vigente, efectivo y posición.                                                |
+| `02-amount-pesos`         | `COCOS-5`, `COCOS-49`       | Conversión de pesos a acciones enteras: nunca redondea hacia arriba, acepta coma decimal.                                               |
+| `03-ticket-validation`    | `COCOS-6`, `COCOS-47`       | Los tres mensajes de validación del ticket, sin crear ninguna orden.                                                                    |
+| `04-sell-partial`         | `COCOS-25`, `COCOS-28`      | Venta a mercado y venta parcial: el PPP no cambia al vender.                                                                            |
+| `05-order-history`        | `COCOS-10`                  | La orden recién enviada aparece primera con sus datos.                                                                                  |
+| `06-search`               | `COCOS-1`, `17`, `18`, `43` | Buscar por ticker, por sugerencia, por nombre de empresa (hallazgo O3, falla por un defecto de la app) y distinguir ACCIONES de MONEDA. |
+| `07-market-catalog`       | `COCOS-3`, `2`              | Abrir la ficha desde el panel; precio y retorno diario coinciden entre panel y ficha.                                                   |
+| `08-ticket-setup`         | `COCOS-4`, `22`             | El panel abre con los valores por defecto correctos, y sobre el instrumento correcto desde los tres accesos.                            |
+| `09-ticket-limit-pricing` | `COCOS-21`                  | El estimado de una orden límite usa el precio límite, no el de mercado.                                                                 |
+| `10-ticket-non-stock`     | `COCOS-41`                  | ARS no debería poder comprarse (hallazgo O8, falla por un defecto de la app).                                                           |
+| `11-order-integrity`      | `COCOS-9`, `44`             | No comprar por más efectivo del disponible; el precio confirmado es el que se ejecuta.                                                  |
+| `12-order-resubmission`   | `COCOS-36`, `37`, `40`      | Doble toque, arrastre de estado entre instrumentos y reenvío fantasma al reabrir.                                                       |
+| `13-portfolio-derived`    | `COCOS-11`, `12`, `30`      | Efectivo/posiciones reflejan el servicio; signo de la ganancia en cero (rendimiento en rojo, mismo defecto de formato que O4).          |
+| `14-account-behavior`     | `COCOS-34`, `15`            | Cambiar de pestaña conserva el estado; formato argentino (hallazgo O4, porcentaje en rojo).                                             |
+| `15-order-history-order`  | `COCOS-48`                  | Con doce órdenes seguidas, el historial muestra las más nuevas primero y en orden inverso al de envío.                                  |
+| `16-limit-orders`         | `COCOS-8`, `29`, `46`       | Órdenes límite no ejecutables: nunca se ejecutan, terminan rechazadas y liberan la reserva de efectivo o de acciones.                   |
+| `17-account-reset`        | `COCOS-13`, `50`            | Reiniciar deja el saldo inicial y borra las órdenes límite pendientes. Corre último: nuclea la cuenta compartida.                       |
 
 **Un instrumento distinto por caso** (DYCA, CAPX, MIRG, TECO2, PATA, FERR,
 SAMI, y dieciséis más agregados para los specs `06`–`16`), a propósito: todos los
 specs de una corrida comparten tenant, así que si dos casos operaran el mismo
 ticker el delta de uno mediría el movimiento del otro.
 
-### Casos en rojo a propósito
+### Casos que fallan por un defecto de la app
 
 Cuatro casos automatizan el comportamiento **correcto** de un defecto que sigue
 abierto en la app: hoy fallan, y se ponen en verde solos el día que se arregle.
@@ -165,7 +165,7 @@ spec, no en una sola corrida, y dan lo mismo que en Android.
 
 - Verdes (22): `COCOS-1, 2, 3, 4, 8, 9, 11, 12, 13, 17, 21, 22, 29, 34, 36, 37,
 40, 43, 44, 46, 48, 50`.
-- Rojos a propósito (4), los mismos que en Android: `COCOS-15`, `18`, `30` y `41`.
+- Fallan por un defecto de la app (4), los mismos que en Android: `COCOS-15`, `18`, `30` y `41`.
 - Los 8 casos originales no se volvieron a correr en esta ronda. Sus 4 fallos se
   habían atribuido al desajuste entre Xcode y el runtime; puede que los arreglos
   de abajo también cambien ese resultado, pero no está verificado.
@@ -345,14 +345,14 @@ de Qase.
 bun run test:api            # tier `off` (línea base): debe pasar en verde
 bun run test:api:easy       # también :medium y :hard — los fallos son hallazgos
 bun run test:api:tiers      # los cuatro tiers en una sola corrida
-bun run test:api:defectos   # defectos conocidos en `off`: fallan a propósito
+bun run test:api:defectos   # defectos conocidos en `off`: fallan porque el servicio no los cumple
 bun run test:api:report     # genera y abre el reporte de Allure
 ```
 
 - **Un test por caso de Qase:** cada test declara su caso con
   `qase(id, "COCOS-N · ...")` y cada paso del caso es un `test.step`, igual que
   los E2E. Cubren COCOS-20, 24, 27, 32, 35, 39 y 51, más COCOS-42, que va como defecto
-  (`@defecto`, falla a propósito): 8 casos de Qase.
+  (`@defecto`, falla porque el servicio no lo cumple): 8 casos de Qase.
 - **Tiers como proyectos:** cada valor de `X-Enable-Bugs` es un proyecto de
   Playwright. La misma suite pasa en `off` y va fallando al subir el tier
   (en `easy` ya falla el catálogo y el saldo). `API_TIERS=off,hard bun run test:api`
