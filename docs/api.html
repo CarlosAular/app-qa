@@ -513,15 +513,11 @@
         <ol>
           <li><a href="#headers">Headers obligatorios</a></li>
           <li><a href="#endpoints">Endpoints</a></li>
-          <li><a href="#reglas">Reglas de negocio</a></li>
           <li>
             <a href="#limite">Resolución de órdenes límite</a>
             <span>— la parte crítica</span>
           </li>
-          <li><a href="#aislamiento">Aislamiento y persistencia</a></li>
-          <li><a href="#tiers">Niveles de defectos</a></li>
           <li><a href="#anomalias">Anomalías observadas</a></li>
-          <li><a href="#recetas">Recetas de verificación</a></li>
         </ol>
       </nav>
 
@@ -533,18 +529,11 @@
 
       <h3><code>X-Enable-Bugs</code> — en todos los endpoints</h3>
       <p>
-        Nivel de defectos inyectados: <code>off</code>, <code>easy</code>,
-        <code>medium</code> o <code>hard</code>. No distingue mayúsculas (<code
-          >OFF</code
-        >
-        funciona). Ausente o con cualquier otro valor:
+        Se manda siempre <code>off</code>, que es el comportamiento normal del
+        servicio. No distingue mayúsculas (<code>OFF</code> funciona). Si falta
+        o no es un valor válido, la API responde 400:
       </p>
       <pre><code>{<span class="s">"error"</span>: <span class="s">"X-Enable-Bugs must be off, easy, medium, or hard"</span>}</code></pre>
-      <p>
-        <code>off</code> es el camino sano y la línea base contra la que se
-        escriben las verificaciones.
-      </p>
-
       <h3><code>X-Candidate-Id</code> — en portfolio, orders y reset</h3>
       <p>Identifica la cuenta. Ausente o vacío:</p>
       <pre><code>{<span class="s">"error"</span>: <span class="s">"Missing X-Candidate-Id header"</span>}</code></pre>
@@ -1054,87 +1043,7 @@ curl -s <span class="s">"https://dummy-api-topaz.vercel.app/portfolio"</span> \
       </div>
 
       <!-- ================================================================ -->
-      <h2 id="reglas">3 · Reglas de negocio</h2>
-      <p class="h2sub">Ejecución y ciclo de las reservas de saldo.</p>
-
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Tipo</th>
-              <th>Al crearse</th>
-              <th>Precio de ejecución</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>MARKET</code></td>
-              <td><span class="chip chip--ok">FILLED</span> inmediato</td>
-              <td>Último precio del instrumento</td>
-            </tr>
-            <tr>
-              <td><code>LIMIT</code></td>
-              <td>
-                <strong>Siempre</strong>
-                <span class="chip chip--wait">PENDING</span>
-              </td>
-              <td>Se resuelve después</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Ciclo de la reserva</h3>
-      <p>Toda orden aparta saldo en el momento de crearse.</p>
-
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Estado</th>
-              <th>Efecto sobre la reserva</th>
-              <th>Efecto en el portafolio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="chip chip--wait">PENDING</span></td>
-              <td>La mantiene</td>
-              <td>Efectivo o cantidad reducidos</td>
-            </tr>
-            <tr>
-              <td><span class="chip chip--ok">FILLED</span></td>
-              <td>La liquida</td>
-              <td>Se materializa el movimiento</td>
-            </tr>
-            <tr>
-              <td><span class="chip chip--bad">REJECTED</span></td>
-              <td>La libera</td>
-              <td>Vuelve el saldo</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <ul>
-        <li>
-          Una <strong>compra</strong> reserva <code>cantidad × precio</code> de
-          efectivo.
-        </li>
-        <li>
-          Una <strong>venta</strong> reserva <code>cantidad</code> acciones.
-        </li>
-      </ul>
-
-      <p>
-        <em>Observado:</em> con $ 999.542,80 y 10 DYCA, una venta límite de 5
-        DYCA deja el efectivo intacto y baja la tenencia a 5; una compra límite
-        de 10 CAPX a $ 40 baja el efectivo en exactamente $ 400 sin crear
-        ninguna tenencia.
-      </p>
-
-      <!-- ================================================================ -->
-      <h2 id="limite">4 · Resolución de órdenes límite</h2>
+      <h2 id="limite">3 · Resolución de órdenes límite</h2>
       <p class="h2sub">
         No determinística y perezosa. Es el comportamiento más importante a la
         hora de diseñar tests estables.
@@ -1251,106 +1160,7 @@ GET /orders  #2  -> REJECTED   <span class="c">(terminal, no cambia más)</span>
       </ul>
 
       <!-- ================================================================ -->
-      <h2 id="aislamiento">5 · Aislamiento y persistencia</h2>
-      <p class="h2sub">Cómo hacer que dos corridas de tests no se pisen.</p>
-
-      <ul>
-        <li>
-          El estado <strong>persiste entre corridas</strong>. Dos ejecuciones
-          con el mismo candidate-id interfieren entre sí.
-        </li>
-        <li>
-          El id es arbitrario: se pueden generar ids únicos por corrida o por
-          caso para paralelizar
-          <strong>sin depender del reset</strong>.
-        </li>
-      </ul>
-
-      <div class="note">
-        <span class="note__label">Entornos donde el reset no existe</span>
-        <p>
-          La estrategia pasa a asertar <strong>deltas</strong> en vez de valores
-          absolutos: leer el estado, ejecutar la acción, asertar la diferencia
-          esperada (<code
-            >efectivo_después = efectivo_antes − cantidad × precio</code
-          >). Los ids únicos por corrida son el complemento natural.
-        </p>
-      </div>
-
-      <!-- ================================================================ -->
-      <h2 id="tiers">6 · Niveles de defectos</h2>
-      <p class="h2sub">
-        Diferencias observadas contra <code>off</code> en un sondeo acotado. No
-        es un inventario completo de los defectos inyectados.
-      </p>
-
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Comprobación</th>
-              <th>off</th>
-              <th>easy</th>
-              <th>medium</th>
-              <th>hard</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Listado y búsqueda de instrumentos</td>
-              <td><span class="chip chip--ok">ok</span></td>
-              <td><span class="chip chip--ok">ok</span></td>
-              <td><span class="chip chip--ok">ok</span></td>
-              <td><span class="chip chip--ok">ok</span></td>
-            </tr>
-            <tr>
-              <td>Cantidad cero rechazada</td>
-              <td><span class="chip chip--ok">400</span></td>
-              <td><span class="chip chip--ok">400</span></td>
-              <td><span class="chip chip--ok">400</span></td>
-              <td><span class="chip chip--ok">400</span></td>
-            </tr>
-            <tr>
-              <td><strong>Venta sin tenencia suficiente</strong></td>
-              <td><span class="chip chip--ok">rechaza</span></td>
-              <td><span class="chip chip--bad">la acepta</span></td>
-              <td><span class="chip chip--bad">la acepta</span></td>
-              <td><span class="chip chip--bad">la acepta</span></td>
-            </tr>
-            <tr>
-              <td><strong>Código HTTP al crear una orden</strong></td>
-              <td><span class="chip chip--ok">201</span></td>
-              <td><span class="chip chip--ok">201</span></td>
-              <td><span class="chip chip--bad">200</span></td>
-              <td><span class="chip chip--bad">200</span></td>
-            </tr>
-            <tr>
-              <td><strong>Precio de ejecución a mercado</strong></td>
-              <td><span class="chip chip--ok">último</span></td>
-              <td><span class="chip chip--ok">último</span></td>
-              <td><span class="chip chip--ok">último</span></td>
-              <td><span class="chip chip--bad">cierre</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="note note--warn">
-        <span class="note__label">Cómo autoverificar la suite</span>
-        <p>
-          Una suite bien construida debería fallar al menos en: control de
-          tenencia (desde
-          <code>easy</code>), código de estado de creación (desde
-          <code>medium</code>) y precio de ejecución (en <code>hard</code>).
-          <strong
-            >Si al subir el nivel la suite sigue toda en verde, es que no está
-            asertando comportamiento real.</strong
-          >
-        </p>
-      </div>
-
-      <!-- ================================================================ -->
-      <h2 id="anomalias">7 · Anomalías observadas</h2>
+      <h2 id="anomalias">4 · Anomalías observadas</h2>
       <p class="h2sub">
         Desviaciones respecto de lo documentado o de lo esperable,
         <strong>todas con los defectos en <code>off</code></strong> — es decir,
@@ -1457,118 +1267,12 @@ curl -s <span class="s">"https://dummy-api-topaz.vercel.app/"</span> \
   -H <span class="s">"X-Enable-Bugs: off"</span> -w <span class="s">" [%{http_code}]\n"</span></code></pre>
       </div>
 
-      <!-- ================================================================ -->
-      <h2 id="recetas">8 · Recetas de verificación</h2>
-      <p class="h2sub">Para explorar a mano desde la terminal.</p>
-
-      <pre><code>API=https://dummy-api-topaz.vercel.app
-CID=tu-candidate-id
-H=(-H <span class="s">"X-Enable-Bugs: off"</span> -H <span class="s">"X-Candidate-Id: $CID"</span>)
-
-<span class="c"># Estado limpio</span>
-curl -s -X POST <span class="s">"$API/reset"</span> <span class="s">"${H[@]}"</span>
-
-<span class="c"># Catálogo y búsqueda</span>
-curl -s <span class="s">"$API/instruments"</span> -H <span class="s">"X-Enable-Bugs: off"</span>
-curl -s <span class="s">"$API/search?query=DYCA"</span> -H <span class="s">"X-Enable-Bugs: off"</span>
-
-<span class="c"># Portafolio inicial -> {"cash":1000000,"holdings":[]}</span>
-curl -s <span class="s">"$API/portfolio"</span> <span class="s">"${H[@]}"</span>
-
-<span class="c"># Compra a mercado</span>
-curl -s -X POST <span class="s">"$API/orders"</span> <span class="s">"${H[@]}"</span> \
-  -H <span class="s">"Content-Type: application/json"</span> \
-  -d <span class="s">'{"instrument_id":1,"side":"BUY","type":"MARKET","quantity":10}'</span>
-
-<span class="c"># Verificar la derivación: 1000000 - 10*45.72 = 999542.80</span>
-curl -s <span class="s">"$API/portfolio"</span> <span class="s">"${H[@]}"</span>
-
-<span class="c"># Orden límite: siempre nace pendiente</span>
-curl -s -X POST <span class="s">"$API/orders"</span> <span class="s">"${H[@]}"</span> \
-  -H <span class="s">"Content-Type: application/json"</span> \
-  -d <span class="s">'{"instrument_id":1,"side":"SELL","type":"LIMIT","quantity":5,"price":84.5}'</span></code></pre>
-
-      <h3>Reset completo antes de un caso</h3>
-      <p>
-        "Resetear la app" son en realidad dos cosas distintas, y confundirlas
-        hace perder tiempo. El saldo, las órdenes y la tenencia
-        <strong>no viven en el teléfono</strong>: viven en la API, separados por
-        <code>X-Candidate-Id</code>. Borrar los datos locales deja la cuenta
-        exactamente como estaba.
-      </p>
-
-      <div class="tablewrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Qué querés borrar</th>
-              <th>Dónde vive</th>
-              <th>Con qué</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Saldo, órdenes, tenencias</td>
-              <td>La API, por candidate id</td>
-              <td><code>POST /reset</code></td>
-            </tr>
-            <tr>
-              <td>Caché de pantallas, estado de navegación</td>
-              <td>El dispositivo</td>
-              <td><code>pm clear</code> · reinstalar</td>
-            </tr>
-            <tr>
-              <td>Empezar como un usuario nuevo</td>
-              <td>Ninguno de los dos</td>
-              <td>Cambiar el candidate id en <code>.env</code></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h4>Copiar y pegar</h4>
-      <pre><code><span class="c"># 1 · Cuenta a cero en la API</span>
-curl -s -X POST <span class="s">"https://dummy-api-topaz.vercel.app/reset"</span> \
-  -H <span class="s">"X-Enable-Bugs: off"</span> \
-  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
-
-<span class="c"># 2 · Comprobar: cash 1000000, holdings vacío, sin órdenes</span>
-curl -s <span class="s">"https://dummy-api-topaz.vercel.app/portfolio"</span> \
-  -H <span class="s">"X-Enable-Bugs: off"</span> \
-  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq
-curl -s <span class="s">"https://dummy-api-topaz.vercel.app/orders"</span> \
-  -H <span class="s">"X-Enable-Bugs: off"</span> \
-  -H <span class="s">"X-Candidate-Id: carlos-aular"</span> | jq <span class="s">'length'</span>
-
-<span class="c"># 3 · Estado local del dispositivo (Android)</span>
-adb shell pm clear com.cocos.trading
-
-<span class="c"># 3 · Estado local del dispositivo (iOS)</span>
-xcrun simctl terminate booted com.cocos.trading
-xcrun simctl launch booted com.cocos.trading</code></pre>
-
-      <div class="note note--warn">
-        <span class="note__label"
-          >Si cambiás el candidate id, reiniciá Metro</span
-        >
-        <p>
-          Las variables <code>EXPO_PUBLIC_*</code> quedan escritas adentro del
-          bundle cuando Metro lo arma, no se leen en vivo. Cambiar
-          <code>EXPO_PUBLIC_CANDIDATE_ID</code> en el <code>.env</code> no tiene
-          ningún efecto hasta que reinicies Metro limpiando caché — y la app no
-          avisa nada, sigue operando sobre el inquilino viejo. Lo mismo vale
-          para <code>EXPO_PUBLIC_BUGS_TIER</code> cuando querés activar un nivel
-          de defectos.
-        </p>
-        <pre><code>bunx expo start --clear</code></pre>
-      </div>
-
       <footer class="footer">
         Contrato de la API que consume la app Cocos · Relevado el 19/09/2026
         contra
-        <code>dummy-api-topaz.vercel.app</code> con el nivel de defectos en
-        <code>off</code>. Todo lo marcado como observado se verificó con
-        requests reales.
+        <code>dummy-api-topaz.vercel.app</code> con
+        <code>X-Enable-Bugs: off</code>. Todo lo marcado como observado se
+        verificó con requests reales.
       </footer>
     </main>
   </body>

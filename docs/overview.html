@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Overview Cocos QA</title>
+    <meta
+      name="description"
+      content="Lectura corta de todo lo que se hizo en el challenge de QA de Cocos y de cómo encaja cada pieza."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+
+        /* Misma paleta que el resto de docs/ (tomada de src/global.css) */
+        --bg: #020617;
+        --card: #0e1223;
+        --panel: #11182a;
+        --fg: #f8fafc;
+        --fg-muted: #9aa7bd;
+        --fg-dim: #64748b;
+        --border: #253149;
+        --primary: #2dd4bf;
+        --secondary: #38bdf8;
+        --profit: #34d399;
+        --loss: #fb7185;
+        --warning: #facc15;
+
+        --sans:
+          "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --measure: 68ch;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .wrap {
+        max-width: 940px;
+        margin: 0 auto;
+        padding-inline: 20px;
+        padding-block: 0 88px;
+      }
+
+      .masthead {
+        padding-block: 60px 34px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 36px;
+      }
+
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 14px;
+      }
+
+      h1 {
+        font-weight: 800;
+        font-size: clamp(2.05rem, 1.5rem + 2.5vw, 3.1rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        text-wrap: balance;
+        margin: 0 0 16px;
+      }
+
+      .standfirst {
+        font-size: 1.06rem;
+        color: var(--fg-muted);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: clamp(1.4rem, 1.15rem + 1.1vw, 1.85rem);
+        letter-spacing: -0.02em;
+        line-height: 1.18;
+        text-wrap: balance;
+        margin: 62px 0 4px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+      }
+
+      h3 {
+        font-size: 1.02rem;
+        margin: 0 0 6px;
+      }
+
+      .h2sub {
+        color: var(--fg-muted);
+        margin: 0 0 22px;
+        max-width: var(--measure);
+      }
+
+      p,
+      ul {
+        max-width: var(--measure);
+      }
+
+      p {
+        margin: 14px 0;
+      }
+
+      a {
+        color: var(--secondary);
+        text-underline-offset: 3px;
+      }
+
+      code {
+        font-family: var(--mono);
+        font-size: 0.88em;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        padding: 1px 6px;
+      }
+
+      pre {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        font-family: var(--mono);
+        font-size: 13.5px;
+        line-height: 1.7;
+        max-width: var(--measure);
+      }
+
+      pre code {
+        background: none;
+        border: 0;
+        padding: 0;
+      }
+
+      .comment {
+        color: var(--fg-dim);
+      }
+
+      .stats,
+      .cards,
+      .links {
+        display: grid;
+        gap: 12px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        margin-top: 30px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+
+      .links {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      .stat,
+      .card,
+      .links a {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+
+      .stat b {
+        display: block;
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--primary);
+        letter-spacing: -0.02em;
+      }
+
+      .stat span {
+        font-size: 0.86rem;
+        color: var(--fg-muted);
+      }
+
+      .card p {
+        margin: 6px 0 0;
+        font-size: 0.94rem;
+        color: var(--fg-muted);
+      }
+
+      .tag {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--primary);
+      }
+
+      .links a {
+        text-decoration: none;
+        color: var(--fg);
+        display: block;
+        transition: border-color 0.15s;
+      }
+
+      .links a:hover {
+        border-color: var(--primary);
+      }
+
+      .links a b {
+        display: block;
+        color: var(--secondary);
+      }
+
+      .links a span {
+        font-size: 0.9rem;
+        color: var(--fg-muted);
+      }
+
+      figure {
+        margin: 26px 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+      }
+
+      figure svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      figcaption {
+        font-size: 0.86rem;
+        color: var(--fg-muted);
+        margin: 10px 4px 2px;
+      }
+
+      .idea {
+        border-left: 3px solid var(--primary);
+        padding: 2px 0 2px 16px;
+        margin: 22px 0;
+        max-width: var(--measure);
+      }
+
+      .idea p {
+        margin: 4px 0;
+        color: var(--fg-muted);
+      }
+
+      .idea b {
+        color: var(--fg);
+      }
+
+      .pill {
+        display: inline-block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border-radius: 999px;
+        padding: 1px 10px;
+        margin-right: 6px;
+        border: 1px solid var(--border);
+      }
+
+      .pill.bad {
+        color: var(--loss);
+      }
+
+      .pill.warn {
+        color: var(--warning);
+      }
+
+      .pill.ok {
+        color: var(--profit);
+      }
+
+      ul.plain {
+        list-style: none;
+        padding: 0;
+      }
+
+      ul.plain li {
+        margin: 10px 0;
+      }
+
+      @media (max-width: 520px) {
+        .masthead {
+          padding-block: 40px 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <p class="eyebrow">Cocos · Challenge de QA</p>
+        <h1>Todo lo que hicimos, en cinco minutos</h1>
+        <p class="standfirst">
+          La app de trading ya estaba hecha. Nuestro trabajo fue descubrir qué
+          tan buena es, dejar una forma repetible de comprobarlo y contar lo que
+          encontramos. Esto es el mapa; el detalle vive en los otros documentos.
+        </p>
+        <div class="stats">
+          <div class="stat"><b>53</b><span>casos de prueba en Qase</span></div>
+          <div class="stat">
+            <b>43</b><span>automatizados (10 manuales)</span>
+          </div>
+          <div class="stat"><b>34</b><span>casos de UI en Appium</span></div>
+          <div class="stat">
+            <b>19</b><span>defectos: 18 abiertos, 1 resuelto</span>
+          </div>
+        </div>
+      </header>
+
+      <h2 id="que">Qué hicimos</h2>
+      <p class="h2sub">Cuatro piezas que se apoyan una en otra.</p>
+      <div class="cards">
+        <div class="card">
+          <span class="tag">1 · Plan</span>
+          <h3>Qué probar y qué no</h3>
+          <p>
+            Un plan de pruebas priorizado por riesgo: alcance, fuera de alcance
+            con su justificación y supuestos.
+          </p>
+        </div>
+        <div class="card">
+          <span class="tag">2 · API</span>
+          <h3>Pruebas de contrato</h3>
+          <p>
+            Suite con Playwright que valida esquemas, saldos, reservas,
+            validaciones y aislamiento entre candidatos.
+          </p>
+        </div>
+        <div class="card">
+          <span class="tag">3 · UI</span>
+          <h3>Regresión en dispositivos</h3>
+          <p>
+            Suite con Appium y WebdriverIO. Un solo Page Object Model sirve para
+            iOS y Android.
+          </p>
+        </div>
+        <div class="card">
+          <span class="tag">4 · Reporte</span>
+          <h3>Casos y defectos</h3>
+          <p>
+            Todo vive en Qase (proyecto COCOS) y los HTML de
+            <code>docs/</code> son su copia legible.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="como">Cómo funciona todo</h2>
+      <p class="h2sub">
+        Una API compartida, dos suites que la miran desde ángulos distintos y un
+        lugar donde termina el resultado.
+      </p>
+
+      <figure>
+        <svg
+          viewBox="0 0 760 330"
+          role="img"
+          aria-label="Diagrama: los tests de UI manejan la app en el dispositivo, la app y los tests de API hablan con la API dummy, y los resultados van a Allure y Qase."
+          font-family="Plus Jakarta Sans, sans-serif"
+        >
+          <defs>
+            <marker
+              id="arr"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto"
+            >
+              <path d="M0 0L10 5L0 10z" fill="#9aa7bd" />
+            </marker>
+          </defs>
+          <g fill="#0e1223" stroke="#253149">
+            <rect x="10" y="20" width="200" height="70" rx="12" />
+            <rect x="10" y="140" width="200" height="70" rx="12" />
+            <rect x="280" y="80" width="200" height="70" rx="12" />
+            <rect x="280" y="230" width="200" height="70" rx="12" />
+            <rect x="550" y="20" width="200" height="70" rx="12" />
+            <rect x="550" y="140" width="200" height="70" rx="12" />
+            <rect x="550" y="230" width="200" height="70" rx="12" />
+          </g>
+          <g
+            fill="#f8fafc"
+            font-size="14"
+            font-weight="600"
+            text-anchor="middle"
+          >
+            <text x="110" y="52">Tests de UI</text>
+            <text x="110" y="172">Tests de API</text>
+            <text x="380" y="112">App Expo</text>
+            <text x="380" y="262">API dummy</text>
+            <text x="650" y="52">Allure</text>
+            <text x="650" y="172">Qase</text>
+            <text x="650" y="262">GitHub Actions</text>
+          </g>
+          <g fill="#9aa7bd" font-size="11.5" text-anchor="middle">
+            <text x="110" y="70">Appium + POM</text>
+            <text x="110" y="190">Playwright</text>
+            <text x="380" y="132">iOS y Android</text>
+            <text x="380" y="282">headers de nivel y candidato</text>
+            <text x="650" y="70">reporte HTML</text>
+            <text x="650" y="190">casos, corridas, defectos</text>
+            <text x="650" y="282">corre la API en cada push</text>
+          </g>
+          <g
+            stroke="#9aa7bd"
+            stroke-width="1.5"
+            fill="none"
+            marker-end="url(#arr)"
+          >
+            <path d="M210 55 L280 105" />
+            <path d="M210 175 L280 260" />
+            <path d="M380 150 L380 230" />
+            <path d="M210 62 L550 55" stroke-dasharray="4 4" />
+            <path d="M210 182 L550 175" stroke-dasharray="4 4" />
+            <path d="M650 230 L650 210" />
+          </g>
+        </svg>
+        <figcaption>
+          Las flechas llenas son llamadas; las punteadas son resultados que se
+          reportan.
+        </figcaption>
+      </figure>
+
+      <div class="idea">
+        <p><b>La API se controla con dos headers.</b></p>
+        <p>
+          <code>X-Enable-Bugs</code> elige el nivel de defectos
+          (<code>off</code>, <code>easy</code>, <code>medium</code>,
+          <code>hard</code>). Con <code>off</code> todo debería andar: es la
+          línea base. <code>X-Candidate-Id</code> separa el estado de cada
+          persona, así nadie pisa a nadie.
+        </p>
+      </div>
+      <div class="idea">
+        <p><b>El saldo se deriva de las órdenes.</b></p>
+        <p>
+          No hay un saldo guardado: se calcula desde las órdenes ejecutadas, y
+          cada orden reserva plata o acciones apenas se crea. Por eso varias
+          pruebas comparan portafolio y órdenes entre sí.
+        </p>
+      </div>
+      <div class="idea">
+        <p><b>Las órdenes límite son inestables a propósito.</b></p>
+        <p>
+          Pueden quedar pendientes, ejecutarse o rechazarse al azar. En vez de
+          apostar a un resultado, las pruebas usan órdenes a mercado (que son
+          determinísticas) o precios que nunca se ejecutan, y verifican que el
+          resultado caiga en el conjunto permitido.
+        </p>
+      </div>
+      <div class="idea">
+        <p>
+          <b>Sin <code>POST /reset</code> también se puede.</b>
+        </p>
+        <p>
+          Cada corrida usa su propio candidate id y datos propios, y las
+          aserciones miran diferencias en vez de valores absolutos. No depende
+          de arrancar desde cero.
+        </p>
+      </div>
+
+      <h2 id="hallazgos">Qué encontramos</h2>
+      <p class="h2sub">
+        19 defectos cargados en Qase. Estos son los que más importan.
+      </p>
+      <ul class="plain">
+        <li>
+          <span class="pill bad">Crítica</span>En iOS, los rechazos del servicio
+          son silenciosos: la app no avisa cuando la orden no se puede enviar.
+        </li>
+        <li>
+          <span class="pill warn">Mayor</span>La posición desaparece del
+          portafolio mientras una venta límite reserva todas las acciones.
+        </li>
+        <li>
+          <span class="pill warn">Mayor</span>La moneda ARS se puede comprar
+          como si fuera una acción.
+        </li>
+        <li>
+          <span class="pill warn">Mayor</span>Buscar por el nombre de la empresa
+          no devuelve nada, aunque el campo lo promete.
+        </li>
+        <li>
+          <span class="pill warn">Mayor</span>Android nunca muestra el aviso de
+          orden ejecutada.
+        </li>
+        <li>
+          <span class="pill ok">Resuelto</span>El ticket era inoperable con
+          VoiceOver en iOS.
+        </li>
+      </ul>
+      <p>
+        Cuatro casos automatizados (COCOS-15, 18, 30 y 41) fallan porque la app
+        no cumple; el test es correcto. Están en el
+        <a href="reporte-de-bugs.html">reporte de bugs</a> con pasos, esperado,
+        obtenido y evidencia.
+      </p>
+
+      <h2 id="correr">Cómo correrlo</h2>
+      <p class="h2sub">
+        Un comando para todo, otro para lo que no necesita dispositivos.
+      </p>
+      <pre><code><span class="comment"># todo menos UI: lint, formato, tipos, unitarios y API (~20 s)</span>
+bun run qa:rapido
+
+<span class="comment"># todo, incluida la UI en Android y iOS (necesita emulador y simulador)</span>
+bun run qa</code></pre>
+      <p>
+        El primer build de release tarda entre 30 y 45 minutos; las corridas
+        siguientes reusan el binario.
+      </p>
+
+      <h2 id="seguir">Dónde seguir leyendo</h2>
+      <p class="h2sub">Cada documento se abre solo, sin servidor.</p>
+      <div class="links">
+        <a href="plan-de-pruebas.html"
+          ><b>Plan de pruebas</b
+          ><span>Alcance, riesgos y trazabilidad de los 53 casos.</span></a
+        >
+        <a href="reporte-de-bugs.html"
+          ><b>Reporte de bugs</b
+          ><span>Los 19 defectos con pasos y evidencia.</span></a
+        >
+        <a href="qase.html"
+          ><b>Catálogo de casos</b
+          ><span>Qué es Qase y cómo está organizado COCOS.</span></a
+        >
+        <a href="api.html"
+          ><b>Contrato de la API</b
+          ><span>Endpoints, errores y reservas, con requests reales.</span></a
+        >
+        <a href="producto-y-qa.html"
+          ><b>Producto y QA</b
+          ><span>Pantallas, reglas de negocio y matriz de riesgo.</span></a
+        >
+        <a href="puesta-en-marcha.html"
+          ><b>Puesta en marcha</b
+          ><span>Levantar la app y cada comando de prueba.</span></a
+        >
+        <a href="tecnologias.html"
+          ><b>Tecnologías</b
+          ><span>El stack y las versiones verificadas.</span></a
+        >
+        <a href="glosario.html"
+          ><b>Glosario</b><span>Cada término, sin asumir nada.</span></a
+        >
+      </div>
+    </div>
+  </body>
+</html>

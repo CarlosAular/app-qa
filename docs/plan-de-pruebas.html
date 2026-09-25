@@ -632,10 +632,6 @@
             <span>— y cobertura de cada riesgo</span>
           </li>
           <li><a href="#trazabilidad">Trazabilidad de los 53 casos</a></li>
-          <li>
-            <a href="#decisiones">Decisiones de automatización</a>
-            <span>— incluye cómo se trabaja sin <code>POST /reset</code></span>
-          </li>
           <li><a href="#entornos">Entornos, datos y supuestos</a></li>
           <li>
             <a href="#criterios">Criterios de entrada, salida y aprobación</a>
@@ -689,11 +685,11 @@
         </li>
         <li>
           <strong>El requisito de trabajar sin <code>POST /reset</code></strong>
-          está resuelto con un tenant por build y aserciones por delta (sección
-          7.3).
+          está resuelto con un tenant por build y aserciones por delta (ver
+          «Aislamiento sin POST /reset» del README).
         </li>
         <li>
-          <strong>Lo que falta se dice acá.</strong> La sección 12 lista los
+          <strong>Lo que falta se dice acá.</strong> La sección 11 lista los
           límites del plan sin maquillaje.
         </li>
       </ul>
@@ -901,9 +897,8 @@
               <td><code>POST /reset</code> desde la suite</td>
               <td>La consigna lo prohíbe para automatizar.</td>
               <td>
-                Tenant por build y aserciones por delta (7.3). El botón
-                «Reiniciar» de la propia app sí se prueba por UI (COCOS-13 y
-                50).
+                Tenant por build y aserciones por delta. El botón «Reiniciar» de
+                la propia app sí se prueba por UI (COCOS-13 y 50).
               </td>
             </tr>
           </tbody>
@@ -2319,196 +2314,12 @@
         </li>
         <li>
           <strong>COCOS-8, 29 y 46:</strong> el paso intermedio acepta
-          «reservado o ya liberado», por lo dicho en 7.4; los pasos finales son
-          exactos.
+          «reservado o ya liberado», porque las órdenes límite se resuelven al
+          leer; los pasos finales son exactos.
         </li>
       </ul>
 
-      <h2 id="decisiones">7 · Decisiones de automatización</h2>
-      <p class="h2sub">
-        El criterio detrás de las herramientas y de cómo se escriben los tests.
-      </p>
-
-      <h3>7.1 Por qué Appium</h3>
-      <ul>
-        <li>
-          Es el único de los candidatos (frente a Maestro y Detox) que habla W3C
-          WebDriver contra iOS y Android, así que
-          <strong>un mismo test corre en las dos plataformas</strong> y el
-          modelo de páginas es compartido de verdad.
-        </li>
-        <li>
-          Los casos exigen aritmética dentro del test: verificar que
-          <code>floor(monto / precio)</code> nunca redondee hacia arriba, y
-          comparar importes en formato <code>es-AR</code> por delta. Maestro es
-          YAML declarativo y no puede parsear ese texto ni calcular el esperado.
-        </li>
-        <li>
-          Permite mezclar UI y HTTP en el mismo test, que es lo que hace viable
-          el aislamiento por tenant: se siembra el estado por API y se verifica
-          por UI.
-        </li>
-        <li>Tiene reporter oficial de Qase, además de Allure y JUnit.</li>
-      </ul>
-
-      <h3>7.2 Cómo se evita la flakiness</h3>
-      <ul>
-        <li>
-          <strong>Serial y sin reintentos.</strong> Los specs comparten tenant,
-          así que paralelizar haría que los deltas de un worker midan los
-          movimientos de otro. Reintentar un spec que ya movió plata mediría
-          sobre una cuenta distinta a la fotografiada.
-        </li>
-        <li>
-          <strong>Aserciones por delta,</strong> nunca contra el millón inicial,
-          y cada spec <strong>se autoabastece</strong>: la posición que necesita
-          la siembra por API.
-        </li>
-        <li>
-          <strong>Esperas por condición:</strong> se reintenta hasta que la
-          aserción pase, en vez de dormir a ciegas. Las pausas cortas que quedan
-          son para que una animación termine de asentarse.
-        </li>
-        <li>
-          <strong>Binarios de release, no de debug:</strong> embeben el bundle
-          (la suite no depende de Metro) y no tienen la capa de avisos que en
-          debug tapa la barra de pestañas y se traga los toques.
-        </li>
-        <li><strong>Órdenes límite: invariantes, no estados</strong> (7.4).</li>
-      </ul>
-
-      <h3 id="sin-reset">7.3 Sin <code>POST /reset</code></h3>
-      <div class="note">
-        <span class="note__label">Requisito explícito del challenge</span>
-        <p>
-          Documentar cómo montar la automatización en un entorno donde
-          <code>POST /reset</code> no sea posible. Es la situación de esta
-          suite: la consigna lo prohíbe.
-        </p>
-      </div>
-      <p>
-        El identificador de cuenta (<code>EXPO_PUBLIC_CANDIDATE_ID</code>) se
-        inlinea al empaquetar, así que el tenant contra el que habla la app
-        queda congelado en el binario y no puede variar por test. De ahí sale el
-        diseño:
-      </p>
-      <ol>
-        <li>
-          El script de build genera un identificador por build, lo hornea,
-          <strong>verifica con grep que haya quedado dentro del bundle</strong>
-          y lo escribe en un archivo de información de build.
-        </li>
-        <li>
-          El proceso de test lee ese archivo: su cliente HTTP apunta al mismo
-          tenant que la app. Nunca se recalcula del lado del test.
-        </li>
-        <li>Las aserciones son por delta.</li>
-        <li>Cada spec se autoabastece por <code>POST /orders</code>.</li>
-        <li>Un worker y sin reintentos, por lo dicho en 7.2.</li>
-      </ol>
-      <p>
-        Para forzar una cuenta virgen basta recompilar: cada build nuevo es una
-        cuenta nueva. La suite de API, que no depende de un binario, genera un
-        identificador nuevo <strong>por test</strong>. Ninguna de las dos
-        necesita limpiar nada, y las dos funcionan igual donde
-        <code>/reset</code> no exista. El botón «Reiniciar cuenta» de la propia
-        app se prueba por UI (COCOS-13 y 50) y ese spec corre siempre último.
-      </p>
-
-      <h3>7.4 Órdenes límite no determinísticas</h3>
-      <p>
-        El servicio resuelve las órdenes límite al <strong>leer</strong> la
-        cuenta y con un factor aleatorio, así que un estado puntual no se puede
-        afirmar. Lo que sí se mantiene, y se midió, es un invariante: una orden
-        <strong>no ejecutable</strong> (compra por debajo del mercado, venta por
-        encima) nunca se ejecuta (0 de 40 observadas) y termina rechazada. Los
-        tests se apoyan en eso:
-      </p>
-      <ul>
-        <li>
-          Los pasos intermedios afirman
-          <strong>pertenencia a un conjunto</strong>: el efectivo o las acciones
-          están reservados <em>o</em> ya liberados, y se deja constancia de cuál
-          se vio.
-        </li>
-        <li>
-          Los pasos finales afirman el estado terminal: rechazada, nunca
-          ejecutada, y efectivo o cantidad exactamente iguales a los iniciales.
-        </li>
-        <li>
-          Para llegar al estado final se sondea la API (unos 300 ms por lectura,
-          hasta 40), que es lo mismo que refrescar la pantalla sin pagar unos 5
-          s por refresco.
-        </li>
-        <li>
-          COCOS-48 (orden del historial) no depende de esto: son doce órdenes a
-          mercado.
-        </li>
-      </ul>
-
-      <h3>7.5 Casos que fallan por un defecto de la app</h3>
-      <p>
-        Cuatro casos de UI (COCOS-15, 18, 30 y 41) y los tests de defecto de API
-        de COCOS-42 y COCOS-53
-        <strong
-          >fallan porque la app o el servicio no cumple lo que el caso
-          afirma</strong
-        >. El test está bien escrito: verifica el comportamiento correcto, y ese
-        comportamiento todavía no existe. No se silencian ni se marcan como
-        fallo esperado, porque un test en rojo que documenta un defecto es la
-        forma más honesta de reportarlo, y se vuelve verde solo cuando el
-        defecto se corrige. Se listan en el README para que nadie los confunda
-        con una regresión de la suite.
-      </p>
-
-      <h3>7.6 Lo que enseñaron las plataformas</h3>
-      <ul>
-        <li>
-          En iOS 26 la barra de pestañas se colapsa a dos círculos al scrollear,
-          y un toque por geometría cae sobre una fila. La suite expande la barra
-          tocando el círculo de la pestaña activa, como haría una persona.
-        </li>
-        <li>
-          El sheet del ticket era opaco para VoiceOver en iOS (defecto #46), y
-          eso bloqueaba toda la automatización en iOS. Se resolvió con una línea
-          en <code>ModalContext.tsx</code>:
-          <strong>es la única modificación hecha al código de la app</strong>.
-        </li>
-        <li>
-          En la ficha de una posición, el scroll nativo de WebDriverAgent no
-          converge y el gráfico absorbe los gestos del centro; se scrollea desde
-          el margen.
-        </li>
-        <li>
-          En Android, cambiar de pestaña justo después de cerrar el ticket puede
-          caer sobre el fondo atenuado del sheet que se cierra; la suite
-          verifica la pestaña seleccionada y reintenta.
-        </li>
-      </ul>
-
-      <h3>7.7 Reportes e integración</h3>
-      <ul>
-        <li>
-          <strong>Reportes:</strong> Allure (HTML), JUnit y Qase. Cada test
-          declara su caso con <code>qase(id, …)</code> y cada paso del caso es
-          un paso del reporte. Al fallar se adjuntan una captura y el árbol de
-          accesibilidad.
-        </li>
-        <li>
-          <strong>Qase apagado por defecto</strong> en local; se enciende con
-          una variable y un token que va en un archivo ignorado por git.
-        </li>
-        <li>
-          <strong>CI:</strong> dos workflows. <code>api.yml</code> corre lint,
-          formato, tipos, tests unitarios y la suite de API en cada push y PR, y
-          de noche los niveles con defectos y los tests <code>@defecto</code>.
-          <code>e2e.yml</code> corre Android en cada push y iOS de noche y a
-          pedido. Los dos están escritos y validados en su estructura, pero
-          <strong>todavía no corrieron en GitHub</strong> (sección 12).
-        </li>
-      </ul>
-
-      <h2 id="entornos">8 · Entornos, datos y supuestos</h2>
+      <h2 id="entornos">7 · Entornos, datos y supuestos</h2>
       <div class="tablewrap">
         <table>
           <thead>
@@ -2595,7 +2406,7 @@
         </li>
       </ul>
 
-      <h2 id="criterios">9 · Criterios de entrada, salida y aprobación</h2>
+      <h2 id="criterios">8 · Criterios de entrada, salida y aprobación</h2>
       <div class="tablewrap">
         <table>
           <thead>
@@ -2647,7 +2458,7 @@
         </table>
       </div>
 
-      <h2 id="resultados">10 · Ejecución y resultados</h2>
+      <h2 id="resultados">9 · Ejecución y resultados</h2>
       <div class="tablewrap">
         <table>
           <thead>
@@ -2753,7 +2564,7 @@
         </li>
       </ul>
 
-      <h2 id="defectos">11 · Hallazgos y defectos</h2>
+      <h2 id="defectos">10 · Hallazgos y defectos</h2>
       <p class="h2sub">
         19 defectos en Qase: 18 abiertos (1 crítico, 9 mayores, 1 normal, 6
         menores y 1 trivial) y 1 resuelto (#46). Cada ficha documenta qué pasa,
@@ -3071,7 +2882,7 @@
         </li>
       </ul>
 
-      <h2 id="pendientes">12 · Límites del plan y pendientes</h2>
+      <h2 id="pendientes">11 · Límites del plan y pendientes</h2>
       <p class="h2sub">Lo que este plan no garantiza, dicho sin maquillaje.</p>
 
       <div class="tablewrap">
@@ -3195,7 +3006,7 @@
         </li>
       </ul>
 
-      <h2 id="ejecutar">13 · Cómo ejecutar todo</h2>
+      <h2 id="ejecutar">12 · Cómo ejecutar todo</h2>
       <pre><code>bun install
 
 # Todo en un comando: calidad, API y UI (compila los binarios que falten)
@@ -3228,7 +3039,7 @@ bun test
 bun run lint
 bun run format:check</code></pre>
 
-      <h2 id="entregables">14 · Mapa de entregables del challenge</h2>
+      <h2 id="entregables">13 · Mapa de entregables del challenge</h2>
       <div class="tablewrap">
         <table>
           <thead>
@@ -3256,7 +3067,7 @@ bun run format:check</code></pre>
                 <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 19
                 defectos de Qase (18 abiertos y 1 resuelto), cada uno con pasos,
                 obtenido, esperado, severidad, evidencia y la configuración en
-                que se observó. Resumen en la sección 11 y hallazgos iniciales
+                que se observó. Resumen en la sección 10 y hallazgos iniciales
                 en
                 <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
               </td>
@@ -3267,10 +3078,7 @@ bun run format:check</code></pre>
             </tr>
             <tr>
               <td>Automatización sin <code>POST /reset</code></td>
-              <td>
-                Sección 7.3 y la sección «Aislamiento sin POST /reset» del
-                README.
-              </td>
+              <td>La sección «Aislamiento sin POST /reset» del README.</td>
             </tr>
             <tr>
               <td>Reportes legibles (HTML y JUnit)</td>

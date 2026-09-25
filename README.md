@@ -5,8 +5,12 @@ Query, and a multi-tenant dummy trading API.
 
 ## Documentación QA
 
-Ocho documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
+Nueve documentos HTML independientes en [`docs/`](docs/). Se abren directo en el
 navegador, no necesitan servidor ni build.
+
+- [`docs/overview.html`](docs/overview.html) — el mapa de cinco minutos: qué se
+  hizo, cómo encaja cada pieza, qué se encontró y dónde seguir leyendo. Empezar
+  por acá.
 
 El proyecto de Qase (`COCOS`) es privado: los links a sus fichas piden acceso al
 workspace. Estos documentos son la copia legible de lo que hay ahí (los casos,
@@ -18,8 +22,7 @@ las corridas y los defectos), así que no hace falta entrar a Qase para evaluar.
   la app cuando se observó cada uno.
 - [`docs/plan-de-pruebas.html`](docs/plan-de-pruebas.html) — el plan de pruebas:
   alcance y fuera de alcance, estrategia por niveles, priorización por riesgo,
-  trazabilidad de los 53 casos con sus resultados, decisiones de automatización
-  (incluye cómo se trabaja sin `POST /reset`), defectos y pendientes.
+  trazabilidad de los 53 casos con sus resultados, defectos y pendientes.
 - [`docs/glosario.html`](docs/glosario.html) — qué significa cada término de la
   app, la API y el resto de la documentación. Escrito desde cero, sin asumir
   conocimiento del mundo financiero.
@@ -445,16 +448,24 @@ La run se llama `Playwright API · tier off` (o `· defectos conocidos`). Con
 ## Correr la app y la API con cada nivel de bugs
 
 `X-Enable-Bugs` se fija con `EXPO_PUBLIC_BUGS_TIER` (app) o `API_TIERS` (suite de
-API). Hay un script por nivel:
+API). Para la app hay un solo comando, que deja el dispositivo listo:
 
-| Nivel    | App (Metro)            | iOS                  | Android                  | API                       |
-| -------- | ---------------------- | -------------------- | ------------------------ | ------------------------- |
-| `off`    | `bun run start:off`    | `bun run ios:off`    | `bun run android:off`    | `bun run test:api:off`    |
-| `easy`   | `bun run start:easy`   | `bun run ios:easy`   | `bun run android:easy`   | `bun run test:api:easy`   |
-| `medium` | `bun run start:medium` | `bun run ios:medium` | `bun run android:medium` | `bun run test:api:medium` |
-| `hard`   | `bun run start:hard`   | `bun run ios:hard`   | `bun run android:hard`   | `bun run test:api:hard`   |
+```bash
+bun run dev android hard   # arranca el emulador, compila, instala y levanta Metro
+bun run dev ios easy       # lo mismo con el simulador de iOS
+bun run dev android off --no-build   # reusa la app instalada, solo cambia el tier
+```
 
-Los `start:*` limpian la caché de Metro (`--clear`), porque las variables
+Sin tier usa `off`. Para la API hay un script por nivel:
+
+| Nivel    | API                       |
+| -------- | ------------------------- |
+| `off`    | `bun run test:api:off`    |
+| `easy`   | `bun run test:api:easy`   |
+| `medium` | `bun run test:api:medium` |
+| `hard`   | `bun run test:api:hard`   |
+
+`bun run dev` y los `start:*` limpian la caché de Metro (`--clear`), porque las variables
 `EXPO_PUBLIC_*` se incrustan al empaquetar. La suite E2E (Appium) está
 calibrada para el golden path: se compila y corre en `off`.
 
