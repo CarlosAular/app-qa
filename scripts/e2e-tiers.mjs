@@ -21,6 +21,10 @@
  * Un nivel que falla no corta el resto: en easy, medium y hard los fallos son
  * hallazgos. Al final imprime el resumen y sale con código 1 si
  * alguna corrida no terminó en verde.
+ *
+ * Al terminar arma el reporte de Allure con todas las corridas (y la página de
+ * insights) con scripts/e2e-tiers-report.mjs. Se puede volver a armar, sin
+ * repetir nada, con `bun run e2e:report:tiers`.
  */
 import {spawnSync} from "node:child_process"
 import {
@@ -35,10 +39,9 @@ import {
 import {dirname, resolve} from "node:path"
 import {fileURLToPath} from "node:url"
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..")
+import {PLATFORMS as ALL_PLATFORMS, TIERS as ALL_TIERS} from "./lib/tiers.mjs"
 
-const ALL_TIERS = ["off", "easy", "medium", "hard"]
-const ALL_PLATFORMS = ["android", "ios"]
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 
 const option = name =>
   process.argv
@@ -102,7 +105,13 @@ const ALL_RUNS_RESULTS = resolve(ALL_RUNS_DIR, "allure-results")
  * se llaman igual en todas: mezclarlos tal cual los mostraría como reintentos
  * de un mismo test. Se copian a un directorio común reescribiendo dos cosas:
  * el árbol de suites pasa a ser nivel > plataforma > suite original (el nivel
- * de defectos es lo que distingue las corridas) y el historyId lleva el sufijo de la corrida.
+ * de defectos es lo que distingue las corridas) y tanto el historyId como el
+ * testCaseId llevan el sufijo de la corrida. Allure agrupa los reintentos por
+ * testCaseId, que es el mismo en las ocho corridas: sin el sufijo sólo muestra
+ * la última de cada test y oculta el resto como reintentos. Después
+ * scripts/e2e-tiers-report.mjs reordena las etiquetas para que el dashboard se
+ * lea (una barra por corrida, severidad, áreas); los tres datos originales
+ * (nivel, plataforma y suite) los toma de acá.
  */
 const mergeAllureResults = (platform, tier) => {
   if (!existsSync(ALLURE_SOURCE)) {
@@ -135,6 +144,10 @@ const mergeAllureResults = (platform, tier) => {
       {name: "tag", value: platform},
     ]
     result.historyId = `${result.historyId}-${platform}-${tier}`
+
+    if (result.testCaseId) {
+      result.testCaseId = `${result.testCaseId}-${platform}-${tier}`
+    }
 
     writeFileSync(to, JSON.stringify(result))
   }
@@ -196,20 +209,21 @@ results.forEach(({title, ok}) =>
 )
 
 if (existsSync(ALL_RUNS_RESULTS)) {
-  const report = resolve(ALL_RUNS_DIR, "allure")
-  const allure = resolve(ROOT, "node_modules/.bin/allure")
-
+  // Etiqueta los resultados con la metadata de Qase y arma el reporte de Allure
+  // (ver scripts/e2e-tiers-report.mjs). Se puede volver a armar cuando se quiera
+  // sin repetir las corridas.
   const generated = spawnSync(
-    allure,
-    ["generate", ALL_RUNS_RESULTS, "--clean", "-o", report],
+    "node",
+    [resolve(ROOT, "scripts/e2e-tiers-report.mjs"), "--no-open"],
     {cwd: ROOT, stdio: "inherit"}
   )
 
   console.log(
     generated.status === 0
-      ? "\n[e2e-tiers] Reporte de Allure con todas las corridas: bun run e2e:report:tiers"
-      : "\n[e2e-tiers] No se pudo generar el reporte (Allure necesita Java). " +
-          "Los resultados quedaron en e2e/reports/todas-las-corridas/allure-results."
+      ? "\n[e2e-tiers] Reporte con todas las corridas: bun run e2e:report:tiers"
+      : "\n[e2e-tiers] No se pudo generar el reporte (Allure necesita Java). Los resultados " +
+          "quedaron en e2e/reports/todas-las-corridas/allure-results; " +
+          "reintentá con: bun run e2e:report:tiers"
   )
 }
 

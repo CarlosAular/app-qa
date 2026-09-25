@@ -1,0 +1,532 @@
+{
+  "1": {
+    "title": "Buscar un instrumento por ticker muestra el resultado",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R12"],
+    "tags": ["tipo:e2e", "riesgo:R12", "automatizado:appium"]
+  },
+  "2": {
+    "title": "El panel muestra el precio y la variación del día de cada instrumento",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R9"],
+    "tags": ["tipo:e2e", "riesgo:R9", "automatizado:appium"]
+  },
+  "3": {
+    "title": "Abrir un instrumento desde el panel muestra su ficha completa",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R11"],
+    "tags": ["tipo:e2e", "riesgo:R11", "automatizado:appium"]
+  },
+  "4": {
+    "title": "El panel de orden abre listo para comprar a precio de mercado",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R5"],
+    "tags": ["tipo:e2e", "riesgo:R5", "automatizado:appium"]
+  },
+  "5": {
+    "title": "Comprar indicando un importe en pesos calcula cuántas acciones enteras entran",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R4"],
+    "tags": ["tipo:e2e", "riesgo:R4", "automatizado:appium"]
+  },
+  "6": {
+    "title": "No se puede enviar una orden sin una cantidad válida",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R5"],
+    "tags": ["tipo:e2e", "riesgo:R5", "automatizado:appium"]
+  },
+  "7": {
+    "title": "Una compra a mercado se ejecuta al precio vigente y descuenta el importe del efectivo",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R1", "R2"],
+    "tags": ["tipo:e2e", "riesgo:R1", "riesgo:R2", "automatizado:appium"]
+  },
+  "8": {
+    "title": "Una orden límite por debajo del precio de mercado nunca se ejecuta",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R3", "R6"],
+    "tags": ["tipo:e2e", "riesgo:R3", "riesgo:R6", "automatizado:appium"]
+  },
+  "9": {
+    "title": "No se puede comprar por más dinero del disponible",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R3"],
+    "tags": ["tipo:e2e", "riesgo:R3", "hallazgo:O7", "automatizado:appium"]
+  },
+  "10": {
+    "title": "La orden recién enviada aparece primera en el historial con sus datos",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R8"],
+    "tags": ["tipo:e2e", "riesgo:R8", "automatizado:appium"]
+  },
+  "11": {
+    "title": "El efectivo y las posiciones reflejan las órdenes ya ejecutadas",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R2"],
+    "tags": ["tipo:e2e", "riesgo:R2", "automatizado:appium"]
+  },
+  "12": {
+    "title": "El detalle de una posición muestra los precios de referencia y el resultado",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R7", "R11"],
+    "tags": ["tipo:e2e", "riesgo:R7", "riesgo:R11", "automatizado:appium"]
+  },
+  "13": {
+    "title": "Reiniciar la cuenta deja el saldo inicial, sin posiciones ni historial",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R10"],
+    "tags": ["tipo:e2e", "riesgo:R10", "automatizado:appium"]
+  },
+  "14": {
+    "title": "Si el mercado no carga, la pantalla ofrece reintentar",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "manual",
+    "risks": ["R13"],
+    "tags": ["tipo:e2e", "riesgo:R13"]
+  },
+  "15": {
+    "title": "Los importes y porcentajes se muestran en formato argentino",
+    "severity": "minor",
+    "priority": "low",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R14"],
+    "tags": ["tipo:e2e", "riesgo:R14", "hallazgo:O4", "automatizado:appium"]
+  },
+  "16": {
+    "title": "El botón para operar una posición es alcanzable al final de la pantalla",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R17"],
+    "tags": ["tipo:visual", "hallazgo:O12", "riesgo:R17"]
+  },
+  "17": {
+    "title": "Tocar una sugerencia de \"Más movidos\" completa la búsqueda",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R12"],
+    "tags": ["tipo:e2e", "riesgo:R12", "automatizado:appium"]
+  },
+  "18": {
+    "title": "Buscar por el nombre de la empresa encuentra el instrumento",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R12"],
+    "tags": ["tipo:e2e", "riesgo:R12", "hallazgo:O3", "automatizado:appium"]
+  },
+  "19": {
+    "title": "El panel de instrumentos se ve correcto en toda la pantalla",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R17"],
+    "tags": ["tipo:visual", "hallazgo:O13", "riesgo:R17"]
+  },
+  "20": {
+    "title": "El servicio de instrumentos devuelve el catálogo completo y bien tipado",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "api",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R12"],
+    "tags": ["tipo:api", "riesgo:R12", "automatizado:playwright"]
+  },
+  "21": {
+    "title": "El importe estimado de una orden límite usa el precio límite ingresado",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R4", "R5"],
+    "tags": ["tipo:e2e", "riesgo:R4", "riesgo:R5", "automatizado:appium"]
+  },
+  "22": {
+    "title": "El panel de orden abre sobre el instrumento correcto desde los tres accesos",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R11", "R1"],
+    "tags": ["tipo:e2e", "riesgo:R11", "riesgo:R1", "automatizado:appium"]
+  },
+  "23": {
+    "title": "Con el teclado abierto, los campos y el botón de enviar siguen visibles",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R17"],
+    "tags": ["tipo:visual", "riesgo:R17"]
+  },
+  "24": {
+    "title": "El servicio de órdenes rechaza los cuerpos inválidos con el mensaje correcto",
+    "severity": "major",
+    "priority": "high",
+    "layer": "api",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R5"],
+    "tags": ["tipo:api", "riesgo:R5", "automatizado:playwright"]
+  },
+  "25": {
+    "title": "Una venta a mercado reduce la tenencia y aumenta el efectivo",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R1", "R2"],
+    "tags": ["tipo:e2e", "riesgo:R1", "riesgo:R2", "automatizado:appium"]
+  },
+  "26": {
+    "title": "El historial muestra cada orden con su estado y su ticker correctos",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R8", "R17"],
+    "tags": ["tipo:visual", "riesgo:R8", "hallazgo:O6", "riesgo:R17"]
+  },
+  "27": {
+    "title": "El servicio ejecuta las órdenes a mercado al instante y devuelve el precio real",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "api",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R1", "R6"],
+    "tags": ["tipo:api", "riesgo:R1", "riesgo:R6", "automatizado:playwright"]
+  },
+  "28": {
+    "title": "Una venta parcial reduce la cantidad y mantiene el precio promedio de compra",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R2", "R7"],
+    "tags": ["tipo:e2e", "riesgo:R2", "riesgo:R7", "automatizado:appium"]
+  },
+  "29": {
+    "title": "Una orden límite pendiente descuenta el efectivo sin crear ninguna posición",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R3", "R6"],
+    "tags": ["tipo:e2e", "riesgo:R3", "riesgo:R6", "automatizado:appium"]
+  },
+  "30": {
+    "title": "La ganancia y el rendimiento llevan el signo correcto",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R7"],
+    "tags": ["tipo:e2e", "riesgo:R7", "automatizado:appium"]
+  },
+  "31": {
+    "title": "El resumen del portafolio no induce a error sobre cuánto tiene el usuario",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R17"],
+    "tags": ["tipo:visual", "hallazgo:O2", "riesgo:R17"]
+  },
+  "32": {
+    "title": "El servicio de portafolio cuadra con las órdenes ejecutadas",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "api",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R2", "R3"],
+    "tags": ["tipo:api", "riesgo:R2", "riesgo:R3", "automatizado:playwright"]
+  },
+  "33": {
+    "title": "Los mensajes de error se muestran en español",
+    "severity": "minor",
+    "priority": "low",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R14"],
+    "tags": ["tipo:e2e", "riesgo:R14", "hallazgo:O4"]
+  },
+  "34": {
+    "title": "Cambiar entre las pestañas conserva el estado de cada una",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R11", "R13"],
+    "tags": ["tipo:e2e", "riesgo:R11", "riesgo:R13", "automatizado:appium"]
+  },
+  "35": {
+    "title": "El servicio aísla cada cuenta por su X-Candidate-Id",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "api",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R10"],
+    "tags": ["tipo:api", "riesgo:R10", "automatizado:playwright"]
+  },
+  "36": {
+    "title": "Tocar \"Enviar orden\" dos veces seguidas crea una sola orden",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R15"],
+    "tags": ["tipo:e2e", "riesgo:R15", "automatizado:appium"]
+  },
+  "37": {
+    "title": "Después de enviar, el panel no arrastra la orden anterior",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R15"],
+    "tags": ["tipo:e2e", "riesgo:R15", "automatizado:appium"]
+  },
+  "38": {
+    "title": "Reintentar tras un fallo de conexión no duplica la orden",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "manual",
+    "risks": ["R15", "R13"],
+    "tags": ["tipo:e2e", "riesgo:R15", "riesgo:R13"]
+  },
+  "39": {
+    "title": "El servicio no distingue dos envíos idénticos consecutivos",
+    "severity": "major",
+    "priority": "high",
+    "layer": "api",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R15"],
+    "tags": ["tipo:api", "riesgo:R15", "automatizado:playwright"]
+  },
+  "40": {
+    "title": "Salir del panel y volver a abrirlo no reenvía la última orden",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R15"],
+    "tags": ["tipo:e2e", "riesgo:R15", "automatizado:appium"]
+  },
+  "41": {
+    "title": "La moneda ARS no se ofrece como instrumento comprable",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R16"],
+    "tags": ["tipo:e2e", "riesgo:R16", "hallazgo:O8", "automatizado:appium"]
+  },
+  "42": {
+    "title": "El servicio rechaza órdenes sobre instrumentos que no son acciones",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "api",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R16"],
+    "tags": ["tipo:api", "riesgo:R16", "hallazgo:O8", "automatizado:playwright"]
+  },
+  "43": {
+    "title": "Los instrumentos que no son acciones se distinguen en los listados",
+    "severity": "normal",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R16"],
+    "tags": ["tipo:e2e", "riesgo:R16", "automatizado:appium"]
+  },
+  "44": {
+    "title": "El precio confirmado en el panel es el precio al que se ejecuta",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R1"],
+    "tags": ["tipo:e2e", "riesgo:R1", "automatizado:appium"]
+  },
+  "45": {
+    "title": "Dos ventas límite pendientes no pueden comprometer las mismas acciones",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "manual",
+    "risks": ["R3", "R6"],
+    "tags": ["tipo:e2e", "riesgo:R3", "riesgo:R6"]
+  },
+  "46": {
+    "title": "Una venta límite pendiente reduce la cantidad visible de la posición",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R6"],
+    "tags": ["tipo:e2e", "riesgo:R6", "automatizado:appium"]
+  },
+  "47": {
+    "title": "Un precio límite de cero o negativo no se puede enviar",
+    "severity": "major",
+    "priority": "high",
+    "layer": "e2e",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R5"],
+    "tags": ["tipo:e2e", "riesgo:R5", "automatizado:appium"]
+  },
+  "48": {
+    "title": "Con más de nueve órdenes el historial mantiene el orden cronológico",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R8"],
+    "tags": ["tipo:e2e", "riesgo:R8", "hallazgo:O5", "automatizado:appium"]
+  },
+  "49": {
+    "title": "Un importe en pesos con coma decimal se interpreta correctamente",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R4", "R14"],
+    "tags": ["tipo:e2e", "riesgo:R4", "riesgo:R14", "automatizado:appium"]
+  },
+  "50": {
+    "title": "Reiniciar la cuenta también borra las órdenes límite pendientes",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R10", "R3"],
+    "tags": ["tipo:e2e", "riesgo:R10", "riesgo:R3", "automatizado:appium"]
+  },
+  "51": {
+    "title": "El servicio rechaza las órdenes sin efectivo o sin tenencias suficientes y no mueve nada",
+    "severity": "critical",
+    "priority": "high",
+    "layer": "api",
+    "behavior": "negative",
+    "automation": "automated",
+    "risks": ["R3"],
+    "tags": ["tipo:api", "riesgo:R3", "automatizado:playwright"]
+  },
+  "52": {
+    "title": "El ticket de trading se puede operar con VoiceOver en iOS",
+    "severity": "major",
+    "priority": "medium",
+    "layer": "e2e",
+    "behavior": "positive",
+    "automation": "manual",
+    "risks": ["R17"],
+    "tags": ["tipo:e2e", "riesgo:R17", "accesibilidad"]
+  },
+  "53": {
+    "title": "La posición sigue visible mientras una venta límite reserva todas sus acciones",
+    "severity": "major",
+    "priority": "high",
+    "layer": "api",
+    "behavior": "positive",
+    "automation": "automated",
+    "risks": ["R2", "R6"],
+    "tags": ["tipo:api", "riesgo:R2", "riesgo:R6", "automatizado:playwright"]
+  }
+}
