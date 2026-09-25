@@ -20,7 +20,7 @@ on:
       qase:
         description: Publicar resultados en Qase
         type: boolean
-        default: true
+        default: false
 
 concurrency:
   group: e2e-${{ github.ref }}
@@ -159,7 +159,7 @@ jobs:
       - name: Correr la suite en el emulador
         uses: reactivecircus/android-emulator-runner@v2
         env:
-          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && !inputs.qase) && 'off' || 'testops' }}
+          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && inputs.qase && secrets.QASE_TESTOPS_API_TOKEN != '') && 'testops' || 'off' }}
           QASE_TESTOPS_PROJECT: COCOS
           QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
           QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · Android"
@@ -257,7 +257,7 @@ jobs:
 
       - name: Correr la suite
         env:
-          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && !inputs.qase) && 'off' || 'testops' }}
+          QASE_MODE: ${{ (github.event_name == 'workflow_dispatch' && inputs.qase && secrets.QASE_TESTOPS_API_TOKEN != '') && 'testops' || 'off' }}
           QASE_TESTOPS_PROJECT: COCOS
           QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
           QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · iOS"
