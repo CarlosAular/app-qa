@@ -1,3 +1,6 @@
+// Endpoints: POST /orders, GET /orders, GET /portfolio
+// Verifica el ciclo de vida de órdenes MARKET y LIMIT: ejecución, estados y no-idempotencia.
+
 import {qase} from "playwright-qase-reporter"
 
 import {expect, INITIAL_CASH, money, tag, test} from "../fixtures"
@@ -50,6 +53,7 @@ test(
       expect(first.price).toBe(price)
     })
 
+    // POST /orders MARKET — el price del body se ignora; siempre se usa el precio vigente
     await test.step("Repetir el POST enviando además un price arbitrario (1)", async () => {
       const second = await order("BUY", "MARKET", 10, 1)
       expect(second.status).toBe("FILLED")
@@ -149,6 +153,7 @@ test(
       )
     })
 
+    // POST /orders — dos requests idénticos generan dos órdenes con distinto id: no hay idempotencia
     await test.step("Registrar la conclusión: no hay idempotencia del lado del servicio", async () => {
       expect(new Set([first.id, second.id]).size).toBe(2)
     })

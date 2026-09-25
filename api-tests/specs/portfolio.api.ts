@@ -1,3 +1,6 @@
+// Endpoints: POST /orders, GET /orders, GET /portfolio
+// Verifica que el saldo y las tenencias reflejen fielmente las órdenes ejecutadas.
+
 import {qase} from "playwright-qase-reporter"
 
 import {expect, expectError, INITIAL_CASH, money, tag, test} from "../fixtures"
@@ -41,6 +44,7 @@ test(
       expect((await held())?.quantity).toBe(10)
     })
 
+    // GET /portfolio — campo avg_cost_price debe coincidir con el precio de compra
     await test.step("Revisar el precio promedio de compra (avg_cost_price)", async () => {
       expect((await held())?.avg_cost_price).toBeCloseTo(price, 2)
     })
@@ -60,6 +64,7 @@ test(
       )
     })
 
+    // POST /orders LIMIT + GET /portfolio — la reserva de efectivo reduce cash pero no crea acciones
     await test.step("POST /orders BUY LIMIT quantity 10 bajo el mercado y GET /portfolio", async () => {
       const cashBefore = (await api.portfolio()).cash
       const limit = money(price * 0.5)

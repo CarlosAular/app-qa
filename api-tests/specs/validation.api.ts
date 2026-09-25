@@ -1,3 +1,6 @@
+// Endpoint: POST /orders
+// Verifica que el servicio rechace bodies malformados con el mensaje de error correcto.
+
 import {qase} from "playwright-qase-reporter"
 
 import {expect, expectError, INITIAL_CASH, tag, test} from "../fixtures"
@@ -76,6 +79,7 @@ test(
       )
     })
 
+    // GET /orders + GET /portfolio — confirma que ningún request inválido persistió estado
     await test.step("GET /orders y GET /portfolio", async () => {
       expect(await api.orders()).toEqual([])
       const portfolio = await api.portfolio()

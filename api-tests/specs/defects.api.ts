@@ -1,3 +1,7 @@
+// Endpoints: POST /orders, GET /orders, GET /portfolio, GET /instruments
+// Documenta bugs conocidos del servicio (tier off). Cada test afirma el comportamiento ESPERADO,
+// por eso falla hoy. Se corren con `bun run test:api:defectos` (API_DEFECTS=1).
+
 import {qase} from "playwright-qase-reporter"
 
 import {expect, money, tag, test} from "../fixtures"
@@ -10,6 +14,7 @@ import {expect, money, tag, test} from "../fixtures"
  * el servicio se corrija.
  */
 
+// POST /orders — el servicio acepta quantity como string/boolean y price <= 0 en LIMIT; debería responder 400
 test(
   qase(
     24,
@@ -41,6 +46,7 @@ test(
   }
 )
 
+// POST /orders + GET /instruments + GET /portfolio — el servicio permite operar con ARS (no es una acción); debería responder 400
 test(
   qase(
     42,
@@ -84,6 +90,8 @@ test(
   }
 )
 
+// POST /orders SELL LIMIT + GET /portfolio — con una venta pendiente que reserva todas las acciones,
+// el servicio omite la tenencia en GET /portfolio; debería seguir mostrándola
 test(
   qase(
     53,
