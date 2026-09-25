@@ -2990,10 +2990,11 @@
           y los ocho originales no se re-corrieron tras los arreglos.
         </li>
         <li>
-          <strong>El CI nunca corrió en GitHub.</strong> Los dos workflows
-          (<code>api.yml</code> y <code>e2e.yml</code>) están escritos, pero no
-          se probaron hasta que el repositorio se publique. Los comandos que
-          ejecutan sí se corrieron en local.
+          <strong>El CI de UI no completó una corrida.</strong> El workflow
+          <code>api.yml</code> corre en verde en GitHub. En
+          <code>e2e.yml</code> el build del APK de Android compiló, pero la
+          suite en el emulador todavía no se ejecutó allá. Los comandos que
+          ejecuta sí se corrieron en local.
         </li>
         <li>
           <strong>En iOS la venta límite cierra el ticket sola</strong> unos

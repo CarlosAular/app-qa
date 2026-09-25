@@ -380,14 +380,16 @@ Dos workflows. En cada push y PR corren **solo el smoke**; el cron nocturno y el
 disparo manual corren las suites completas.
 
 `.github/workflows/api.yml`: calidad (lint, formato, tipos y tests unitarios) y
-la suite de API en el nivel `off`, en cada push y PR. Es rápido porque no
+la suite de API en el nivel `off` (en push y PR, solo el smoke; la suite completa
+de noche y a pedido). Es rápido porque no
 necesita dispositivo: solo el cliente HTTP de Playwright. Publica el reporte de
 Allure y el de JUnit como artefacto, y solo publica en Qase si se lo pide a mano.
 De noche y a pedido corre además los niveles con defectos inyectados y los tests
 `@defecto`: fallan porque el servicio no cumple lo que afirman, así que ese job
 no rompe el build y solo deja los reportes.
 
-`.github/workflows/e2e.yml`: Android en cada push y PR (runner Linux), iOS por
+`.github/workflows/e2e.yml`: Android en cada push y PR (runner Linux, solo el
+smoke; el cron y el disparo manual corren los 34), iOS por
 cron nocturno y a pedido (runner macOS, que se factura 10x y tiene 3 vCPU). El
 build y la suite de iOS van en el **mismo job** a propósito: separarlos obliga a
 un segundo checkout, un segundo `bun install` de 4,1 GB, un round-trip de

@@ -75,4 +75,4 @@ Todos los comandos, qué necesitan y cuánto tardan:
 - `api-tests/`: suite de API (Playwright + Zod, reporte Allure).
 - `e2e/`: suite de UI (Appium/WebdriverIO, iOS y Android).
 - `docs/`: documentación.
-- `.github/workflows/`: CI (`api.yml` en cada push y PR).
+- `.github/workflows/`: CI (`api.yml` y `e2e.yml`: el smoke en cada push y PR, todo de noche).
