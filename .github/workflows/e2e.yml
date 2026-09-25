@@ -1,15 +1,17 @@
 name: E2E (Appium)
 
-# Android corre en cada push: el runner de Linux es 4 vCPU / 16 GB y barato.
-# iOS corre de noche y a pedido: el de macOS es 3 vCPU / 7 GB y se factura 10x,
-# y un build de release en frío son 30-45 minutos.
+# Android corre en cada push (solo el smoke): el runner de Linux es 4 vCPU / 16 GB
+# y barato. La suite completa y iOS corren solo a pedido (workflow_dispatch): el
+# runner de macOS es 3 vCPU / 7 GB y se factura 10x, y un build de release en
+# frío son 30-45 minutos. No hay cron a propósito: la corrida nocturna quedaba
+# en rojo (WebDriverAgent no arranca en el runner de macOS, y en Android fallan
+# los cuatro casos que dependen de un defecto de la app más COCOS-36 y 13).
+# Reponerlo es una mejora pendiente (docs/plan-de-pruebas.html, sección 11).
 on:
   push:
     branches: [main, "ca/**"]
   pull_request:
     branches: [main]
-  schedule:
-    - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
       platform:
@@ -163,8 +165,8 @@ jobs:
           QASE_TESTOPS_PROJECT: COCOS
           QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
           QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · Android"
-          # Push y PR corren solo los casos críticos (@smoke); el cron y el
-          # disparo manual corren los 34.
+          # Push y PR corren solo los casos críticos (@smoke); el disparo
+          # manual corre los 34.
           E2E_SMOKE: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && '1' || '0' }}
           QASE_TESTOPS_RUN_DESCRIPTION: "${{ github.sha }} · ${{ github.ref_name }}"
           QASE_TESTOPS_RUN_COMPLETE: "true"
@@ -191,9 +193,8 @@ jobs:
   ios:
     name: iOS · build + suite
     if: >-
-      github.event_name == 'schedule' ||
-      (github.event_name == 'workflow_dispatch' &&
-       contains(fromJSON('["both","ios"]'), inputs.platform))
+      github.event_name == 'workflow_dispatch' &&
+      contains(fromJSON('["both","ios"]'), inputs.platform)
     runs-on: macos-26
     timeout-minutes: 90
     steps:
