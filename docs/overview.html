@@ -258,6 +258,13 @@
         height: auto;
       }
 
+      figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+
       figcaption {
         font-size: 0.86rem;
         color: var(--fg-muted);
@@ -452,6 +459,24 @@
         <figcaption>
           Las flechas llenas son llamadas; las punteadas son resultados que se
           reportan.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <a href="evidencia/reporte-allure-vision-general.png"
+          ><img
+            src="evidencia/reporte-allure-vision-general.png"
+            alt="Primera página del reporte de Allure: 272 casos de prueba con 73.16% exitosos, una barra por cada una de las ocho corridas, los fallos agrupados en cinco tipos y las funcionalidades."
+            width="2160"
+            height="2340"
+            loading="lazy"
+        /></a>
+        <figcaption>
+          La primera página del reporte de Allure con las ocho corridas: cuatro
+          niveles de bugs por Android e iOS. Cada barra es una corrida y los
+          fallos se agrupan por tipo. La tendencia se llena desde la segunda
+          tanda. Se arma y se abre con <code>bun run e2e:report:tiers</code>; un
+          clic en la imagen la muestra completa.
         </figcaption>
       </figure>
 
