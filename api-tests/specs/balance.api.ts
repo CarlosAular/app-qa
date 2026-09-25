@@ -8,7 +8,7 @@ import {expect, expectError, INITIAL_CASH, tag, test} from "../fixtures"
 test(
   qase(
     51,
-    "COCOS-51 · El servicio rechaza las órdenes sin efectivo o sin tenencias suficientes y no mueve nada"
+    "COCOS-51 · El servicio rechaza las órdenes sin efectivo o sin tenencias suficientes y no mueve nada @smoke"
   ),
   async ({api, account}) => {
     await tag("Saldo", "blocker")

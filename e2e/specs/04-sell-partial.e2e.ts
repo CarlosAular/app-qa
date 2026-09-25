@@ -28,7 +28,7 @@ describe("Venta a mercado", () => {
   it(
     qase(
       25,
-      "COCOS-25 · Una venta a mercado reduce la tenencia y aumenta el efectivo"
+      "COCOS-25 · Una venta a mercado reduce la tenencia y aumenta el efectivo @smoke"
     ),
     async () => {
       const instrument = CASE_INSTRUMENT.sell

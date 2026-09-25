@@ -21,7 +21,10 @@ describe("Integridad de la orden", () => {
   afterEach(resetUiState)
 
   it(
-    qase(9, "COCOS-9 · No se puede comprar por más dinero del disponible"),
+    qase(
+      9,
+      "COCOS-9 · No se puede comprar por más dinero del disponible @smoke"
+    ),
     async () => {
       const instrument = CASE_INSTRUMENT.insufficientCash
       const before = await captureAccount()

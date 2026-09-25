@@ -19,6 +19,7 @@ const requested = (process.env.API_TIERS ?? "off")
   .filter((tier): tier is BugsTier => TIERS.includes(tier as BugsTier))
 
 const defects = process.env.API_DEFECTS === "1"
+const smoke = process.env.API_SMOKE === "1"
 const tiersLabel = (requested.length ? requested : ["off"]).join("+")
 
 /*
@@ -31,7 +32,8 @@ process.env.QASE_MODE ??= "off"
 process.env.QASE_TESTOPS_PROJECT ??= "COCOS"
 process.env.QASE_TESTOPS_RUN_TITLE ??=
   `Playwright API · tier ${tiersLabel}` +
-  (defects ? " · defectos conocidos" : "")
+  (defects ? " · defectos conocidos" : "") +
+  (smoke ? " · smoke" : "")
 process.env.QASE_TESTOPS_RUN_COMPLETE ??= "true"
 process.env.QASE_REPORT_DRIVER ??= "local"
 process.env.QASE_REPORT_CONNECTION_PATH ??= path.join(
@@ -51,7 +53,12 @@ export default defineConfig<{tier: BugsTier}>({
   testMatch: "**/*.api.ts",
   // Los tests @defecto afirman el comportamiento correcto y hoy fallan porque el servicio no lo cumple:
   // no van en la corrida base, sólo con API_DEFECTS=1 (bun run test:api:defectos).
-  ...(defects ? {grep: /@defecto/} : {grepInvert: /@defecto/}),
+  // API_SMOKE=1 corre solo los casos críticos etiquetados @smoke (los del CI de cada push).
+  ...(defects
+    ? {grep: /@defecto/}
+    : smoke
+      ? {grep: /@smoke/, grepInvert: /@defecto/}
+      : {grepInvert: /@defecto/}),
   outputDir: "./reports/test-output",
   fullyParallel: true,
   retries: 0,

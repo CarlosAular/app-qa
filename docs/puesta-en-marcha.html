@@ -2324,6 +2324,17 @@ bun run e2e:build:android --reuse</code></pre>
               <td>Fallan: cada fallo es un hallazgo</td>
             </tr>
             <tr>
+              <td><code>bun run test:api:smoke</code></td>
+              <td>
+                Solo los 4 casos críticos de API etiquetados
+                <code>@smoke</code>. Es lo que corre el CI en cada push. La UI
+                tiene <code>bun run e2e:android:smoke</code> y
+                <code>e2e:ios:smoke</code> (4 casos), y
+                <code>bun run smoke</code> corre todo el smoke.
+              </td>
+              <td>Verde, en unos 5 segundos (API)</td>
+            </tr>
+            <tr>
               <td><code>bun run test:api:tiers</code></td>
               <td>Los cuatro niveles en una sola corrida.</td>
               <td>Verde en <code>off</code>, fallos en los otros</td>

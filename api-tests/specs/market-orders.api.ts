@@ -10,7 +10,7 @@ type Side = "BUY" | "SELL"
 test(
   qase(
     27,
-    "COCOS-27 · El servicio ejecuta las órdenes a mercado al instante y devuelve el precio real"
+    "COCOS-27 · El servicio ejecuta las órdenes a mercado al instante y devuelve el precio real @smoke"
   ),
   async ({api}) => {
     await tag("Órdenes MARKET y LIMIT", "blocker")

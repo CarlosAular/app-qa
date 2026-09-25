@@ -364,9 +364,20 @@ QASE_MODE=testops QASE_TESTOPS_API_TOKEN=<token> bun run e2e:android
 
 En CI el workflow lo hace solo con el secret `QASE_TESTOPS_API_TOKEN`.
 
+### Smoke
+
+Ocho casos llevan `@smoke` al final del título: los que cubren el camino del
+dinero, la integridad de la orden y el contrato base. API: COCOS-20, 27, 32 y 51. UI: COCOS-7 (compra a mercado), 25 (venta a mercado), 9 (compra sin efectivo
+suficiente) y 10 (la orden aparece en el historial). Quedan fuera los que fallan
+por un defecto de la app, los `@defecto`, las órdenes límite (no determinísticas)
+y todo lo de formato o estilo. Se corren con `bun run test:api:smoke`,
+`bun run e2e:android:smoke` / `e2e:ios:smoke` (variable `E2E_SMOKE=1`, que además
+reduce los archivos a los cuatro con casos smoke) o `bun run smoke` para todo.
+
 ### CI
 
-Dos workflows.
+Dos workflows. En cada push y PR corren **solo el smoke**; el cron nocturno y el
+disparo manual corren las suites completas.
 
 `.github/workflows/api.yml`: calidad (lint, formato, tipos y tests unitarios) y
 la suite de API en el nivel `off`, en cada push y PR. Es rápido porque no
@@ -395,6 +406,7 @@ bun run test:api            # tier `off` (línea base): debe pasar en verde
 bun run test:api:easy       # también :medium y :hard — los fallos son hallazgos
 bun run test:api:tiers      # los cuatro tiers en una sola corrida
 bun run test:api:defectos   # defectos conocidos en `off`: fallan porque el servicio no los cumple
+bun run test:api:smoke      # solo los 4 casos críticos (@smoke), los que corre el CI en cada push
 bun run test:api:report     # genera y abre el reporte de Allure
 ```
 

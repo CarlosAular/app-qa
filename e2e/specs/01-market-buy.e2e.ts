@@ -24,7 +24,7 @@ describe("Compra a mercado", () => {
   it(
     qase(
       7,
-      "COCOS-7 · Una compra a mercado se ejecuta al precio vigente y descuenta el importe del efectivo"
+      "COCOS-7 · Una compra a mercado se ejecuta al precio vigente y descuenta el importe del efectivo @smoke"
     ),
     async () => {
       const before = await captureAccount()

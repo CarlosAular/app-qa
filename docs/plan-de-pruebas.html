@@ -978,6 +978,18 @@
         </p>
       </div>
 
+      <div class="note">
+        <span class="note__label">Smoke</span>
+        <p>
+          Ocho casos llevan la etiqueta <code>@smoke</code> y son los que corre
+          el CI en cada push: COCOS-20, 27, 32 y 51 por API; COCOS-7, 25, 9 y 10
+          por UI. Cubren el camino del dinero (comprar, vender, saldo), la
+          integridad de la orden y el contrato base. Se excluyen los que fallan
+          por un defecto, las órdenes límite (no determinísticas) y el formato.
+          La suite completa corre de noche y a pedido.
+        </p>
+      </div>
+
       <h2 id="riesgo">5 · Priorización por riesgo</h2>
       <p class="h2sub">
         Probabilidad por impacto, con foco en qué pierde el usuario si falla. La

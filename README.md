@@ -39,6 +39,15 @@ bun run qa:rapido
 bun run test:api:report   # reporte Allure de la suite de API
 ```
 
+**Smoke** (los 8 casos más críticos, 4 de API y 4 de UI, etiquetados `@smoke`;
+es lo que corre el CI en cada push):
+
+```sh
+bun run test:api:smoke      # API, unos 5 segundos
+bun run e2e:android:smoke   # UI en Android (también e2e:ios:smoke)
+bun run smoke               # API + UI en las dos plataformas
+```
+
 **Todo, incluida la UI** (Appium en Android e iOS; necesita emulador y
 simulador arrancados, el primer build de release tarda 30 a 45 min):
 

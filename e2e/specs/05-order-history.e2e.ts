@@ -25,7 +25,7 @@ describe("Historial de órdenes", () => {
   it(
     qase(
       10,
-      "COCOS-10 · La orden recién enviada aparece primera en el historial con sus datos"
+      "COCOS-10 · La orden recién enviada aparece primera en el historial con sus datos @smoke"
     ),
     async () => {
       const before = await captureAccount()

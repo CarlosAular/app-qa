@@ -163,6 +163,9 @@ jobs:
           QASE_TESTOPS_PROJECT: COCOS
           QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
           QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · Android"
+          # Push y PR corren solo los casos críticos (@smoke); el cron y el
+          # disparo manual corren los 34.
+          E2E_SMOKE: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && '1' || '0' }}
           QASE_TESTOPS_RUN_DESCRIPTION: "${{ github.sha }} · ${{ github.ref_name }}"
           QASE_TESTOPS_RUN_COMPLETE: "true"
         with:

@@ -92,7 +92,9 @@ jobs:
           QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
           QASE_TESTOPS_RUN_TITLE: "CI #${{ github.run_number }} · API"
           QASE_TESTOPS_RUN_DESCRIPTION: "${{ github.sha }} · ${{ github.ref_name }}"
-        run: bun run test:api
+        # Push y PR corren solo los casos críticos (@smoke); la suite completa va
+        # de noche y a pedido.
+        run: bun run ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && 'test:api:smoke' || 'test:api' }}
 
       - uses: actions/setup-java@v4
         if: always()

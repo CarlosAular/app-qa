@@ -24,7 +24,7 @@ export {E2E_ROOT, REPORTS_DIR}
  * queda horneado en el binario), así que el orden es parte del contrato y no
  * puede quedar a merced de cómo ordene el sistema de archivos.
  */
-export const SPECS = [
+const ALL_SPECS = [
   resolve(E2E_ROOT, "specs/01-market-buy.e2e.ts"),
   resolve(E2E_ROOT, "specs/02-amount-pesos.e2e.ts"),
   resolve(E2E_ROOT, "specs/03-ticket-validation.e2e.ts"),
@@ -44,6 +44,21 @@ export const SPECS = [
   // Último, a propósito: reinicia la cuenta compartida por toda la corrida.
   resolve(E2E_ROOT, "specs/17-account-reset.e2e.ts"),
 ]
+
+/**
+ * E2E_SMOKE=1: solo los casos críticos etiquetados @smoke. Se reducen también
+ * los archivos para no abrir una sesión de Appium en specs sin casos smoke.
+ */
+export const SMOKE = process.env.E2E_SMOKE === "1"
+
+const SMOKE_SPECS = [
+  "01-market-buy",
+  "04-sell-partial",
+  "05-order-history",
+  "11-order-integrity",
+].map(name => resolve(E2E_ROOT, `specs/${name}.e2e.ts`))
+
+export const SPECS = SMOKE ? SMOKE_SPECS : ALL_SPECS
 
 export const sharedConfig = (platform: E2ePlatform) => {
   ensureReportsDir()
@@ -120,6 +135,7 @@ export const sharedConfig = (platform: E2ePlatform) => {
     mochaOpts: {
       ui: "bdd" as const,
       timeout: 300_000,
+      ...(SMOKE ? {grep: "@smoke"} : {}),
     },
 
     reporters: [

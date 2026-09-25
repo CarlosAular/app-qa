@@ -11,7 +11,7 @@ const HEADER_ERROR = "X-Enable-Bugs must be off, easy, medium, or hard"
 test(
   qase(
     20,
-    "COCOS-20 · El servicio de instrumentos devuelve el catálogo completo y bien tipado"
+    "COCOS-20 · El servicio de instrumentos devuelve el catálogo completo y bien tipado @smoke"
   ),
   async ({api, rawClient, tier}) => {
     await tag("Instrumentos y búsqueda", "critical")

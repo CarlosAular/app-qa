@@ -8,7 +8,7 @@ import {expect, expectError, INITIAL_CASH, money, tag, test} from "../fixtures"
 test(
   qase(
     32,
-    "COCOS-32 · El servicio de portafolio cuadra con las órdenes ejecutadas"
+    "COCOS-32 · El servicio de portafolio cuadra con las órdenes ejecutadas @smoke"
   ),
   async ({api, rawClient, tier}) => {
     await tag("Portafolio", "blocker")
