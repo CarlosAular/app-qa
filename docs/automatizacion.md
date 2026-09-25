@@ -1,11 +1,13 @@
 # Cocos: automatización y documentación de QA (referencia técnica)
 
-React Native trading app built with Expo Router, TypeScript, Uniwind, TanStack
-Query, and a multi-tenant dummy trading API.
+La app bajo prueba es una app de trading en React Native (Expo Router,
+TypeScript, Uniwind, TanStack Query) contra una API dummy multi-tenant. Este
+documento es la referencia técnica de cómo se la automatiza; el resumen y los
+resultados están en el [README](../README.md) y en `overview.html`.
 
 ## Documentación QA
 
-Nueve documentos HTML independientes en [`docs/`](). Se abren directo en el
+Nueve documentos HTML independientes en [`docs/`](.). Se abren directo en el
 navegador, no necesitan servidor ni build.
 
 - [`overview.html`](overview.html) — el mapa de cinco minutos: qué se
@@ -37,7 +39,8 @@ las corridas y los defectos), así que no hace falta entrar a Qase para evaluar.
   con qué versión se verificó.
 - [`qase.html`](qase.html) — el catálogo de casos de prueba: qué es Qase,
   cómo está organizado el proyecto `COCOS`, los 53 casos con link a cada ficha y las
-  corridas registradas, manuales y automatizadas.
+  12 corridas automatizadas (API y UI, en los cuatro niveles de defectos), cada
+  una con su reporte público.
 - [`api.html`](api.html) — contrato de la API observado con requests
   reales: endpoints, errores, reservas de saldo, resolución de órdenes límite y
   diferencias entre niveles de defectos.
@@ -188,22 +191,28 @@ No son bugs de la suite.
 
 ### Estado por plataforma
 
-**Android** (Pixel 8, API 36): los 34 casos, 30 verdes y los 4 rojos de arriba.
-La primera corrida completa de los primeros 30 casos en una sola sesión (27
-minutos) dio además dos fallos propios de la suite, `COCOS-36` y `COCOS-50`; se
-estabilizaron y pasan en verde por separado, y los cuatro casos siguientes
-(`COCOS-48`, `8`, `29` y `46`) también se verificaron por spec. No se repitió la
-corrida completa de los 34, que ronda los 45 minutos.
+La corrida completa más reciente, en el nivel `off` y publicada en Qase
+(corridas 11 y 12), da **28 de 34 en cada plataforma**. No es un 34 de 34 y el
+motivo se dice acá en lugar de esconderlo:
 
-**iOS** (iPhone 17 Pro, iOS 26.5): los 26 casos nuevos se verificaron spec por
-spec, no en una sola corrida, y dan lo mismo que en Android.
+**Android** (Pixel 8, API 36, 30 minutos): 28 verdes.
 
-- Verdes (22): `COCOS-1, 2, 3, 4, 8, 9, 11, 12, 13, 17, 21, 22, 29, 34, 36, 37,
-40, 43, 44, 46, 48, 50`.
-- Fallan por un defecto de la app (4), los mismos que en Android: `COCOS-15`, `18`, `30` y `41`.
-- Los 8 casos originales no se volvieron a correr en esta ronda. Sus 4 fallos se
-  habían atribuido al desajuste entre Xcode y el runtime; puede que los arreglos
-  de abajo también cambien ese resultado, pero no está verificado.
+- Fallan por un defecto de la app (4): `COCOS-15`, `18`, `30` y `41`.
+- Inválidos (2): `COCOS-13` (el reinicio de la cuenta «nunca terminó»: el botón
+  siguió en «Reiniciando…») y `COCOS-36` (el botón nunca pasó a «Enviar otra
+  orden»). Son esperas que vencen dentro de la suite y **repiten en la CI de
+  GitHub** (specs 12 y 17), así que no son cosa del equipo local. No hay un
+  defecto de la app confirmado detrás.
+
+**iOS** (iPhone 17 Pro, iOS 26.5, 63 minutos): 28 verdes.
+
+- Fallan por un defecto de la app (4), los mismos: `COCOS-15`, `18`, `30` y `41`.
+- Falla (1): `COCOS-8`. Inválido (1): `COCOS-28`. Tampoco se investigaron.
+
+Los niveles `easy`, `medium` y `hard` (corridas 13 a 18) sí fallan más, y esa
+diferencia es el hallazgo: están en `qase.html`. La primera tarea de la
+siguiente iteración es estabilizar estos casos (`plan-de-pruebas.html`,
+sección 11).
 
 Qué costó llegar ahí en iOS, para no redescubrirlo. Todos fueron defectos de la
 suite, no del simulador:
@@ -273,7 +282,11 @@ ejecuta (0 de 40 observadas) y termina rechazada. Los specs `16-limit-orders` y
 
 ### Aislamiento sin `POST /reset`
 
-La consigna prohíbe `POST /reset`. `EXPO_PUBLIC_CANDIDATE_ID` se **inlinea al
+El challenge pide documentar cómo automatizar en un entorno donde `POST /reset`
+no es posible, así que la suite **no depende de él**: no tiene ningún wrapper
+de `POST /reset`, y solo `COCOS-13` y `50` tocan el botón «Reiniciar cuenta» de
+la app (que sí lo llama), porque probar el reinicio es justamente su objetivo.
+`EXPO_PUBLIC_CANDIDATE_ID` se **inlinea al
 bundlear**, así que el tenant contra el que habla la app queda congelado en el
 binario y no puede variar por test. De ahí sale todo el diseño:
 
@@ -376,8 +389,9 @@ reduce los archivos a los cuatro con casos smoke) o `bun run smoke` para todo.
 
 ### CI
 
-Dos workflows. En cada push y PR corren **solo el smoke**; el cron nocturno y el
-disparo manual corren las suites completas.
+Dos workflows. En cada push y PR corren **solo el smoke**; el cron nocturno de
+API y el disparo manual corren las suites completas de API, y el de UI solo a
+pedido.
 
 `.github/workflows/api.yml`: calidad (lint, formato, tipos y tests unitarios) y
 la suite de API en el nivel `off` (en push y PR, solo el smoke; la suite completa
@@ -389,12 +403,22 @@ De noche y a pedido corre además los niveles con defectos inyectados y los test
 no rompe el build y solo deja los reportes.
 
 `.github/workflows/e2e.yml`: Android en cada push y PR (runner Linux, solo el
-smoke; el cron y el disparo manual corren los 34), iOS por
-cron nocturno y a pedido (runner macOS, que se factura 10x y tiene 3 vCPU). El
-build y la suite de iOS van en el **mismo job** a propósito: separarlos obliga a
+smoke, unos 25 minutos, en verde). Los 34 casos y iOS solo se corren a pedido
+(`workflow_dispatch`; iOS en runner macOS, que se factura 10x y tiene 3 vCPU).
+El build y la suite de iOS van en el **mismo job** a propósito: separarlos obliga a
 un segundo checkout, un segundo `bun install` de 4,1 GB, un round-trip de
 artifact que le saca el bit de ejecución al `.app`, y una compilación de
 WebDriverAgent en frío.
+
+**Por qué no hay cron de UI.** Existió (todas las noches, a las 03:00 de
+Argentina) y se quitó porque siempre terminaba en rojo por lo mismo, así que no
+informaba nada nuevo. La corrida completa de Android dio 11 de 17 archivos
+verdes: los cuatro casos que dependen de un defecto de la app (`COCOS-15`, `18`,
+`30` y `41`) más `COCOS-36` y `COCOS-13`. La de iOS ni siquiera creó sesión: el
+runner de macOS no logra lanzar WebDriverAgent (`Unable to launch
+WebDriverAgent`). Reponerlo es una mejora pendiente: etiquetar los cuatro casos
+de defecto como `@defecto`, estabilizar los otros dos y resolver
+WebDriverAgent en el runner.
 
 ## Suite de API (Playwright)
 

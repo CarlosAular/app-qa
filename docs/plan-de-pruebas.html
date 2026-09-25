@@ -986,7 +986,7 @@
           por UI. Cubren el camino del dinero (comprar, vender, saldo), la
           integridad de la orden y el contrato base. Se excluyen los que fallan
           por un defecto, las órdenes límite (no determinísticas) y el formato.
-          La suite completa corre de noche y a pedido.
+          La suite completa corre solo a pedido.
         </p>
       </div>
 
@@ -2472,11 +2472,119 @@
       </div>
 
       <h2 id="resultados">9 · Ejecución y resultados</h2>
+      <p class="h2sub">
+        Doce corridas publicadas en Qase el 24 y 25/09/2026: cada suite en los
+        cuatro niveles de defectos. Cada cifra son los casos que pasaron sobre
+        los que la corrida reportó, y enlaza al reporte público, que abre sin
+        cuenta. El detalle de cada corrida, con los casos que fallan, está en
+        <a href="qase.html#corridas">qase.html</a>.
+      </p>
       <div class="tablewrap">
         <table>
           <thead>
             <tr>
-              <th>Corrida</th>
+              <th>Suite</th>
+              <th>off</th>
+              <th>easy</th>
+              <th>medium</th>
+              <th>hard</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>API · Playwright<br /><span class="muted">7 casos</span></td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/8c68513eec4b1102d32b6001fcb5775e66340bdb"
+                  >7 / 7</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/5c5e803d09477622b3dc6742de27973ff127ad82"
+                  >5 / 7</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/0d16f0cb2653137eb56622940bfcaa444edcd37c"
+                  >4 / 7</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/6ee034889249a6e780accbfcacf83468406a19e0"
+                  >0 / 7</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                UI · Appium · Android<br /><span class="muted">34 casos</span>
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/56ac0132ad99061142d31cd6af3f848995a99a24"
+                  >28 / 34</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/223e9c34350cda89e14d6ccf5eb575e76cbfca64"
+                  >26 / 34</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/8a7b4d459a3ec70992e2ce6c94069e408508cb2f"
+                  >27 / 34</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/94084d85d00f4049a4bdb14327080a6d422283d8"
+                  >17 / 34</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                UI · Appium · iOS<br /><span class="muted">34 casos</span>
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/9e580ff7fd60acb4a627e2f4dda211122a315bc9"
+                  >28 / 34</a
+                >
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/22235ac9ca25b74d2b37d5cce74637765d2e094d"
+                  >24 / 30</a
+                ><br /><span class="muted">4 sin resultado</span>
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/1174cec2bfeecd5908ff4396833db860ba5d2786"
+                  >27 / 33</a
+                ><br /><span class="muted">1 sin resultado</span>
+              </td>
+              <td class="num">
+                <a
+                  href="https://app.qase.io/public/report/464d45442158d10785ab86d2d40e1b7a7e1e5046"
+                  >21 / 34</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Otras ejecuciones</th>
               <th>Fecha</th>
               <th>Casos</th>
               <th>Resultado</th>
@@ -2485,9 +2593,9 @@
           <tbody>
             <tr>
               <td>
-                <a href="https://app.qase.io/run/COCOS/dashboard/2"
-                  >Manual · iOS 26.5 · iPhone 17 Pro</a
-                ><br /><span class="muted">Qase, bugs=off</span>
+                Manual · iOS 26.5 · iPhone 17 Pro<br /><span class="muted"
+                  >Qase, bugs=off</span
+                >
               </td>
               <td class="num">20–21/09</td>
               <td class="num">50</td>
@@ -2499,57 +2607,15 @@
             </tr>
             <tr>
               <td>
-                <a href="https://app.qase.io/run/COCOS/dashboard/3"
-                  >Manual · Android 16 · Pixel 8</a
-                ><br /><span class="muted">Qase, bugs=off</span>
+                Manual · Android 16 · Pixel 8<br /><span class="muted"
+                  >Qase, bugs=off</span
+                >
               </td>
               <td class="num">22/09</td>
               <td class="num">50</td>
               <td>
                 <span class="chip chip--ok">36 pasaron</span>
                 <span class="chip chip--bad">14 fallaron</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="https://app.qase.io/run/COCOS/dashboard/4"
-                  >Playwright API · nivel off</a
-                ><br /><span class="muted">Qase</span>
-              </td>
-              <td class="num">23/09</td>
-              <td class="num">7</td>
-              <td><span class="chip chip--ok">7 pasaron</span></td>
-            </tr>
-            <tr>
-              <td>
-                Appium · Android<br /><span class="muted"
-                  >Local, Qase apagado</span
-                >
-              </td>
-              <td class="num">23–24/09</td>
-              <td class="num">34</td>
-              <td>
-                <span class="chip chip--ok">30 verdes</span>
-                <span class="chip chip--warn"
-                  >4 fallan por un defecto de la app</span
-                >
-                (COCOS-15, 18, 30 y 41)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Appium · iOS<br /><span class="muted"
-                  >Local, spec por spec</span
-                >
-              </td>
-              <td class="num">23–24/09</td>
-              <td class="num">26 + 8</td>
-              <td>
-                <span class="chip chip--ok">22 verdes</span>
-                <span class="chip chip--warn"
-                  >4 fallan por un defecto de la app</span
-                >, los mismos que en Android. Los 8 casos originales dieron 4 de
-                8 en su corrida y no se volvieron a correr.
               </td>
             </tr>
             <tr>
@@ -2563,16 +2629,29 @@
       </div>
       <ul>
         <li>
-          Los cuatro que fallan por un defecto son los mismos en las dos
-          plataformas, y cada uno remite a un defecto de Qase.
+          Cuatro casos fallan ya en <code>off</code> en las dos plataformas
+          (COCOS-15, 18, 30 y 41): la app no cumple, el test es correcto, y cada
+          uno remite a un defecto de Qase. Al subir de nivel fallan más casos:
+          son los hallazgos de cada nivel.
         </li>
         <li>
-          Las corridas de Appium se quedan en local a propósito: solo la de API
-          está publicada en Qase. Las de UI se reproducen con un comando y su
-          reporte de Allure.
+          <strong>Los 34 no dan verde en una corrida completa.</strong> Además
+          de esos cuatro, en <code>off</code> Android dejó
+          <em>inválidos</em> COCOS-13 y 36 (28 de 34) e iOS falló COCOS-8 y dejó
+          inválido COCOS-28 (28 de 34). No hay un defecto de la app confirmado
+          detrás: son casos de la suite. Los dos de Android se cortan por una
+          espera que vence (el reinicio que «nunca termina», el botón que no
+          pasa a «Enviar otra orden») y se repiten en la CI de GitHub, así que
+          no son un problema del equipo local. No se investigaron a fondo:
+          quedan como primera tarea de la siguiente iteración (sección 11).
         </li>
         <li>
-          Las corridas manuales de Qase cuentan 50 casos; COCOS-51 se agregó
+          Las de UI se reproducen con un comando y su reporte de Allure; las
+          doce corridas quedaron además publicadas en Qase.
+        </li>
+        <li>
+          Las dos corridas manuales contaban 50 casos y ya no figuran en el
+          proyecto de Qase, por eso su fila no lleva link. COCOS-51 se agregó
           después y solo lo corre la suite de API.
         </li>
       </ul>
@@ -2978,23 +3057,24 @@
       <ul>
         <li>
           <strong
-            >No se corrió la suite de UI completa de una sola vez en
-            Android</strong
+            >La suite completa de UI da 28 de 34 en cada plataforma</strong
           >
-          con todos los casos actuales (rondaría los 45 minutos). Cada spec se
-          verificó por separado, y los specs de órdenes límite también en
-          secuencia.
+          (sección 9): cuatro casos fallan por un defecto de la app y otros dos
+          son inestables de la suite (COCOS-13 y 36 en Android; COCOS-8 y 28 en
+          iOS). Una corrida completa tarda unos 30 minutos en Android y más de
+          una hora en iOS.
         </li>
         <li>
-          <strong>En iOS</strong> los casos nuevos se verificaron spec por spec,
-          y los ocho originales no se re-corrieron tras los arreglos.
-        </li>
-        <li>
-          <strong>El CI de UI no completó una corrida.</strong> El workflow
-          <code>api.yml</code> corre en verde en GitHub. En
-          <code>e2e.yml</code> el build del APK de Android compiló, pero la
-          suite en el emulador todavía no se ejecutó allá. Los comandos que
-          ejecuta sí se corrieron en local.
+          <strong>La CI cubre menos que la corrida local.</strong>
+          <code>api.yml</code> corre en verde en GitHub, y en
+          <code>e2e.yml</code> el smoke de Android también (unos 25 minutos por
+          push). La suite completa y iOS quedaron a pedido: el runner de macOS
+          no logra arrancar WebDriverAgent (<em
+            >Unable to launch WebDriverAgent</em
+          >), y la corrida nocturna completa de Android dio 11 de 17 archivos
+          verdes, con los cuatro defectos de la app más COCOS-36 y 13. Por eso
+          se quitó el cron de <code>e2e.yml</code>: una corrida que falla
+          siempre por lo mismo no informa nada.
         </li>
         <li>
           <strong>En iOS la venta límite cierra el ticket sola</strong> unos
@@ -3019,6 +3099,42 @@
           por la suite de Playwright con validación de esquema.
         </li>
       </ul>
+
+      <h3>Para una siguiente iteración</h3>
+      <p class="h3sub">
+        En orden de valor, lo primero que haría con más tiempo.
+      </p>
+      <ol>
+        <li>
+          <strong>Estabilizar los casos inestables:</strong> COCOS-13 y 36 en
+          Android, COCOS-8 y 28 en iOS. Fallan de forma repetible en corridas
+          completas y no son defectos de la app; hoy son la razón por la que la
+          suite da 28 de 34.
+        </li>
+        <li>
+          <strong>iOS en la CI:</strong> lograr que WebDriverAgent arranque en
+          el runner <code>macos-26</code>.
+        </li>
+        <li>
+          <strong>Reponer la corrida completa nocturna</strong> (el cron se
+          quitó de <code>e2e.yml</code>), con los cuatro casos que dependen de
+          un defecto de la app etiquetados <code>@defecto</code> como ya se hizo
+          en API, para que la línea base salga en verde.
+        </li>
+        <li>
+          <strong>VoiceOver en un iPhone físico</strong> (COCOS-52) y los casos
+          de red caída (COCOS-14, 33 y 38) con una forma de cortar la red en
+          iOS.
+        </li>
+        <li>
+          <strong>COCOS-45 por API:</strong> la doble reserva de acciones, sin
+          lecturas entre las dos órdenes.
+        </li>
+        <li>
+          <strong>Colección Postman o REST Client</strong> con los seis
+          endpoints (lo opcional de la consigna; hoy lo cubre Zod).
+        </li>
+      </ol>
 
       <h2 id="ejecutar">12 · Cómo ejecutar todo</h2>
       <pre><code>bun install

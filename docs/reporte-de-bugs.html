@@ -536,6 +536,53 @@
         border-radius: 16px;
         padding: 20px 22px 8px;
         margin: 20px 0;
+        scroll-margin-top: 24px;
+      }
+      .dindex {
+        margin-top: 20px;
+      }
+      .dindex h3 {
+        margin: 20px 0 2px;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--fg-dim);
+      }
+      .dindex h3 a {
+        color: inherit;
+      }
+      .dindex ul {
+        list-style: none;
+        max-width: none;
+        margin: 4px 0 0;
+        padding: 0;
+        display: grid;
+        gap: 2px 28px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+      .dindex li {
+        margin: 0;
+      }
+      .dindex li a {
+        display: block;
+        padding: 3px 0;
+        font-size: 0.92rem;
+        line-height: 1.4;
+        color: var(--fg);
+      }
+      .dindex .did {
+        font-family: var(--mono);
+        color: var(--primary);
+        margin-right: 6px;
+        font-weight: 400;
+      }
+      tr[id] {
+        scroll-margin-top: 24px;
+      }
+      tr:target td {
+        background: var(--panel);
       }
       .defect h3 {
         margin: 0 0 8px;
@@ -644,6 +691,10 @@
       <nav class="toc" aria-label="Contenido">
         <h2>Contenido</h2>
         <ol>
+          <li>
+            <a href="#indice">Índice de defectos</a>
+            <span>— uno por uno, con enlace a su ficha</span>
+          </li>
           <li><a href="#resumen">Resumen</a></li>
           <li>
             <a href="#configuracion">En qué configuración se corrió la app</a>
@@ -657,6 +708,194 @@
           </li>
           <li><a href="#fuera">Qué no está en este reporte</a></li>
         </ol>
+      </nav>
+
+      <nav class="toc dindex" id="indice" aria-label="Índice de defectos">
+        <h2>Índice de defectos</h2>
+
+        <h3><a href="#sev-critical">Críticos</a> <span>1</span></h3>
+        <ul>
+          <li>
+            <a href="#d19"
+              ><span class="did">#19</span> iOS: los rechazos del servicio son
+              silenciosos</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#sev-major">Mayores</a> <span>9</span></h3>
+        <ul>
+          <li>
+            <a href="#d1"
+              ><span class="did">#1</span> Buscar por el nombre de la empresa
+              encuentra el instrumento</a
+            >
+          </li>
+          <li>
+            <a href="#d2"
+              ><span class="did">#2</span> Llegar al final del listado no se ve
+              la ultima fila</a
+            >
+          </li>
+          <li>
+            <a href="#d4"
+              ><span class="did">#4</span> El Valor total no refleja el valor
+              del efectivo</a
+            >
+          </li>
+          <li>
+            <a href="#d20"
+              ><span class="did">#20</span> La moneda ARS se puede comprar como
+              si fuera una acción</a
+            >
+          </li>
+          <li>
+            <a href="#d21"
+              ><span class="did">#21</span> La API acepta cantidades
+              coaccionadas y precios límite ≤ 0</a
+            >
+          </li>
+          <li>
+            <a href="#d22"
+              ><span class="did">#22</span> Con el teclado abierto el botón de
+              enviar queda tapado</a
+            >
+          </li>
+          <li>
+            <a href="#d23"
+              ><span class="did">#23</span> Los toques atraviesan la barra de
+              pestañas con la lista scrolleada</a
+            >
+          </li>
+          <li>
+            <a href="#d43"
+              ><span class="did">#43</span> Android: nunca se muestra el aviso
+              de orden ejecutada</a
+            >
+          </li>
+          <li>
+            <a href="#d45"
+              ><span class="did">#45</span> La posición desaparece del
+              portafolio mientras una venta límite reserva todo</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#sev-normal">Normales</a> <span>1</span></h3>
+        <ul>
+          <li>
+            <a href="#d24"
+              ><span class="did">#24</span> El estado pendiente de una orden
+              límite nunca es observable</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#sev-minor">Menores</a> <span>6</span></h3>
+        <ul>
+          <li>
+            <a href="#d3"
+              ><span class="did">#3</span> El panel de instrumentos no se ve
+              bien al bajar en la lista</a
+            >
+          </li>
+          <li>
+            <a href="#d25"
+              ><span class="did">#25</span> Los porcentajes usan punto decimal y
+              los importes coma</a
+            >
+          </li>
+          <li>
+            <a href="#d26"
+              ><span class="did">#26</span> La confirmación de la orden no dice
+              a qué precio se ejecutó</a
+            >
+          </li>
+          <li>
+            <a href="#d28"
+              ><span class="did">#28</span> El gráfico del día es verde aunque
+              la variación sea negativa</a
+            >
+          </li>
+          <li>
+            <a href="#d29"
+              ><span class="did">#29</span> Al volver a Órdenes se ven datos
+              viejos hasta refrescar</a
+            >
+          </li>
+          <li>
+            <a href="#d44"
+              ><span class="did">#44</span> El error de red llega sin traducir:
+              «Network Error»</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#sev-trivial">Triviales</a> <span>1</span></h3>
+        <ul>
+          <li>
+            <a href="#d27"
+              ><span class="did">#27</span> El estado vacío del portafolio le
+              habla al usuario de la API</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#sev-resuelto">Resueltos</a> <span>1</span></h3>
+        <ul>
+          <li>
+            <a href="#d46"
+              ><span class="did">#46</span> iOS: el ticket de trading es
+              inoperable con VoiceOver</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#niveles">Hallazgos con los niveles de la API</a></h3>
+        <ul>
+          <li>
+            <a href="#t-cocos-20"
+              ><span class="did">COCOS-20</span> La búsqueda distingue
+              mayúsculas</a
+            >
+          </li>
+          <li>
+            <a href="#t-cocos-51"
+              ><span class="did">COCOS-51</span> No valida las tenencias al
+              vender</a
+            >
+          </li>
+          <li>
+            <a href="#t-cocos-24"
+              ><span class="did">COCOS-24</span> Trunca los decimales en
+              silencio</a
+            >
+          </li>
+          <li>
+            <a href="#t-cocos-27"
+              ><span class="did">COCOS-27</span> El precio ejecutado no es el
+              vigente</a
+            >
+          </li>
+          <li>
+            <a href="#t-cocos-39"
+              ><span class="did">COCOS-39</span> Las órdenes a mercado no se
+              ejecutan al instante</a
+            >
+          </li>
+          <li>
+            <a href="#t-cocos-35"
+              ><span class="did">COCOS-35</span> El portafolio no refleja la
+              orden ejecutada</a
+            >
+          </li>
+          <li>
+            <a href="#t-cocos-49"
+              ><span class="did">COCOS-49</span> El servicio devuelve precio 0
+              para MIRG</a
+            >
+          </li>
+        </ul>
       </nav>
 
       <h2 id="resumen">1 · Resumen</h2>
@@ -1093,10 +1332,9 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
         </div>
         <h4>Evidencia</h4>
         <figure class="evidence">
-          <a
-            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ad72892e086c297c514281d6e89a51b0e09f3e1c/CleanShot%202026-09-20%20at%2017.59.39.png"
+          <a href="evidencia/d1-busqueda-sin-resultados.png"
             ><img
-              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ad72892e086c297c514281d6e89a51b0e09f3e1c/CleanShot%202026-09-20%20at%2017.59.39.png"
+              src="evidencia/d1-busqueda-sin-resultados.png"
               alt="Búsqueda por el nombre de la empresa sin resultados"
               loading="lazy"
           /></a>
@@ -1203,10 +1441,9 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
         </div>
         <h4>Evidencia</h4>
         <figure class="evidence">
-          <a
-            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ab783ceb8345e91a682fffbc80ca6b0a2cb02b52/CleanShot%202026-09-20%20at%2018.02.56.png"
+          <a href="evidencia/d2-ultima-fila-tapada.png"
             ><img
-              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/ab783ceb8345e91a682fffbc80ca6b0a2cb02b52/CleanShot%202026-09-20%20at%2018.02.56.png"
+              src="evidencia/d2-ultima-fila-tapada.png"
               alt="Última fila del listado tapada por la barra de pestañas"
               loading="lazy"
           /></a>
@@ -1864,10 +2101,9 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         </div>
         <h4>Evidencia</h4>
         <figure class="evidence">
-          <a
-            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/64e7d3426876a7affe50bfac694347453f8ec651/Android-posicion-desaparecida-por-reserva-total.png"
+          <a href="evidencia/d45-posicion-desaparecida.png"
             ><img
-              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/64e7d3426876a7affe50bfac694347453f8ec651/Android-posicion-desaparecida-por-reserva-total.png"
+              src="evidencia/d45-posicion-desaparecida.png"
               alt="Portafolio vacío con una venta límite que reserva todas las acciones"
               loading="lazy"
           /></a>
@@ -2066,10 +2302,9 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         </div>
         <h4>Evidencia</h4>
         <figure class="evidence">
-          <a
-            href="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/5df6bc516de675737df567b6056f16f4bd4d135a/CleanShot%202026-09-20%20at%2018.05.55.png"
+          <a href="evidencia/d3-barra-de-estado.png"
             ><img
-              src="https://d2cxucsjd6xvsd.cloudfront.net/public/team/72789566b98b4dd4d2acc8664b0fe023db1e73a1/attachment/5df6bc516de675737df567b6056f16f4bd4d135a/CleanShot%202026-09-20%20at%2018.05.55.png"
+              src="evidencia/d3-barra-de-estado.png"
               alt="Contenido pisando la barra de estado"
               loading="lazy"
           /></a>
@@ -2703,8 +2938,11 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         Corrida de la suite de API con
         <code>API_TIERS=off,easy,medium,hard</code> del 24/09/2026: 28
         resultados (7 casos por nivel). El nivel <code>off</code> pasó completo;
-        en los otros tres fallaron 10 resultados, que son 5 defectos distintos
-        del servicio.
+        en los otros tres fallaron 12 resultados, que son 6 defectos distintos
+        del servicio. La suite de UI, corrida en los cuatro niveles y las dos
+        plataformas, reproduce varios de ellos y suma uno más: 7 en total. Bajo
+        cada caso de API figuran, como «UI», los casos de UI que fallan por el
+        mismo defecto.
       </p>
 
       <div class="tablewrap">
@@ -2718,8 +2956,8 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>COCOS-20</td>
+            <tr id="t-cocos-20">
+              <td class="num">COCOS-20</td>
               <td>easy, medium, hard</td>
               <td>
                 <code>GET /search?query=ga</code> devolvió 0 resultados; se
@@ -2731,8 +2969,10 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
                 <code>ga</code> en minúsculas no encuentra nada.
               </td>
             </tr>
-            <tr>
-              <td>COCOS-51</td>
+            <tr id="t-cocos-51">
+              <td class="num">
+                COCOS-51<br /><span class="muted">UI 25</span>
+              </td>
               <td>easy, medium, hard</td>
               <td>
                 <code>SELL MARKET</code> quantity 1 sin tenencias se ejecutó
@@ -2744,8 +2984,8 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
                 vender lo que no se tiene.
               </td>
             </tr>
-            <tr>
-              <td>COCOS-24</td>
+            <tr id="t-cocos-24">
+              <td class="num">COCOS-24</td>
               <td>medium, hard</td>
               <td>
                 <code>quantity: 2.5</code> se aceptó y se ejecutó con
@@ -2757,8 +2997,10 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
                 rechazarlos.
               </td>
             </tr>
-            <tr>
-              <td>COCOS-27</td>
+            <tr id="t-cocos-27">
+              <td class="num">
+                COCOS-27<br /><span class="muted">UI 7, 9, 10, 44</span>
+              </td>
               <td>hard</td>
               <td>
                 El precio de la respuesta fue 50.07 y el vigente era 45.72.
@@ -2768,8 +3010,10 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
                 precio o cambia entre la consulta y la ejecución.
               </td>
             </tr>
-            <tr>
-              <td>COCOS-39</td>
+            <tr id="t-cocos-39">
+              <td class="num">
+                COCOS-39<br /><span class="muted">UI 22, 46</span>
+              </td>
               <td>hard</td>
               <td>
                 La primera orden <code>BUY MARKET</code> quantity 5 quedó en
@@ -2781,8 +3025,10 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
                 >
               </td>
             </tr>
-            <tr>
-              <td>COCOS-35</td>
+            <tr id="t-cocos-35">
+              <td class="num">
+                COCOS-35<br /><span class="muted">API 32</span>
+              </td>
               <td>hard</td>
               <td>
                 La orden figura <code>FILLED</code> y está en el historial, pero
@@ -2792,6 +3038,23 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
                 <strong>El portafolio no refleja la orden ejecutada.</strong>
                 Puede ser un retraso o un dato que nunca se actualiza; los tests
                 no lo distinguen.
+              </td>
+            </tr>
+            <tr id="t-cocos-49">
+              <td class="num">
+                COCOS-49<br /><span class="muted">solo UI</span>
+              </td>
+              <td>easy, medium, hard</td>
+              <td>
+                <code>GET /instruments</code> devuelve
+                <code>last_price: 0</code> para MIRG (en <code>off</code>,
+                40,88); el ticket muestra <code>$ 0,00</code>.
+              </td>
+              <td>
+                <strong
+                  >El servicio devuelve precio 0 para un instrumento.</strong
+                >
+                Es el único dato del catálogo que cambia entre niveles.
               </td>
             </tr>
           </tbody>
@@ -2804,9 +3067,13 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           COCOS-27, COCOS-39 y COCOS-35 parecen síntomas de un mismo
           comportamiento del nivel <code>hard</code> (ejecución asíncrona o
           inconsistente); es una hipótesis. COCOS-20 y COCOS-51 se repiten en
-          varios niveles porque es el mismo defecto. Estos hallazgos vienen de
-          defectos inyectados a propósito: no están cargados como defectos en
-          Qase y no entran en el conteo del resumen.
+          varios niveles porque es el mismo defecto. COCOS-9 falla en
+          <code>hard</code> porque el servicio ejecuta a un precio menor que el
+          mostrado (el de COCOS-27), no por falta de validación de saldo: con
+          más acciones sí responde 400. Quedan sin atribuir a un defecto los
+          fallos de UI de <code>hard</code> en COCOS-11, 28, 29 y 48. Estos
+          hallazgos vienen de defectos inyectados a propósito: no están cargados
+          como defectos en Qase y no entran en el conteo del resumen.
         </p>
       </div>
 
@@ -2837,9 +3104,10 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
       <footer class="footer">
         Reporte de defectos del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase
-        al 24/09/2026: 18 defectos abiertos y 1 resuelto. Las capturas se
-        enlazan desde Qase. Documento vivo: se actualiza cuando cambian los
-        defectos.
+        al 24/09/2026: 18 defectos abiertos y 1 resuelto. Las capturas son las
+        mismas que están adjuntas en Qase y viven en
+        <code>docs/evidencia/</code>, así que este reporte no depende del
+        proyecto. Documento vivo: se actualiza cuando cambian los defectos.
       </footer>
     </div>
   </body>

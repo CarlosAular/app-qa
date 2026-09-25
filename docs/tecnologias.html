@@ -1078,9 +1078,10 @@
               <td><span class="chip chip--ok">en uso</span></td>
               <td>
                 Corre la suite: Android en cada push (solo el smoke) sobre
-                runner Linux, iOS por cron nocturno y a pedido sobre runner
-                macOS. El build y la suite de iOS van en el mismo job, porque
-                separarlos cuesta un segundo
+                runner Linux; la suite completa y iOS, solo a pedido (iOS sobre
+                runner macOS, donde WebDriverAgent todavía no arranca). El build
+                y la suite de iOS van en el mismo job, porque separarlos cuesta
+                un segundo
                 <code>bun install</code> de 4,1 GB y una compilación de
                 WebDriverAgent en frío.
               </td>

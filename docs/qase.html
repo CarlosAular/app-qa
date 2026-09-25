@@ -546,7 +546,7 @@
           </li>
           <li>
             <a href="#corridas">Corridas</a>
-            <span>— enlace a Qase</span>
+            <span>— 12 corridas con su reporte público</span>
           </li>
           <li><a href="#cambios">Registro de cambios</a></li>
         </ol>
@@ -588,7 +588,13 @@
           El catálogo <strong>no se duplica</strong>: los pasos de cada caso
           están sólo en Qase. Este documento lista qué casos existen y para qué;
           lo que hay que hacer en cada uno se lee en su ficha. El proyecto es
-          privado, así que los links abren únicamente con acceso al workspace.
+          privado, así que los links a las fichas abren únicamente con acceso al
+          workspace; los reportes de las corridas (sección 5) son públicos.
+        </p>
+        <p>
+          Para entrar al proyecto existen
+          <strong>credenciales de un rol viewer</strong> (solo lectura), que se
+          comparten por mail.
         </p>
       </div>
 
@@ -1692,10 +1698,401 @@
       </div>
 
       <h2 id="corridas">5 · Corridas</h2>
-      <p>
-        Las corridas viven en Qase, no acá:
-        <a href="https://app.qase.io/runs/COCOS">app.qase.io/runs/COCOS</a>.
+      <p class="h2sub">
+        Doce corridas, del 24 al 25/09/2026: la suite de API y la de UI en los
+        cuatro niveles de defectos. Cada una tiene su reporte público, que abre
+        sin cuenta de Qase.
       </p>
+
+      <p>
+        Los links de las tablas llevan al reporte público de cada corrida. La
+        lista completa, con acceso al proyecto (las credenciales del rol viewer
+        se comparten por mail), está en
+        <a href="https://app.qase.io/runs/COCOS">app.qase.io/runs/COCOS</a>.
+        Horas en Argentina (UTC−3).
+      </p>
+
+      <div class="note">
+        <span class="note__label">Cómo leerlas</span>
+        <p>
+          El <strong>nivel</strong> es el valor de
+          <code>X-Enable-Bugs</code> con el que corrió la suite:
+          <code>off</code> es la línea base, sin defectos intencionales del
+          servicio; <code>easy</code>, <code>medium</code> y <code>hard</code>
+          los activan de a más. En la API cada test que se pone rojo al subir de
+          nivel es un hallazgo. En la UI, los cuatro casos que fallan ya en
+          <code>off</code> en las dos plataformas (COCOS-15, 18, 30 y 41) son
+          defectos de la app ya documentados. <em>Inválido</em> es un test que
+          se cortó por un error que no es una aserción, por ejemplo una espera
+          que venció; <em>sin resultado</em>, un caso de la suite que la corrida
+          no llegó a reportar.
+        </p>
+      </div>
+
+      <h3>API · Playwright <span class="count">7 casos por corrida</span></h3>
+      <p class="h3sub">
+        Corre sin dispositivo, contra el servicio, y se publica en segundos.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Corrida</th>
+              <th>Inicio</th>
+              <th>Duración</th>
+              <th>Casos</th>
+              <th>Resultado</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/8c68513eec4b1102d32b6001fcb5775e66340bdb"
+                  >Playwright API · off</a
+                ><br /><span class="muted">Corrida #5</span>
+              </td>
+              <td class="num">24/09 21:41</td>
+              <td class="num">19 s</td>
+              <td class="num">7</td>
+              <td><span class="chip chip--ok">7 pasaron</span></td>
+              <td class="muted">Todos pasaron</td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/5c5e803d09477622b3dc6742de27973ff127ad82"
+                  >Playwright API · easy</a
+                ><br /><span class="muted">Corrida #6</span>
+              </td>
+              <td class="num">24/09 21:41</td>
+              <td class="num">23 s</td>
+              <td class="num">7</td>
+              <td>
+                <span class="chip chip--ok">5 pasaron</span>
+                <span class="chip chip--bad">2 fallaron</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-20">20</a
+                >, <a href="https://app.qase.io/case/COCOS-51">51</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/0d16f0cb2653137eb56622940bfcaa444edcd37c"
+                  >Playwright API · medium</a
+                ><br /><span class="muted">Corrida #7</span>
+              </td>
+              <td class="num">24/09 21:42</td>
+              <td class="num">22 s</td>
+              <td class="num">7</td>
+              <td>
+                <span class="chip chip--ok">4 pasaron</span>
+                <span class="chip chip--bad">3 fallaron</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-20">20</a
+                >, <a href="https://app.qase.io/case/COCOS-24">24</a>,
+                <a href="https://app.qase.io/case/COCOS-51">51</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/6ee034889249a6e780accbfcacf83468406a19e0"
+                  >Playwright API · hard</a
+                ><br /><span class="muted">Corrida #8</span>
+              </td>
+              <td class="num">24/09 21:42</td>
+              <td class="num">26 s</td>
+              <td class="num">7</td>
+              <td>
+                <span class="chip chip--ok">0 pasaron</span>
+                <span class="chip chip--bad">7 fallaron</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-20">20</a
+                >, <a href="https://app.qase.io/case/COCOS-24">24</a>,
+                <a href="https://app.qase.io/case/COCOS-27">27</a>,
+                <a href="https://app.qase.io/case/COCOS-32">32</a>,
+                <a href="https://app.qase.io/case/COCOS-35">35</a>,
+                <a href="https://app.qase.io/case/COCOS-39">39</a>,
+                <a href="https://app.qase.io/case/COCOS-51">51</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>UI · Appium <span class="count">34 casos por corrida</span></h3>
+      <p class="h3sub">
+        La misma suite en el emulador de Android (Pixel 8) y el simulador de iOS
+        (iPhone 17 Pro), un nivel de defectos por corrida.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Corrida</th>
+              <th>Inicio</th>
+              <th>Duración</th>
+              <th>Casos</th>
+              <th>Resultado</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/56ac0132ad99061142d31cd6af3f848995a99a24"
+                  >Appium · Android · off</a
+                ><br /><span class="muted">Corrida #11</span>
+              </td>
+              <td class="num">24/09 23:12</td>
+              <td class="num">30 min</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">28 pasaron</span>
+                <span class="chip chip--bad">4 fallaron</span>
+                <span class="chip chip--warn">2 inválidos</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-15">15</a
+                >, <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-13"
+                  >13</a
+                >, <a href="https://app.qase.io/case/COCOS-36">36</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/9e580ff7fd60acb4a627e2f4dda211122a315bc9"
+                  >Appium · iOS · off</a
+                ><br /><span class="muted">Corrida #12</span>
+              </td>
+              <td class="num">24/09 23:41</td>
+              <td class="num">63 min</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">28 pasaron</span>
+                <span class="chip chip--bad">5 fallaron</span>
+                <span class="chip chip--warn">1 inválido</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-8">8</a>,
+                <a href="https://app.qase.io/case/COCOS-15">15</a>,
+                <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-28"
+                  >28</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/223e9c34350cda89e14d6ccf5eb575e76cbfca64"
+                  >Appium · Android · easy</a
+                ><br /><span class="muted">Corrida #13</span>
+              </td>
+              <td class="num">25/09 00:45</td>
+              <td class="num">27 min</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">26 pasaron</span>
+                <span class="chip chip--bad">6 fallaron</span>
+                <span class="chip chip--warn">2 inválidos</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-15">15</a
+                >, <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a>,
+                <a href="https://app.qase.io/case/COCOS-49">49</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-36"
+                  >36</a
+                >, <a href="https://app.qase.io/case/COCOS-50">50</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/22235ac9ca25b74d2b37d5cce74637765d2e094d"
+                  >Appium · iOS · easy</a
+                ><br /><span class="muted">Corrida #14</span>
+              </td>
+              <td class="num">25/09 01:14</td>
+              <td class="num">55 min</td>
+              <td class="num">30 de 34</td>
+              <td>
+                <span class="chip chip--ok">24 pasaron</span>
+                <span class="chip chip--bad">5 fallaron</span>
+                <span class="chip chip--warn">1 inválido</span>
+                <span class="chip chip--neutral">4 sin resultado</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-8">8</a>,
+                <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a>,
+                <a href="https://app.qase.io/case/COCOS-49">49</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-46"
+                  >46</a
+                ><br />Sin resultado: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-15"
+                  >15</a
+                >, <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-28">28</a>,
+                <a href="https://app.qase.io/case/COCOS-34">34</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/8a7b4d459a3ec70992e2ce6c94069e408508cb2f"
+                  >Appium · Android · medium</a
+                ><br /><span class="muted">Corrida #15</span>
+              </td>
+              <td class="num">25/09 02:10</td>
+              <td class="num">28 min</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">27 pasaron</span>
+                <span class="chip chip--bad">6 fallaron</span>
+                <span class="chip chip--warn">1 inválido</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-15">15</a
+                >, <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a>,
+                <a href="https://app.qase.io/case/COCOS-49">49</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-50"
+                  >50</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/1174cec2bfeecd5908ff4396833db860ba5d2786"
+                  >Appium · iOS · medium</a
+                ><br /><span class="muted">Corrida #16</span>
+              </td>
+              <td class="num">25/09 02:38</td>
+              <td class="num">57 min</td>
+              <td class="num">33 de 34</td>
+              <td>
+                <span class="chip chip--ok">27 pasaron</span>
+                <span class="chip chip--bad">5 fallaron</span>
+                <span class="chip chip--warn">1 inválido</span>
+                <span class="chip chip--neutral">1 sin resultado</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-15">15</a
+                >, <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-49">49</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-28"
+                  >28</a
+                ><br />Sin resultado: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-41"
+                  >41</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/94084d85d00f4049a4bdb14327080a6d422283d8"
+                  >Appium · Android · hard</a
+                ><br /><span class="muted">Corrida #17</span>
+              </td>
+              <td class="num">25/09 03:35</td>
+              <td class="num">25 min</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">17 pasaron</span>
+                <span class="chip chip--bad">14 fallaron</span>
+                <span class="chip chip--warn">3 inválidos</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-7">7</a>,
+                <a href="https://app.qase.io/case/COCOS-9">9</a>,
+                <a href="https://app.qase.io/case/COCOS-10">10</a>,
+                <a href="https://app.qase.io/case/COCOS-11">11</a>,
+                <a href="https://app.qase.io/case/COCOS-15">15</a>,
+                <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-28">28</a>,
+                <a href="https://app.qase.io/case/COCOS-29">29</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a>,
+                <a href="https://app.qase.io/case/COCOS-44">44</a>,
+                <a href="https://app.qase.io/case/COCOS-48">48</a>,
+                <a href="https://app.qase.io/case/COCOS-49">49</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-22"
+                  >22</a
+                >, <a href="https://app.qase.io/case/COCOS-46">46</a>,
+                <a href="https://app.qase.io/case/COCOS-50">50</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a
+                  href="https://app.qase.io/public/report/464d45442158d10785ab86d2d40e1b7a7e1e5046"
+                  >Appium · iOS · hard</a
+                ><br /><span class="muted">Corrida #18</span>
+              </td>
+              <td class="num">25/09 04:00</td>
+              <td class="num">51 min</td>
+              <td class="num">34</td>
+              <td>
+                <span class="chip chip--ok">21 pasaron</span>
+                <span class="chip chip--bad">12 fallaron</span>
+                <span class="chip chip--warn">1 inválido</span>
+              </td>
+              <td class="muted">
+                Fallan: COCOS-<a href="https://app.qase.io/case/COCOS-7">7</a>,
+                <a href="https://app.qase.io/case/COCOS-9">9</a>,
+                <a href="https://app.qase.io/case/COCOS-10">10</a>,
+                <a href="https://app.qase.io/case/COCOS-15">15</a>,
+                <a href="https://app.qase.io/case/COCOS-18">18</a>,
+                <a href="https://app.qase.io/case/COCOS-25">25</a>,
+                <a href="https://app.qase.io/case/COCOS-28">28</a>,
+                <a href="https://app.qase.io/case/COCOS-30">30</a>,
+                <a href="https://app.qase.io/case/COCOS-41">41</a>,
+                <a href="https://app.qase.io/case/COCOS-44">44</a>,
+                <a href="https://app.qase.io/case/COCOS-48">48</a>,
+                <a href="https://app.qase.io/case/COCOS-49">49</a
+                ><br />Inválidos: COCOS-<a
+                  href="https://app.qase.io/case/COCOS-22"
+                  >22</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <h2 id="cambios">6 · Registro de cambios</h2>
       <p class="h2sub">
@@ -1713,6 +2110,35 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td class="num">2026-09-25</td>
+              <td>
+                Se documentó que existen credenciales de un rol viewer para el
+                proyecto de Qase, que se comparten por mail. No están en el
+                repositorio.
+              </td>
+              <td>
+                Los links a las fichas de los casos y a la lista de corridas
+                abren solo con acceso al proyecto, que es privado; un rol de
+                solo lectura permite recorrerlo sin poder modificar nada.
+              </td>
+            </tr>
+            <tr>
+              <td class="num">2026-09-25</td>
+              <td>
+                Corrida completa publicada en Qase: la suite de API (7 casos) y
+                la de UI (34 casos, Android e iOS) en los cuatro niveles de
+                defectos, 12 corridas en total. Cada una se hizo pública y la
+                sección 5 lista su reporte.
+              </td>
+              <td>
+                Hasta ahora sólo estaba publicada la corrida de API y las de UI
+                vivían en local. El proyecto sigue privado, así que el reporte
+                público es lo que puede abrir quien evalúa sin acceso a Qase.
+                Las tres corridas anteriores (dos manuales y la de API) ya no
+                están en el proyecto y sus links dejaron de funcionar.
+              </td>
+            </tr>
             <tr>
               <td class="num">2026-09-24</td>
               <td>
@@ -1925,7 +2351,7 @@
       <footer class="footer">
         Catálogo de casos del challenge de QA de Cocos · Foto del proyecto
         <a href="https://app.qase.io/project/COCOS">COCOS</a> tomada el
-        24/09/2026: 53 casos, 5 suites, 43 automatizados, 6 corridas. Documento
+        25/09/2026: 53 casos, 5 suites, 43 automatizados, 12 corridas. Documento
         vivo: se actualiza con cada corrida que se ejecute.
       </footer>
     </div>
