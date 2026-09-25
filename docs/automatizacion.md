@@ -131,6 +131,45 @@ iPhone booteado. El script de build resuelve solo el JDK 17, el SDK de Android y
 la ABI del emulador; el de iOS elige el simulador disponible más nuevo en tiempo
 de ejecución.
 
+### Reporte con todas las corridas (niveles de bugs)
+
+`bun run publish:e2e:tiers` corre la suite en los cuatro niveles de defectos de
+la API (`off`, `easy`, `medium`, `hard`) y en las dos plataformas: ocho
+corridas. Al terminar, y cada vez que se quiera, se arma el reporte sin volver a
+correr nada:
+
+```sh
+bun run e2e:report:tiers               # arma y abre el reporte de Allure
+bun run e2e:report:tiers -- --no-open  # sólo lo arma
+bun run e2e:insights                   # abre la página de insights
+bun run qase:sync                      # refresca la metadata de los casos
+```
+
+El dashboard de Allure se arma para poder leerse de un vistazo:
+
+- **Suites de prueba**: una barra por corrida (`1 · off · Android` … `8 · hard ·
+iOS`), numeradas en el orden en que se corren.
+- **Categorías**: los fallos por lo que dicen y no por su estado. En esta suite
+  `broken` es cualquier `Error` de un helper y `failed` son los `expect()` sin
+  mensaje, así que las categorías por defecto de Allure (Product defects y Test
+  defects) engañan. Las reglas están en `scripts/lib/failure-categories.mjs`.
+- **Funcionalidades**: cada área funcional, abierta por corrida.
+- **Severidad**: la de Qase, llevada a los cinco niveles de Allure (`major` va a
+  `normal`; la exacta queda en la etiqueta `qaseSeverity`). Sale de
+  `e2e/data/qase-cases.json`.
+- **Ambiente, ejecutor y tendencia**: commit y rama, número de tanda, y el
+  historial entre tandas en `e2e/reports/history/tiers/`, fuera de
+  `todas-las-corridas/`, que se borra al empezar cada tanda. Volver a armar el
+  reporte con los mismos resultados no suma otro punto a la tendencia. La
+  tendencia se llena a partir de la segunda tanda.
+
+La **página de insights** (`e2e/reports/todas-las-corridas/insights/index.html`)
+suma lo que Allure no da. El nivel `off` es la línea base: un test que falla ahí
+no detecta nada (_ruido_) y uno que pasa en `off` y falla desde un nivel en
+adelante es una _detección_ real. Incluye la matriz test x corrida, la curva de
+detección, los fallos por tipo, las diferencias entre Android e iOS, la
+cobertura por riesgo y dónde se va el tiempo.
+
 ### Por qué Appium y no Maestro ni Detox
 
 - Es el único de los tres que habla W3C WebDriver contra iOS y Android, así que

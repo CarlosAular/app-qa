@@ -2255,6 +2255,40 @@ xcrun simctl shutdown booted    <span class="c"># apaga el simulador de iOS</spa
               <td>Haber corrido la suite, y Java</td>
               <td>Segundos</td>
             </tr>
+            <tr>
+              <td><code>bun run e2e:report:tiers</code></td>
+              <td>
+                Arma y abre el reporte de Allure con las ocho corridas (cuatro
+                niveles de bugs por Android e iOS): una barra por corrida, los
+                fallos agrupados por tipo y las áreas funcionales. No vuelve a
+                correr ninguna prueba.
+              </td>
+              <td>
+                Haber corrido <code>bun run publish:e2e:tiers</code>, y Java
+              </td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run e2e:insights</code></td>
+              <td>
+                Abre una página con la matriz de detección de las ocho corridas:
+                qué tests son ruido de la línea base, cuáles detectan defectos
+                de cada nivel y cuáles son inestables, con los fallos, los
+                riesgos y los tiempos.
+              </td>
+              <td>Haber armado el reporte con el comando anterior</td>
+              <td>Segundos</td>
+            </tr>
+            <tr>
+              <td><code>bun run qase:sync</code></td>
+              <td>
+                Baja de Qase la severidad, la prioridad y los riesgos de cada
+                caso a <code>e2e/data/qase-cases.json</code>. Los reportes lo
+                usan para etiquetar los resultados.
+              </td>
+              <td>El token de Qase en el <code>.env</code></td>
+              <td>Segundos</td>
+            </tr>
           </tbody>
         </table>
       </div>
