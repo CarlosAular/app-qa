@@ -5,6 +5,8 @@
  *   bun run dev android hard     -> emulador Android + app con tier hard
  *   bun run dev ios easy         -> simulador iOS + app con tier easy
  *   bun run dev android off --no-build   -> reusa la app ya instalada
+ *   bun run dev ios --boot-only          -> sólo deja el dispositivo listo
+ *                                           (lo usa scripts/e2e-tiers.mjs)
  *
  * Pasos: valida los argumentos, arranca el dispositivo si no hay uno corriendo,
  * lo deja en condiciones (Android: animaciones y stylus), compila e instala la
@@ -28,6 +30,7 @@ const args = process.argv.slice(2)
 const flags = args.filter(arg => arg.startsWith("-"))
 const [platform, tier = "off"] = args.filter(arg => !arg.startsWith("-"))
 const skipBuild = flags.includes("--no-build")
+const bootOnly = flags.includes("--boot-only")
 
 if (!PLATFORMS.includes(platform) || !TIERS.includes(tier)) {
   console.error(
@@ -157,6 +160,10 @@ if (platform === "android") {
   await ensureAndroid()
 } else {
   await ensureIos()
+}
+
+if (bootOnly) {
+  process.exit(0)
 }
 
 if (!skipBuild) {
