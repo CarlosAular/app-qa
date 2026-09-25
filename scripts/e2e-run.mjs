@@ -6,6 +6,7 @@
  *   bun run e2e android    -> sólo Android
  *   bun run e2e ios        -> sólo iOS
  *   bun run e2e --build    -> compila antes el binario de las que no lo tengan
+ *                             (o lo tengan con otro EXPO_PUBLIC_BUGS_TIER)
  *
  * Verifica que exista el binario antes de arrancar, para fallar con un mensaje
  * útil en vez de con un error de sesión de Appium. Compilar es lento (un build
@@ -13,7 +14,7 @@
  * `--build`; `bun run qa` lo pide.
  */
 import {spawnSync} from "node:child_process"
-import {existsSync} from "node:fs"
+import {existsSync, readFileSync} from "node:fs"
 import {dirname, resolve} from "node:path"
 import {fileURLToPath} from "node:url"
 
@@ -34,6 +35,18 @@ if (invalid.length > 0) {
   process.exit(1)
 }
 
+// El tier de bugs queda compilado en el binario (EXPO_PUBLIC_BUGS_TIER), así que
+// pedir otro tier obliga a recompilar. Sin la variable se usa "off".
+const tier = process.env.EXPO_PUBLIC_BUGS_TIER ?? "off"
+
+const builtTier = info => {
+  try {
+    return JSON.parse(readFileSync(info, "utf8")).bugsTier ?? "off"
+  } catch {
+    return undefined
+  }
+}
+
 let failed = 0
 let ran = 0
 
@@ -45,18 +58,25 @@ for (const platform of platforms) {
     continue
   }
 
-  if (!existsSync(info)) {
+  const missing = !existsSync(info)
+  const wrongTier = !missing && builtTier(info) !== tier
+
+  if (missing || wrongTier) {
     if (!buildMissing) {
       console.error(
-        `\n[e2e] Falta el binario de ${platform}.\n` +
-          `      Compilalo con: bun run e2e:build:${platform}\n` +
+        missing
+          ? `\n[e2e] Falta el binario de ${platform}.\n`
+          : `\n[e2e] El binario de ${platform} está compilado con tier "${builtTier(info)}", no "${tier}".\n`,
+        `      Compilalo con: EXPO_PUBLIC_BUGS_TIER=${tier} bun run e2e:build:${platform}\n` +
           "      o corré con --build para que se compile antes.\n"
       )
       failed += 1
       continue
     }
 
-    console.log(`\n[e2e] Compilando el binario de ${platform}...\n`)
+    console.log(
+      `\n[e2e] Compilando el binario de ${platform} (tier ${tier})...\n`
+    )
 
     const build = spawnSync(
       "node",
