@@ -652,6 +652,9 @@
           <li>
             <a href="#defectos">Los defectos</a> <span>— por severidad</span>
           </li>
+          <li>
+            <a href="#niveles">Hallazgos con los niveles de la API</a>
+          </li>
           <li><a href="#fuera">Qué no está en este reporte</a></li>
         </ol>
       </nav>
@@ -867,7 +870,8 @@
         <strong>Nivel de defectos.</strong> Todos los defectos de este reporte
         se observaron con <code>X-Enable-Bugs: off</code>. Los niveles
         <code>easy</code>, <code>medium</code> y <code>hard</code> inyectan
-        defectos a propósito en el servicio y no forman parte de este reporte.
+        defectos a propósito en el servicio; sus hallazgos están aparte, en la
+        sección <a href="#niveles">5</a>, y no cuentan en el resumen.
       </p>
 
       <h2 id="lectura">3 · Cómo se lee cada ficha</h2>
@@ -2694,7 +2698,119 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         </div>
       </article>
 
-      <h2 id="fuera">5 · Qué no está en este reporte</h2>
+      <h2 id="niveles">5 · Hallazgos con los niveles de la API</h2>
+      <p class="h2sub">
+        Corrida de la suite de API con
+        <code>API_TIERS=off,easy,medium,hard</code> del 24/09/2026: 28
+        resultados (7 casos por nivel). El nivel <code>off</code> pasó completo;
+        en los otros tres fallaron 10 resultados, que son 5 defectos distintos
+        del servicio.
+      </p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Caso</th>
+              <th>Nivel</th>
+              <th>Qué falló</th>
+              <th>Defecto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>COCOS-20</td>
+              <td>easy, medium, hard</td>
+              <td>
+                <code>GET /search?query=ga</code> devolvió 0 resultados; se
+                esperaba al menos uno.
+              </td>
+              <td>
+                <strong>La búsqueda distingue mayúsculas.</strong>
+                <code>YCA</code> encuentra <code>DYCA</code>, pero
+                <code>ga</code> en minúsculas no encuentra nada.
+              </td>
+            </tr>
+            <tr>
+              <td>COCOS-51</td>
+              <td>easy, medium, hard</td>
+              <td>
+                <code>SELL MARKET</code> quantity 1 sin tenencias se ejecutó
+                (<code>FILLED</code>, HTTP 200/201) en vez de dar 400
+                <code>Insufficient shares</code>.
+              </td>
+              <td>
+                <strong>No valida las tenencias al vender.</strong> Se puede
+                vender lo que no se tiene.
+              </td>
+            </tr>
+            <tr>
+              <td>COCOS-24</td>
+              <td>medium, hard</td>
+              <td>
+                <code>quantity: 2.5</code> se aceptó y se ejecutó con
+                <code>quantity: 2</code>; debía dar 400
+                <code>quantity must be a positive integer</code>.
+              </td>
+              <td>
+                <strong>Trunca los decimales en silencio</strong> en lugar de
+                rechazarlos.
+              </td>
+            </tr>
+            <tr>
+              <td>COCOS-27</td>
+              <td>hard</td>
+              <td>
+                El precio de la respuesta fue 50.07 y el vigente era 45.72.
+              </td>
+              <td>
+                <strong>El precio ejecutado no es el vigente.</strong> Usa otro
+                precio o cambia entre la consulta y la ejecución.
+              </td>
+            </tr>
+            <tr>
+              <td>COCOS-39</td>
+              <td>hard</td>
+              <td>
+                La primera orden <code>BUY MARKET</code> quantity 5 quedó en
+                <code>PENDING</code>, no en <code>FILLED</code>.
+              </td>
+              <td>
+                <strong
+                  >Las órdenes a mercado no se ejecutan al instante.</strong
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>COCOS-35</td>
+              <td>hard</td>
+              <td>
+                La orden figura <code>FILLED</code> y está en el historial, pero
+                <code>GET /portfolio</code> devuelve 0 tenencias.
+              </td>
+              <td>
+                <strong>El portafolio no refleja la orden ejecutada.</strong>
+                Puede ser un retraso o un dato que nunca se actualiza; los tests
+                no lo distinguen.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--warn">
+        <span class="note__label">Cómo leerlos</span>
+        <p>
+          COCOS-27, COCOS-39 y COCOS-35 parecen síntomas de un mismo
+          comportamiento del nivel <code>hard</code> (ejecución asíncrona o
+          inconsistente); es una hipótesis. COCOS-20 y COCOS-51 se repiten en
+          varios niveles porque es el mismo defecto. Estos hallazgos vienen de
+          defectos inyectados a propósito: no están cargados como defectos en
+          Qase y no entran en el conteo del resumen.
+        </p>
+      </div>
+
+      <h2 id="fuera">6 · Qué no está en este reporte</h2>
       <ul>
         <li>
           <strong>27 defectos en estado «Invalid» en Qase.</strong>
@@ -2708,8 +2824,8 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             >Los niveles <code>easy</code>, <code>medium</code> y
             <code>hard</code></strong
           >
-          de la API: inyectan defectos a propósito, y la suite de API los corre
-          aparte como hallazgos.
+          de la API: inyectan defectos a propósito y sus hallazgos están en la
+          sección <a href="#niveles">5</a>, fuera del conteo de defectos.
         </li>
         <li>
           <strong>Los hallazgos O1 a O14</strong> del análisis inicial que no se
