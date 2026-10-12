@@ -60,7 +60,8 @@ describe("Integridad de la orden", () => {
           await orderTicket.submit()
 
           // Sin feedback visual a propósito: el oráculo es el estado del
-          // servicio (ver 04-sell-partial.e2e.ts).
+          // servicio (ver 04-sell-partial.e2e.ts). Pendiente: afirmar el aviso
+          // de rechazo, que el 12/10/2026 sí apareció en iOS (defecto #19).
           await browser.pause(4_000)
         }
       )

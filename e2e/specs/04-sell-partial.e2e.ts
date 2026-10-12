@@ -111,7 +111,8 @@ describe("Venta a mercado", () => {
           /*
            * No se espera feedback visual a propósito.
            *
-           * En iOS un rechazo del servicio no muestra absolutamente nada, y en
+           * En iOS un rechazo del servicio no mostraba nada (defecto #19; el
+           * 12/10/2026 no se reprodujo, afirmar el aviso queda pendiente), y en
            * Android el toast tampoco es confiable. El oráculo es el estado: la
            * API devuelve 400 SIN crear orden, así que no existe ninguna orden
            * REJECTED que buscar en el historial.
