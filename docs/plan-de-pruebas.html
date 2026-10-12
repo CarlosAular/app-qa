@@ -2663,12 +2663,14 @@
 
       <h2 id="defectos">10 · Hallazgos y defectos</h2>
       <p class="h2sub">
-        19 defectos en Qase: 16 abiertos (9 mayores, 1 normal, 5 menores y 1
-        trivial), 1 resuelto (#46) y 2 que no se reprodujeron al re-verificarlos
-        el 12/10/2026 con el binario de release (#19 y #29; en Qase siguen como
-        abiertos). Cada ficha documenta qué pasa, cómo reproducirlo o dónde se
-        notó, la plataforma y el impacto. El detalle completo de cada uno, con
-        la configuración en que se corrió la app, está en
+        21 defectos: 18 abiertos (9 mayores, 2 normales, 6 menores y 1 trivial),
+        1 resuelto (#46) y 2 que no se reprodujeron al re-verificarlos el
+        12/10/2026 con el binario de release (#19 y #29; en Qase siguen como
+        abiertos). En Qase hay 19: #47 y #48 se registraron el 12/10/2026 y por
+        ahora están solo en el reporte. Cada ficha documenta qué pasa, cómo
+        reproducirlo o dónde se notó, la plataforma y el impacto. El detalle
+        completo de cada uno, con la configuración en que se corrió la app, está
+        en
         <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>.
       </p>
 
@@ -2861,6 +2863,18 @@
               </td>
             </tr>
             <tr>
+              <td class="num">#47</td>
+              <td><span class="chip chip--neutral">Normal</span></td>
+              <td>
+                El ticket no muestra el efectivo ni la tenencia disponible
+              </td>
+              <td>iOS, Android</td>
+              <td class="riesgos">R3 · O7</td>
+              <td class="wrapnum">
+                <a href="https://app.qase.io/case/COCOS-9">9</a>
+              </td>
+            </tr>
+            <tr>
               <td class="num">#3</td>
               <td><span class="chip chip--neutral">Menor</span></td>
               <td>
@@ -2948,6 +2962,14 @@
               </td>
             </tr>
             <tr>
+              <td class="num">#48</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>Los nombres largos se cortan sin puntos suspensivos</td>
+              <td>Android</td>
+              <td class="riesgos">UX</td>
+              <td class="wrapnum">—</td>
+            </tr>
+            <tr>
               <td class="num">#27</td>
               <td><span class="chip chip--neutral">Trivial</span></td>
               <td>
@@ -2966,8 +2988,8 @@
 
       <ul>
         <li>
-          Los defectos de UX (#26 a #29) se anotaron como mejoras: no rompen un
-          flujo, pero degradan la confianza en una app financiera.
+          Los defectos de UX (#26 a #29 y #48) se anotaron como mejoras: no
+          rompen un flujo, pero degradan la confianza en una app financiera.
         </li>
         <li>
           Los hallazgos más antiguos (O1 a O14) y su evidencia con capturas
@@ -3212,10 +3234,10 @@ bun run format:check</code></pre>
             <tr>
               <td>Reporte de bugs</td>
               <td>
-                <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 19
-                defectos de Qase (16 abiertos, 1 resuelto y 2 no reproducibles),
-                cada uno con pasos, obtenido, esperado, severidad, evidencia y
-                la configuración en que se observó. Resumen en la sección 10 y
+                <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 21
+                defectos (18 abiertos, 1 resuelto y 2 no reproducibles), cada
+                uno con pasos, obtenido, esperado, severidad, evidencia y la
+                configuración en que se observó. Resumen en la sección 10 y
                 hallazgos iniciales en
                 <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
               </td>
@@ -3258,8 +3280,9 @@ bun run format:check</code></pre>
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
         con las suites del repositorio al 24/09/2026: 53 casos, 43
         automatizados, 18 defectos abiertos. Re-verificación del 12/10/2026: 16
-        abiertos, 2 no reproducibles (#19 y #29). Documento vivo: se actualiza
-        cuando cambian el alcance o los resultados.
+        abiertos, 2 no reproducibles (#19 y #29) y 2 nuevos que todavía no están
+        en Qase (#47 y #48). Documento vivo: se actualiza cuando cambian el
+        alcance o los resultados.
       </footer>
     </div>
   </body>

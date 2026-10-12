@@ -2018,9 +2018,9 @@ Modal transversal: Ticket de orden (panel deslizante)
               <td>
                 <code>ARS</code> se puede comprar como si fuera una acción
               </td>
-              <td><span class="chip chip--wait">sin reproducir</span></td>
+              <td><span class="chip chip--ok">verificado</span></td>
               <td>
-                <span class="chip chip--wait">sin reproducir</span>
+                <span class="chip chip--ok">verificado</span>
               </td>
             </tr>
             <tr>
@@ -2037,6 +2037,18 @@ Modal transversal: Ticket de orden (panel deslizante)
           </tbody>
         </table>
       </div>
+      <p>
+        <strong>Dónde quedó cada hallazgo.</strong> Los verificados están
+        reportados como defectos en
+        <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: O2 es el #4, O3
+        el #1, O7 el #47, O8 el #20, O9 el #21, O11 el #24, O12 el #2 y O13 el
+        #3. O8 se confirmó después de las dos pasadas, en la ejecución del
+        catálogo (COCOS-41 y COCOS-42). De O4 no se llegó a ver el texto en
+        inglés que anticipaba, pero el mismo riesgo sí apareció con otros
+        síntomas: los defectos #25 y #44. O14 no se reporta porque solo ocurre
+        en el build de desarrollo: el binario de release no tiene esa capa de
+        avisos. O1, O5, O6 y O10 no se reprodujeron.
+      </p>
       <div class="note">
         <span class="note__label">Qué cambia entre plataformas</span>
         <p>
@@ -2284,9 +2296,11 @@ Modal transversal: Ticket de orden (panel deslizante)
       <p class="h2sub">
         Cosas que no rompen nada y que igual conviene arreglar. Salieron de
         recorrer la app entera en las dos corridas manuales del 21 y 22 de
-        septiembre de 2026. Cada una está cargada como defecto en Qase con
-        severidad baja y la etiqueta <code>ux-ui</code>, para que no se mezclen
-        con los defectos funcionales.
+        septiembre de 2026. Cada una está reportada como defecto de severidad
+        baja con la etiqueta <code>ux-ui</code>, para que no se mezclen con los
+        defectos funcionales: #26, #27, #28, #29 y #48, en ese orden; la última
+        fila es parte del #20. El #29 no se reprodujo al re-verificarlo el
+        12/10/2026.
       </p>
 
       <div class="tablewrap">

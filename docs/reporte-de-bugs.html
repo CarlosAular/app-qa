@@ -677,11 +677,12 @@
         <p class="eyebrow">Cocos · Hallazgos</p>
         <h1>Reporte de defectos</h1>
         <p class="standfirst">
-          Los mismos defectos que están en Qase, para leerlos sin acceso al
-          proyecto: 16 abiertos, 1 resuelto y 2 que no se reprodujeron al
-          re-verificarlos el 12/10/2026. Cada uno trae los pasos para
-          reproducirlo, lo obtenido y lo esperado, la severidad, la evidencia y
-          la configuración en que se corrió la app cuando se lo observó.
+          Los defectos que están en Qase, para leerlos sin acceso al proyecto,
+          más dos que todavía no se cargaron ahí (#47 y #48): 18 abiertos, 1
+          resuelto y 2 que no se reprodujeron al re-verificarlos el 12/10/2026.
+          Cada uno trae los pasos para reproducirlo, lo obtenido y lo esperado,
+          la severidad, la evidencia y la configuración en que se corrió la app
+          cuando se lo observó.
         </p>
         <a class="biglink" href="https://app.qase.io/project/COCOS">
           <span>Proyecto en Qase</span>
@@ -772,7 +773,7 @@
           </li>
         </ul>
 
-        <h3><a href="#sev-normal">Normales</a> <span>1</span></h3>
+        <h3><a href="#sev-normal">Normales</a> <span>2</span></h3>
         <ul>
           <li>
             <a href="#d24"
@@ -780,9 +781,15 @@
               límite nunca es observable</a
             >
           </li>
+          <li>
+            <a href="#d47"
+              ><span class="did">#47</span> El ticket no muestra el efectivo ni
+              la tenencia disponible</a
+            >
+          </li>
         </ul>
 
-        <h3><a href="#sev-minor">Menores</a> <span>5</span></h3>
+        <h3><a href="#sev-minor">Menores</a> <span>6</span></h3>
         <ul>
           <li>
             <a href="#d3"
@@ -812,6 +819,12 @@
             <a href="#d44"
               ><span class="did">#44</span> El error de red llega sin traducir:
               «Network Error»</a
+            >
+          </li>
+          <li>
+            <a href="#d48"
+              ><span class="did">#48</span> Android: los nombres largos se
+              cortan sin puntos suspensivos</a
             >
           </li>
         </ul>
@@ -901,8 +914,9 @@
 
       <h2 id="resumen">1 · Resumen</h2>
       <p class="h2sub">
-        19 defectos en Qase: 16 abiertos, 1 resuelto y 2 no reproducibles (#19 y
-        #29, que en Qase siguen como abiertos).
+        21 defectos: 18 abiertos, 1 resuelto y 2 no reproducibles (#19 y #29,
+        que en Qase siguen como abiertos). En Qase hay 19: #47 y #48 se
+        registraron el 12/10/2026 y por ahora están solo en este reporte.
       </p>
 
       <div class="tablewrap">
@@ -928,16 +942,16 @@
             </tr>
             <tr>
               <td>Normal</td>
-              <td class="num">1</td>
-              <td><a href="#d24">#24</a></td>
+              <td class="num">2</td>
+              <td><a href="#d24">#24</a>, <a href="#d47">#47</a></td>
             </tr>
             <tr>
               <td>Menor</td>
-              <td class="num">5</td>
+              <td class="num">6</td>
               <td>
                 <a href="#d3">#3</a>, <a href="#d25">#25</a>,
                 <a href="#d26">#26</a>, <a href="#d28">#28</a>,
-                <a href="#d44">#44</a>
+                <a href="#d44">#44</a>, <a href="#d48">#48</a>
               </td>
             </tr>
             <tr>
@@ -985,14 +999,15 @@
               <td>Solo Android</td>
               <td>
                 <a href="#d43">#43</a>, <a href="#d44">#44</a>,
-                <a href="#d45">#45</a>
+                <a href="#d45">#45</a>, <a href="#d48">#48</a>
               </td>
             </tr>
             <tr>
               <td>iOS y Android</td>
               <td>
                 <a href="#d1">#1</a>, <a href="#d2">#2</a>,
-                <a href="#d3">#3</a>, <a href="#d4">#4</a>
+                <a href="#d3">#3</a>, <a href="#d4">#4</a>,
+                <a href="#d47">#47</a>
               </td>
             </tr>
             <tr>
@@ -1122,10 +1137,11 @@
       <h2 id="lectura">3 · Cómo se lee cada ficha</h2>
       <ul>
         <li>
-          <strong>Encabezado:</strong> el número de defecto en Qase, el título,
-          la severidad y el estado, las plataformas, el riesgo de la matriz que
-          compromete y, en amarillo, el hallazgo del análisis inicial al que
-          corresponde (<a href="producto-y-qa.html#hallazgos"
+          <strong>Encabezado:</strong> el número de defecto en Qase (#47 y #48
+          todavía no están cargados ahí), el título, la severidad y el estado,
+          las plataformas, el riesgo de la matriz que compromete y, en amarillo,
+          el hallazgo del análisis inicial al que corresponde (<a
+            href="producto-y-qa.html#hallazgos"
             >producto-y-qa.html</a
           >).
         </li>
@@ -2150,7 +2166,7 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
       </article>
-      <h3 class="sev" id="sev-normal">Normales <span class="count">1</span></h3>
+      <h3 class="sev" id="sev-normal">Normales <span class="count">2</span></h3>
       <article class="defect" id="d24">
         <header>
           <h3>
@@ -2265,7 +2281,138 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
       </article>
-      <h3 class="sev" id="sev-minor">Menores <span class="count">5</span></h3>
+      <article class="defect" id="d47">
+        <header>
+          <h3>
+            <span class="did">#47</span> El ticket no muestra el efectivo ni la
+            tenencia disponible
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Normal</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · Android</span>
+            <span class="chip chip--neutral">Riesgo R3</span>
+            <span class="hall">O7</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>
+            Corrida manual, con el build de desarrollo servido por Metro.
+            Re-verificado el 12/10/2026 con los binarios de release, manejados
+            con Appium.
+          </dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro, y Android 16 / API 36 ·
+            emulador de Pixel 8.
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd><a href="https://app.qase.io/case/COCOS-9">COCOS-9</a></dd>
+        </dl>
+
+        <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>
+              Tener una posición abierta (por ejemplo, 3 acciones de DYCA).
+            </li>
+            <li>
+              Abrir DYCA desde Mercados y tocar &quot;Operar ahora&quot;. El
+              ticket abre en Comprar · Market · Acciones.
+            </li>
+            <li>Buscar en el ticket cuánto efectivo hay para comprar.</li>
+            <li>
+              Tocar &quot;Vender&quot; y buscar cuántas acciones hay para
+              vender.
+            </li>
+            <li>
+              Repetir cambiando a &quot;Pesos&quot; y a &quot;Limit&quot;.
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el ticket muestre el tope de la operación: el efectivo
+            disponible al comprar y la tenencia disponible al vender.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            El ticket no lo muestra en ninguna combinación. Los únicos textos
+            del panel son el ticker, el nombre, el último precio, los tres
+            selectores (Lado, Tipo, Cantidad por), el campo de cantidad o de
+            monto, el precio límite cuando corresponde, el recuadro
+            &quot;ACCIONES A ENVIAR&quot; y el botón &quot;Enviar orden&quot;.
+          </p>
+          <p>
+            Se revisó el árbol de accesibilidad completo del ticket en las
+            cuatro combinaciones (Comprar · Market, Vender · Market, Vender ·
+            Pesos y Comprar · Limit), en las dos plataformas: ningún texto
+            menciona efectivo, saldo, disponible ni tenencia. En Android la
+            cuenta tenía 3 acciones de DYCA y $ 999.862,84; en iOS, 1 acción y $
+            999.954,28.
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            El usuario opera a ciegas: para saber cuánto puede comprar o vender
+            tiene que cerrar el ticket, ir a Portafolio, memorizar el número y
+            volver. Si se pasa, se entera recién al enviar, por el rechazo del
+            servicio (&quot;No tenés efectivo suficiente&quot; o &quot;No tenés
+            acciones suficientes&quot;). Corresponde al hallazgo O7.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Una línea en el ticket que cambie con el lado: &quot;Disponible: $
+            999.862,84&quot; al comprar y &quot;Tenés 3 acciones&quot; al
+            vender. Los dos datos ya están en la respuesta de
+            <code>GET /portfolio</code>, que la app consulta para la pestaña
+            Portafolio.
+          </p>
+        </div>
+
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d47-ticket-sin-tenencia-android.png"
+            ><img
+              src="evidencia/d47-ticket-sin-tenencia-android.png"
+              alt="Ticket en Vender sobre DYCA en Android: no aparece la cantidad de acciones en cartera"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            Android. Ticket en Vender con 3 acciones de DYCA en cartera: el
+            panel no dice cuántas hay.
+          </figcaption>
+        </figure>
+        <figure class="evidence">
+          <a href="evidencia/d47-ticket-sin-efectivo-ios.png"
+            ><img
+              src="evidencia/d47-ticket-sin-efectivo-ios.png"
+              alt="Ticket en Comprar sobre DYCA en iOS: no aparece el efectivo disponible"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. Ticket en Comprar con $ 999.954,28 de efectivo: el panel no lo
+            muestra.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            No lo cubre la suite automatizada: COCOS-9 verifica el rechazo, no
+            que el ticket informe el tope. Las capturas de arriba se sacaron el
+            12/10/2026 con los binarios de release de Android y de iOS: se
+            reproduce igual en los dos.
+          </p>
+        </div>
+      </article>
+      <h3 class="sev" id="sev-minor">Menores <span class="count">6</span></h3>
       <article class="defect" id="d3">
         <header>
           <h3>
@@ -2765,6 +2912,107 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p>
             No lo cubre la suite automatizada. La captura de arriba se sacó el
             12/10/2026 con el binario de release de Android: se reproduce igual.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d48">
+        <header>
+          <h3>
+            <span class="did">#48</span> UX: en Android los nombres largos se
+            cortan sin puntos suspensivos
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">Android · UX</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>
+            Corrida manual, con el build de desarrollo servido por Metro.
+            Re-verificado el 12/10/2026 con los binarios de release, manejados
+            con Appium.
+          </dd>
+          <dt>Plataforma</dt>
+          <dd>Android 16 / API 36 · emulador de Pixel 8.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>Ninguno: se ve al recorrer el listado de Mercados.</dd>
+        </dl>
+
+        <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Abrir la app en Android. Arranca en Mercados.</li>
+            <li>
+              Mirar las filas de PGR (Phoenix Global Resources) y de PATA
+              (Importadora y Exportadora de la Patagonia).
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que un nombre que no entra en la fila termine en puntos suspensivos,
+            como en iOS: &quot;Phoenix Global Resour…&quot;, &quot;Importadora y
+            Exporta…&quot;.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            La fila de PGR dice &quot;Phoenix Global&quot; y la de PATA dice
+            &quot;Importadora y&quot;, sin ninguna marca de corte y con espacio
+            libre a la derecha. El texto parece completo cuando no lo está:
+            &quot;Importadora y&quot; se lee como un nombre entero.
+          </p>
+          <p>
+            El dato completo está: la etiqueta de accesibilidad de la fila dice
+            &quot;PATA, Importadora y Exportadora de la Patagonia, ultimo precio
+            $ 47,41…&quot;. Lo que falla es solo el dibujo del texto.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Que el nombre ocupe el ancho disponible de la fila y corte con
+            elipsis, o darle dos líneas en las filas del listado.
+          </p>
+        </div>
+
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d48-nombres-cortados-android.png"
+            ><img
+              src="evidencia/d48-nombres-cortados-android.png"
+              alt="Mercados en Android: las filas de PGR y PATA muestran Phoenix Global e Importadora y, sin puntos suspensivos"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            Android. PGR figura como &quot;Phoenix Global&quot; y PATA como
+            &quot;Importadora y&quot;.
+          </figcaption>
+        </figure>
+        <figure class="evidence">
+          <a href="evidencia/d48-nombres-con-elipsis-ios.png"
+            ><img
+              src="evidencia/d48-nombres-con-elipsis-ios.png"
+              alt="Mercados en iOS: los mismos nombres terminan en puntos suspensivos"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS, como contraste. Las mismas filas cortan con puntos suspensivos.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            No lo cubre la suite automatizada. Las capturas de arriba se sacaron
+            el 12/10/2026 con los binarios de release: en Android se reproduce
+            igual y en iOS no ocurre.
           </p>
         </div>
       </article>
@@ -3447,9 +3695,18 @@ POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient s
           sección <a href="#niveles">5</a>, fuera del conteo de defectos.
         </li>
         <li>
-          <strong>Los hallazgos O1 a O14</strong> del análisis inicial que no se
-          reprodujeron o que quedaron dentro de estos defectos:
-          <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
+          <strong
+            >Los hallazgos del análisis inicial que no se reprodujeron</strong
+          >
+          (O1, O5, O6 y O10):
+          <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>. El
+          resto de los hallazgos O1 a O14 tiene su ficha acá.
+        </li>
+        <li>
+          <strong>El hallazgo O14</strong> (avisos de Skia y de LogBox que tapan
+          la barra de pestañas): solo aparece en el build de desarrollo. El
+          binario de release no tiene esa capa de avisos, así que no es un
+          defecto del producto.
         </li>
       </ul>
 
@@ -3457,12 +3714,13 @@ POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient s
         Reporte de defectos del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase
         al 24/09/2026: 18 defectos abiertos y 1 resuelto. Re-verificación del
-        12/10/2026: 16 abiertos y 2 no reproducibles (#19 y #29). Las capturas
-        de #1, #2, #3 y #45 son las adjuntas en Qase; las de #4, #19, #22, #26,
-        #27, #28 y #44 se sacaron el 12/10/2026 con los binarios de release.
-        Todas viven en <code>docs/evidencia/</code>, así que este reporte no
-        depende del proyecto. Documento vivo: se actualiza cuando cambian los
-        defectos.
+        12/10/2026: 16 abiertos y 2 no reproducibles (#19 y #29), más #47 y #48,
+        que se registraron ese día y todavía no están en Qase. Las capturas de
+        #1, #2, #3 y #45 son las adjuntas en Qase; las de #4, #19, #22, #26,
+        #27, #28, #44, #47 y #48 se sacaron el 12/10/2026 con los binarios de
+        release. Todas viven en <code>docs/evidencia/</code>, así que este
+        reporte no depende del proyecto. Documento vivo: se actualiza cuando
+        cambian los defectos.
       </footer>
     </div>
   </body>
