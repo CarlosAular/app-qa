@@ -9,7 +9,8 @@ la validación.
 - **53 casos de prueba** en Qase: 43 automatizados (9 de API con Playwright y 34
   de UI con Appium, en iOS y Android) y 10 manuales.
 - **19 defectos** reportados, con pasos, esperado, obtenido, severidad y
-  evidencia: 18 abiertos y 1 resuelto.
+  evidencia: 16 abiertos, 1 resuelto y 2 que no se reprodujeron al
+  re-verificarlos el 12/10/2026 (#19 y #29; en Qase siguen como abiertos).
 - **12 corridas** publicadas en Qase (API y UI, en los cuatro niveles de
   defectos de la API), cada una con su reporte público.
 - **Corrida completa de UI en `off`: 28 de 34** en cada plataforma. Cuatro casos
@@ -132,6 +133,9 @@ Las decisiones técnicas, resumidas (el detalle y la justificación están en
    (COCOS-14, 33 y 38).
 5. **COCOS-45 por API** (doble reserva de acciones) y una colección
    Postman/REST Client para el contrato.
+6. **Afirmar el aviso de rechazo en iOS** en COCOS-9 y COCOS-25: hoy esperan y
+   miran el estado de la cuenta; el aviso sí aparece (defecto #19, no
+   reproducible).
 
 Detalle en la [sección 11 del plan de pruebas](https://carlosaular.github.io/app-qa/plan-de-pruebas.html#pendientes).
 

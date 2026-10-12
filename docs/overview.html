@@ -342,7 +342,8 @@
           </div>
           <div class="stat"><b>34</b><span>casos de UI en Appium</span></div>
           <div class="stat">
-            <b>19</b><span>defectos: 18 abiertos, 1 resuelto</span>
+            <b>19</b
+            ><span>defectos: 16 abiertos, 1 resuelto, 2 no reproducibles</span>
           </div>
         </div>
       </header>
@@ -520,13 +521,10 @@
 
       <h2 id="hallazgos">Qué encontramos</h2>
       <p class="h2sub">
-        19 defectos cargados en Qase. Estos son los que más importan.
+        19 defectos cargados en Qase; dos no se reprodujeron al re-verificarlos
+        el 12/10/2026. Estos son los que más importan.
       </p>
       <ul class="plain">
-        <li>
-          <span class="pill bad">Crítica</span>En iOS, los rechazos del servicio
-          son silenciosos: la app no avisa cuando la orden no se puede enviar.
-        </li>
         <li>
           <span class="pill warn">Mayor</span>La posición desaparece del
           portafolio mientras una venta límite reserva todas las acciones.
@@ -542,6 +540,11 @@
         <li>
           <span class="pill warn">Mayor</span>Android nunca muestra el aviso de
           orden ejecutada.
+        </li>
+        <li>
+          <span class="pill warn">Mayor</span>La API convierte el texto
+          <code>"1e3"</code> en una orden real de 1000 acciones y acepta precios
+          límite menores o iguales a cero.
         </li>
         <li>
           <span class="pill ok">Resuelto</span>El ticket era inoperable con

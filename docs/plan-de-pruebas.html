@@ -656,7 +656,8 @@
           <b>17</b><span>riesgos, todos con cobertura mínima cumplida</span>
         </div>
         <div class="kpi">
-          <b>18</b><span>defectos abiertos, 1 crítico; 1 más resuelto</span>
+          <b>16</b
+          ><span>defectos abiertos; 1 resuelto y 2 no reproducibles</span>
         </div>
         <div class="kpi">
           <b>3</b><span>niveles automatizados: unitario, API y UI</span>
@@ -896,7 +897,11 @@
             </tr>
             <tr>
               <td><code>POST /reset</code> desde la suite</td>
-              <td>La consigna lo prohíbe para automatizar.</td>
+              <td>
+                Decisión propia. La consigna permite usarlo y pide documentar
+                cómo automatizar en un entorno donde no existe; la suite se
+                diseñó para ese entorno.
+              </td>
               <td>
                 Tenant por build y aserciones por delta. El botón «Reiniciar» de
                 la propia app sí se prueba por UI (COCOS-13 y 50).
@@ -2658,11 +2663,13 @@
 
       <h2 id="defectos">10 · Hallazgos y defectos</h2>
       <p class="h2sub">
-        19 defectos en Qase: 18 abiertos (1 crítico, 9 mayores, 1 normal, 6
-        menores y 1 trivial) y 1 resuelto (#46). Cada ficha documenta qué pasa,
-        cómo reproducirlo o dónde se notó, la plataforma y el impacto. El
-        detalle completo de cada uno, con la configuración en que se corrió la
-        app, está en <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>.
+        19 defectos en Qase: 16 abiertos (9 mayores, 1 normal, 5 menores y 1
+        trivial), 1 resuelto (#46) y 2 que no se reprodujeron al re-verificarlos
+        el 12/10/2026 con el binario de release (#19 y #29; en Qase siguen como
+        abiertos). Cada ficha documenta qué pasa, cómo reproducirlo o dónde se
+        notó, la plataforma y el impacto. El detalle completo de cada uno, con
+        la configuración en que se corrió la app, está en
+        <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>.
       </p>
 
       <div class="tablewrap dense">
@@ -2680,7 +2687,10 @@
           <tbody>
             <tr>
               <td class="num">#19</td>
-              <td><span class="chip chip--bad">Crítica</span></td>
+              <td>
+                <span class="chip chip--bad">Crítica</span>
+                <span class="chip chip--neutral">No reproducible</span>
+              </td>
               <td>
                 Los rechazos del servicio son silenciosos: la app no avisa
                 cuando la orden no se puede enviar
@@ -2907,7 +2917,10 @@
             </tr>
             <tr>
               <td class="num">#29</td>
-              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>
+                <span class="chip chip--neutral">Menor</span>
+                <span class="chip chip--neutral">No reproducible</span>
+              </td>
               <td>
                 Al volver a Órdenes o Portafolio se ven datos viejos hasta
                 refrescar a mano
@@ -3134,6 +3147,11 @@
           <strong>Colección Postman o REST Client</strong> con los seis
           endpoints (lo opcional de la consigna; hoy lo cubre Zod).
         </li>
+        <li>
+          <strong>Afirmar el aviso de rechazo en iOS</strong> en COCOS-9 y
+          COCOS-25. Hoy esperan y miran el estado de la cuenta; el aviso sí
+          aparece (defecto #19, no reproducible).
+        </li>
       </ol>
 
       <h2 id="ejecutar">12 · Cómo ejecutar todo</h2>
@@ -3195,10 +3213,10 @@ bun run format:check</code></pre>
               <td>Reporte de bugs</td>
               <td>
                 <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 19
-                defectos de Qase (18 abiertos y 1 resuelto), cada uno con pasos,
-                obtenido, esperado, severidad, evidencia y la configuración en
-                que se observó. Resumen en la sección 10 y hallazgos iniciales
-                en
+                defectos de Qase (16 abiertos, 1 resuelto y 2 no reproducibles),
+                cada uno con pasos, obtenido, esperado, severidad, evidencia y
+                la configuración en que se observó. Resumen en la sección 10 y
+                hallazgos iniciales en
                 <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>.
               </td>
             </tr>
@@ -3239,8 +3257,9 @@ bun run format:check</code></pre>
         Plan de pruebas del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
         con las suites del repositorio al 24/09/2026: 53 casos, 43
-        automatizados, 18 defectos abiertos. Documento vivo: se actualiza cuando
-        cambian el alcance o los resultados.
+        automatizados, 18 defectos abiertos. Re-verificación del 12/10/2026: 16
+        abiertos, 2 no reproducibles (#19 y #29). Documento vivo: se actualiza
+        cuando cambian el alcance o los resultados.
       </footer>
     </div>
   </body>

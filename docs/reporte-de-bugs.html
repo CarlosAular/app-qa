@@ -678,7 +678,8 @@
         <h1>Reporte de defectos</h1>
         <p class="standfirst">
           Los mismos defectos que están en Qase, para leerlos sin acceso al
-          proyecto: 18 abiertos y 1 resuelto. Cada uno trae los pasos para
+          proyecto: 16 abiertos, 1 resuelto y 2 que no se reprodujeron al
+          re-verificarlos el 12/10/2026. Cada uno trae los pasos para
           reproducirlo, lo obtenido y lo esperado, la severidad, la evidencia y
           la configuración en que se corrió la app cuando se lo observó.
         </p>
@@ -712,16 +713,6 @@
 
       <nav class="toc dindex" id="indice" aria-label="Índice de defectos">
         <h2>Índice de defectos</h2>
-
-        <h3><a href="#sev-critical">Críticos</a> <span>1</span></h3>
-        <ul>
-          <li>
-            <a href="#d19"
-              ><span class="did">#19</span> iOS: los rechazos del servicio son
-              silenciosos</a
-            >
-          </li>
-        </ul>
 
         <h3><a href="#sev-major">Mayores</a> <span>9</span></h3>
         <ul>
@@ -791,7 +782,7 @@
           </li>
         </ul>
 
-        <h3><a href="#sev-minor">Menores</a> <span>6</span></h3>
+        <h3><a href="#sev-minor">Menores</a> <span>5</span></h3>
         <ul>
           <li>
             <a href="#d3"
@@ -818,12 +809,6 @@
             >
           </li>
           <li>
-            <a href="#d29"
-              ><span class="did">#29</span> Al volver a Órdenes se ven datos
-              viejos hasta refrescar</a
-            >
-          </li>
-          <li>
             <a href="#d44"
               ><span class="did">#44</span> El error de red llega sin traducir:
               «Network Error»</a
@@ -847,6 +832,22 @@
             <a href="#d46"
               ><span class="did">#46</span> iOS: el ticket de trading es
               inoperable con VoiceOver</a
+            >
+          </li>
+        </ul>
+
+        <h3><a href="#sev-norepro">No reproducibles</a> <span>2</span></h3>
+        <ul>
+          <li>
+            <a href="#d19"
+              ><span class="did">#19</span> iOS: los rechazos del servicio son
+              silenciosos</a
+            >
+          </li>
+          <li>
+            <a href="#d29"
+              ><span class="did">#29</span> Al volver a Órdenes se ven datos
+              viejos hasta refrescar</a
             >
           </li>
         </ul>
@@ -899,7 +900,10 @@
       </nav>
 
       <h2 id="resumen">1 · Resumen</h2>
-      <p class="h2sub">19 defectos en Qase: 18 abiertos y 1 resuelto.</p>
+      <p class="h2sub">
+        19 defectos en Qase: 16 abiertos, 1 resuelto y 2 no reproducibles (#19 y
+        #29, que en Qase siguen como abiertos).
+      </p>
 
       <div class="tablewrap">
         <table>
@@ -911,11 +915,6 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Crítica</td>
-              <td class="num">1</td>
-              <td><a href="#d19">#19</a></td>
-            </tr>
             <tr>
               <td>Mayor</td>
               <td class="num">9</td>
@@ -934,11 +933,11 @@
             </tr>
             <tr>
               <td>Menor</td>
-              <td class="num">6</td>
+              <td class="num">5</td>
               <td>
                 <a href="#d3">#3</a>, <a href="#d25">#25</a>,
                 <a href="#d26">#26</a>, <a href="#d28">#28</a>,
-                <a href="#d29">#29</a>, <a href="#d44">#44</a>
+                <a href="#d44">#44</a>
               </td>
             </tr>
             <tr>
@@ -950,6 +949,13 @@
               <td>Resuelto</td>
               <td class="num">1</td>
               <td><a href="#d46">#46</a></td>
+            </tr>
+            <tr>
+              <td>No reproducible</td>
+              <td class="num">2</td>
+              <td>
+                <a href="#d19">#19</a> (crítica), <a href="#d29">#29</a> (menor)
+              </td>
             </tr>
           </tbody>
         </table>
@@ -1134,8 +1140,13 @@
           >).
         </li>
         <li>
-          <strong>Cuerpo:</strong> el texto del defecto en Qase: pasos para
-          reproducir, obtenido, esperado, causa cuando se la conoce e impacto.
+          <strong>Cuerpo:</strong> el mismo contenido del defecto en Qase,
+          ordenado en pasos para reproducir, esperado y obtenido; después, causa
+          cuando se la conoce e impacto.
+        </li>
+        <li>
+          <strong>Evidencia:</strong> captura, respuesta del servicio o caso
+          automatizado que falla por el defecto. Cuando no hay captura, se dice.
         </li>
         <li>
           <strong>Confirmación con el binario de release:</strong> si la suite
@@ -1147,119 +1158,7 @@
       <p class="h2sub">
         De mayor a menor severidad. Los resueltos quedan al final.
       </p>
-      <h3 class="sev" id="sev-critical">
-        Críticos <span class="count">1</span>
-      </h3>
-      <article class="defect" id="d19">
-        <header>
-          <h3>
-            <span class="did">#19</span> iOS: los rechazos del servicio son
-            silenciosos, la app no avisa cuando la orden no se puede enviar
-          </h3>
-          <p class="chips">
-            <span class="chip chip--bad">Crítica</span>
-            <span class="chip chip--bad">Abierto</span>
-            <span class="chip chip--neutral">iOS</span>
-            <span class="chip chip--neutral">Riesgo R13, R5</span>
-          </p>
-        </header>
 
-        <dl class="meta">
-          <dt>Cómo se observó</dt>
-          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
-          <dt>Plataforma</dt>
-          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
-          <dt>Nivel de defectos</dt>
-          <dd>
-            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
-            es real).
-          </dd>
-          <dt>Casos que lo destapan</dt>
-          <dd>
-            <a href="https://app.qase.io/case/COCOS-9">COCOS-9</a>,
-            <a href="https://app.qase.io/case/COCOS-25">COCOS-25</a>,
-            <a href="https://app.qase.io/case/COCOS-33">COCOS-33</a>
-          </dd>
-        </dl>
-
-        <div class="body">
-          <p>
-            SÓLO EN iOS. En Android el mismo escenario muestra el aviso
-            correcto, así que el problema está en la plataforma, no en la
-            lógica.
-          </p>
-          <p>
-            Al enviar una orden que el servicio rechaza por saldo o tenencia
-            insuficientes, la app iOS no muestra absolutamente nada: ni aviso,
-            ni mensaje de error, ni cambio de estado del botón. El usuario toca
-            &quot;Enviar orden&quot; y la pantalla queda igual.
-          </p>
-          <h4>PASOS PARA REPRODUCIR (iOS 26.5, iPhone 17 Pro, bugs=off)</h4>
-          <ol>
-            <li>Abrir un instrumento y tocar &quot;Operar ahora&quot;.</li>
-            <li>
-              Cargar una cantidad que supere el efectivo disponible (200.000
-              acciones de DYCA, estimado $ 9.144.000 con $ 999.405,64
-              disponibles). También se reproduce en modo Pesos con 5.000.000.
-            </li>
-            <li>Tocar &quot;Enviar orden&quot;.</li>
-          </ol>
-          <h4>Esperado</h4>
-          <p>
-            Un mensaje de error explícito. El código lo tiene escrito (&quot;No
-            pudimos enviar la orden&quot;, 6 segundos) y en Android se muestra
-            sin problemas.
-          </p>
-          <p>
-            OBTENIDO EN iOS<br />Nada. El historial no cambia, el efectivo no
-            cambia, el botón sigue diciendo &quot;Enviar orden&quot;.
-            Reproducido cinco veces, en modo Acciones y en modo Pesos, desde los
-            dos accesos al panel. El mismo panel envía sin problema una orden
-            válida y, con el campo vacío, muestra su mensaje de validación: el
-            botón funciona; lo que falta es la respuesta al rechazo.
-          </p>
-          <p>
-            También ocurre al vender: intentar vender 50 acciones teniendo 13 no
-            produce ningún aviso.
-          </p>
-          <h4>CONTRASTE CON ANDROID (mismo build, misma API)</h4>
-          <p>
-            &quot;No pudimos enviar la orden — No tenés efectivo
-            suficiente.&quot; y &quot;No pudimos enviar la orden — No tenés
-            acciones suficientes.&quot;, en rojo, en español y con botón de
-            cierre.
-          </p>
-          <h4>Confirmado contra la api</h4>
-          <pre><code>POST /orders con quantity 109361 → 400 {&quot;error&quot;:&quot;Insufficient cash&quot;}
-POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient shares&quot;}</code></pre>
-          <p>
-            La API no crea ninguna orden rechazada, así que tampoco queda rastro
-            en el historial.
-          </p>
-          <h4>Impacto</h4>
-          <p>
-            En una app que mueve dinero, un envío que falla en silencio es
-            indistinguible de uno que no se registró: el usuario puede creer que
-            la orden quedó tomada, o seguir tocando el botón.
-          </p>
-          <h4>Casos que lo destapan</h4>
-          <p>
-            COCOS-9 (falla en iOS, pasa parcialmente en Android), COCOS-25 (paso
-            7) y COCOS-33 (pasos 1 y 2, que en iOS no pueden ni evaluarse porque
-            no hay texto que leer).
-          </p>
-        </div>
-
-        <div class="release">
-          <h4>Confirmación con el binario de release</h4>
-          <p>
-            Sí, en iOS. La suite lo contempla: el rechazo por efectivo o
-            acciones insuficientes se verifica por estado (no se creó la orden,
-            la tenencia no se movió) porque no hay ningún mensaje que leer
-            (COCOS-9).
-          </p>
-        </div>
-      </article>
       <h3 class="sev" id="sev-major">Mayores <span class="count">9</span></h3>
       <article class="defect" id="d1">
         <header>
@@ -1295,10 +1194,22 @@ POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient s
 
         <div class="body">
           <p>No encuentra el resultado.</p>
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Ir a Buscar.</li>
+            <li>Escribir &quot;Telecom&quot;, el nombre de TECO2.</li>
+            <li>Borrar y escribir &quot;TECO2&quot;.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que &quot;Telecom&quot; devuelva TECO2: el campo está rotulado
+            &quot;TICKER O EMPRESA&quot; y cada resultado muestra el nombre de
+            la empresa.
+          </p>
           <p>
             — Ampliado con la ejecución manual del 21 y 22/09/2026 (bugs=off) —
           </p>
-          <h4>Confirmado en las dos plataformas</h4>
+          <h4>Obtenido (confirmado en las dos plataformas)</h4>
           <p>
             El campo está rotulado &quot;TICKER O EMPRESA&quot; y la propia fila
             de resultados muestra el nombre de la empresa, pero buscar por ese
@@ -1397,8 +1308,24 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
             — Ampliado con la ejecución manual del 21 y 22/09/2026 (corridas
             &quot;Manual — iOS&quot; y &quot;Manual — Android&quot;, bugs=off) —
           </p>
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Abrir Mercados y deslizar hasta el final del listado.</li>
+            <li>Mirar la última fila (ARS).</li>
+            <li>
+              Repetir en Órdenes, con doce órdenes en el historial, y en el
+              detalle de una posición, buscando el botón &quot;Operar esta
+              posición&quot;.
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el último elemento de cada pantalla quede completo por encima de
+            la barra de pestañas y se pueda tocar.
+          </p>
           <h4>
-            Se reproduce en las dos plataformas y en tres pantallas distintas
+            Obtenido: se reproduce en las dos plataformas y en tres pantallas
+            distintas
           </h4>
           <p>
             1) Listado de Mercados, Android: la última fila (ARS) queda
@@ -1505,7 +1432,25 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
           <p>
             — Ampliado con la ejecución manual del 21 y 22/09/2026 (bugs=off) —
           </p>
-          <h4>Confirmado en las dos plataformas, con y sin posiciones</h4>
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Partir de una cuenta sin posiciones (recién reiniciada).</li>
+            <li>
+              Ir a Portafolio y comparar &quot;VALOR TOTAL&quot; con
+              &quot;Efectivo&quot;.
+            </li>
+            <li>
+              Comprar una posición, volver a Portafolio y comparar de nuevo.
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el valor total incluya el efectivo ($ 1.000.000,00 con la cuenta
+            vacía) o que el rótulo aclare que solo cuenta las tenencias.
+          </p>
+          <h4>
+            Obtenido (confirmado en las dos plataformas, con y sin posiciones)
+          </h4>
           <p>
             Cuenta recién reiniciada (iOS y Android): el número dominante de la
             pantalla, en tipografía grande y arriba de todo, bajo el rótulo
@@ -1548,11 +1493,38 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
           </p>
         </div>
 
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d4-valor-total-cuenta-vacia.png"
+            ><img
+              src="evidencia/d4-valor-total-cuenta-vacia.png"
+              alt="Portafolio sin posiciones: Valor total $ 0,00 con Efectivo $ 1.000.000,00"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. Cuenta sin posiciones: Valor total $ 0,00 con Efectivo $
+            1.000.000,00.
+          </figcaption>
+        </figure>
+        <figure class="evidence">
+          <a href="evidencia/d4-valor-total-con-posiciones.png"
+            ><img
+              src="evidencia/d4-valor-total-con-posiciones.png"
+              alt="Portafolio con cuatro posiciones: Valor total $ 2.553,35 y Efectivo $ 997.446,65"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. Con cuatro posiciones: Valor total $ 2.553,35, igual al costo
+            invertido; el efectivo ($ 997.446,65) no entra.
+          </figcaption>
+        </figure>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
-          <p class="muted">
-            No lo cubre la suite automatizada: se observó solo a mano, con el
-            build de desarrollo.
+          <p>
+            No lo cubre la suite automatizada. La captura de arriba se sacó el
+            12/10/2026 con el binario de release de iOS: se reproduce igual.
           </p>
         </div>
       </article>
@@ -1646,6 +1618,13 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
           </h4>
         </div>
 
+        <h4>Evidencia</h4>
+        <p>
+          La respuesta del servicio copiada arriba (201
+          <code>FILLED</code> sobre <code>instrument_id</code> 26). Dos casos
+          automatizados fallan por este defecto: COCOS-41 por UI y COCOS-42 por
+          API (test <code>@defecto</code>). Sin captura.
+        </p>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -1688,7 +1667,25 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
             El servicio de órdenes valida bien casi todo, pero deja pasar dos
             familias de cuerpos inválidos que su propio contrato dice rechazar.
           </p>
-          <p>COACCIÓN DE TIPOS EN quantity</p>
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>
+              Enviar <code>POST /orders</code> a mercado con
+              <code>quantity</code> <code>&quot;1e3&quot;</code> (texto) y
+              después con <code>true</code>.
+            </li>
+            <li>
+              Enviar <code>POST /orders</code> de tipo <code>LIMIT</code> con
+              <code>price</code> 0 y después con -10.
+            </li>
+            <li>Consultar <code>GET /orders</code>.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            400 en los cuatro envíos, con el mensaje del contrato, y ninguna
+            orden creada.
+          </p>
+          <h4>Obtenido: coacción de tipos en quantity</h4>
           <pre><code>POST /orders {&quot;instrument_id&quot;:1,&quot;side&quot;:&quot;BUY&quot;,&quot;type&quot;:&quot;MARKET&quot;,&quot;quantity&quot;:&quot;1e3&quot;}
   esperado: 400 &quot;quantity must be a positive integer&quot;
   obtenido: 201 {id: 593817, quantity: 1000, price: 45.72, status: &quot;FILLED&quot;}
@@ -1696,7 +1693,7 @@ GET /search?query=teco2 → devuelve el instrumento</code></pre>
           <pre><code>POST /orders {... &quot;quantity&quot;: true}
   esperado: 400
   obtenido: 201 {id: 99575, quantity: 1, status: &quot;FILLED&quot;} — un booleano se interpreta como cantidad 1.</code></pre>
-          <h4>Precios límite inválidos</h4>
+          <h4>Obtenido: precios límite inválidos</h4>
           <pre><code>POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &quot;price&quot;:0}   → 201, orden PENDING con price 0
 POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &quot;price&quot;:-10} → 201, orden creada con price -10 (después REJECTED)
   esperado en ambos: 400.</code></pre>
@@ -1728,6 +1725,12 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
 
+        <h4>Evidencia</h4>
+        <p>
+          Los requests y respuestas copiados arriba. El test
+          <code>@defecto</code> de COCOS-24
+          (<code>api-tests/specs/defects.api.ts</code>) falla por este defecto.
+        </p>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -1817,6 +1820,21 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <h4>COCOS-23 (falla, pasos 2 y 3).</h4>
         </div>
 
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d22-teclado-tapa-enviar.png"
+            ><img
+              src="evidencia/d22-teclado-tapa-enviar.png"
+              alt="Ticket con el teclado numérico abierto: el botón Enviar orden no se ve"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. El teclado tapa &quot;Enviar orden&quot;, corta la línea del
+            estimado y el rótulo &quot;TICKET DE TRADING&quot; queda pisado por
+            el reloj (puntos a, b y d).
+          </figcaption>
+        </figure>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -1864,12 +1882,14 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
               Tocar &quot;Portafolio&quot; en la barra de pestañas flotante.
             </li>
           </ol>
-          <p><strong>Esperado:</strong> cambiar a la pestaña Portafolio.</p>
+          <h4>Esperado</h4>
+          <p>Cambiar a la pestaña Portafolio.</p>
+          <h4>Obtenido</h4>
           <p>
-            <strong>Obtenido:</strong> no cambia de pestaña. El toque atraviesa
-            la barra y abre la ficha del instrumento que quedó debajo.
-            Reproducido dos veces: con la lista en GARO…LEDE se abrió la ficha
-            de CELU; con la lista en PATA…MTR se abrió la de MTR.
+            No cambia de pestaña. El toque atraviesa la barra y abre la ficha
+            del instrumento que quedó debajo. Reproducido dos veces: con la
+            lista en GARO…LEDE se abrió la ficha de CELU; con la lista en
+            PATA…MTR se abrió la de MTR.
           </p>
           <p>
             Además, con contenido debajo la barra pierde su fondo: los íconos de
@@ -1890,6 +1910,11 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p><strong>Caso que lo destapa:</strong> COCOS-34 (falla, paso 2).</p>
         </div>
 
+        <h4>Evidencia</h4>
+        <p>
+          Sin captura. Se reprodujo con el binario de release al automatizar
+          COCOS-34 (detalle abajo).
+        </p>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -1990,6 +2015,12 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </h4>
         </div>
 
+        <h4>Evidencia</h4>
+        <p>
+          Sin captura: lo que se reporta es la ausencia del aviso. Se verificó
+          sobre cuatro órdenes, buscando el texto en el árbol de accesibilidad,
+          y la suite lo confirma con el binario de release (abajo).
+        </p>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -2169,11 +2200,18 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             <li>Enviar la orden.</li>
             <li>Ir a la pestaña Órdenes.</li>
           </ol>
+          <h4>Esperado</h4>
           <p>
-            <strong>Obtenido:</strong> la orden figura &quot;10 x $ 22,00 ·
-            Límite · Rechazada&quot; y el encabezado dice &quot;Sin órdenes
-            pendientes&quot;. El aviso de envío alcanza a decir que la orden
-            quedó pendiente, pero la lista ya la muestra resuelta.
+            Ver la orden como &quot;Pendiente&quot; en el historial hasta que el
+            servicio la resuelva: es el ciclo de vida que promete el copy de la
+            app.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            La orden figura &quot;10 x $ 22,00 · Límite · Rechazada&quot; y el
+            encabezado dice &quot;Sin órdenes pendientes&quot;. El aviso de
+            envío alcanza a decir que la orden quedó pendiente, pero la lista ya
+            la muestra resuelta.
           </p>
           <p>
             <strong>Por qué pasa:</strong> la API resuelve las órdenes límite de
@@ -2213,6 +2251,11 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
 
+        <h4>Evidencia</h4>
+        <p>
+          Sin captura. Con el binario de release la suite vio las dos variantes,
+          reservado y ya liberado (abajo).
+        </p>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -2222,7 +2265,7 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
       </article>
-      <h3 class="sev" id="sev-minor">Menores <span class="count">6</span></h3>
+      <h3 class="sev" id="sev-minor">Menores <span class="count">5</span></h3>
       <article class="defect" id="d3">
         <header>
           <h3>
@@ -2268,7 +2311,23 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p>
             — Ampliado con la ejecución manual del 21 y 22/09/2026 (bugs=off) —
           </p>
-          <h4>Confirmado en las dos plataformas y en varias pantallas</h4>
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Abrir Mercados.</li>
+            <li>Deslizar el listado hacia arriba.</li>
+            <li>
+              Mirar la franja de la barra de estado (reloj, wifi y batería).
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el contenido pase por debajo de un fondo opaco o se detenga
+            antes de la barra de estado, con el reloj y los íconos siempre
+            legibles.
+          </p>
+          <h4>
+            Obtenido (confirmado en las dos plataformas y en varias pantallas)
+          </h4>
           <p>
             Android, listado de Mercados: al deslizar, la fila de MOLA queda
             pisando el reloj (2:05) y los íconos de wifi y batería.<br />iOS,
@@ -2356,7 +2415,15 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p>
             En la misma pantalla conviven dos convenciones numéricas distintas.
           </p>
-          <h4>OBTENIDO (iOS 26.5, iPhone 17 Pro)</h4>
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>
+              Abrir Mercados y mirar el precio y la variación de la fila de
+              DYCA.
+            </li>
+            <li>Ir a Portafolio y mirar &quot;Retorno&quot;.</li>
+          </ol>
+          <h4>Obtenido (iOS 26.5, iPhone 17 Pro)</h4>
           <ul>
             <li>
               Importes con formato argentino, correcto: &quot;$ 45,72&quot;,
@@ -2375,9 +2442,10 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             &quot;-8.69%&quot;: coma y punto decimal a cinco milímetros de
             distancia.
           </p>
+          <h4>Esperado</h4>
           <p>
-            <strong>Esperado:</strong> en es-AR el separador decimal es la coma
-            también en los porcentajes (&quot;-8,69%&quot;).
+            En es-AR el separador decimal es la coma también en los porcentajes
+            (&quot;-8,69%&quot;).
           </p>
           <p>
             <strong>Impacto:</strong> es cosmético, pero es la clase de detalle
@@ -2387,6 +2455,13 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p><strong>Caso que lo destapa:</strong> COCOS-15 (falla, paso 1).</p>
         </div>
 
+        <h4>Evidencia</h4>
+        <p>
+          Sin captura propia: se ve en las capturas del
+          <a href="#d4">defecto #4</a> (&quot;Retorno 0.00%&quot; junto a
+          &quot;$ 0,00&quot;). COCOS-15 y COCOS-30 fallan por este defecto con
+          el binario de release.
+        </p>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
           <p>
@@ -2424,6 +2499,21 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         </dl>
 
         <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Abrir un instrumento y tocar &quot;Operar ahora&quot;.</li>
+            <li>
+              Cargar una cantidad válida a mercado y tocar &quot;Enviar
+              orden&quot;.
+            </li>
+            <li>Leer el aviso de confirmación.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el aviso confirme lo que se operó: ticker, cantidad, precio de
+            ejecución e importe.
+          </p>
+          <h4>Obtenido</h4>
           <p>
             El aviso que aparece al enviar una orden dice &quot;Orden
             ejecutada&quot; y el número de orden (por ejemplo &quot;Orden
@@ -2452,11 +2542,25 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
 
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d26-aviso-sin-precio.png"
+            ><img
+              src="evidencia/d26-aviso-sin-precio.png"
+              alt="Aviso Orden ejecutada con el número de orden y nada más"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. Compra de 1 DYCA: el aviso dice &quot;Orden ejecutada · Orden
+            #290792&quot; y nada más.
+          </figcaption>
+        </figure>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
-          <p class="muted">
-            No lo cubre la suite automatizada: se observó solo a mano, con el
-            build de desarrollo.
+          <p>
+            No lo cubre la suite automatizada. La captura de arriba se sacó el
+            12/10/2026 con el binario de release de iOS: se reproduce igual.
           </p>
         </div>
       </article>
@@ -2489,6 +2593,23 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         </dl>
 
         <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>
+              Abrir Mercados y tocar DYCA, que tiene variación negativa
+              (-8,69%).
+            </li>
+            <li>
+              Comparar el color del chip de variación con el de la línea del
+              gráfico &quot;Variación del día&quot;.
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            La línea del gráfico en rojo, igual que el chip, cuando la variación
+            es negativa.
+          </p>
+          <h4>Obtenido</h4>
           <p>
             En la ficha de DYCA, con una variación de -8,69%, el chip del
             encabezado se muestra en rojo — correcto — pero la línea del gráfico
@@ -2513,90 +2634,29 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
 
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d28-grafico-verde-variacion-negativa.png"
+            ><img
+              src="evidencia/d28-grafico-verde-variacion-negativa.png"
+              alt="Ficha de DYCA: chip de variación en rojo y línea del gráfico en verde"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. Ficha de DYCA: chip -8.69% en rojo y línea del gráfico en verde
+            agua.
+          </figcaption>
+        </figure>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
-          <p class="muted">
-            No lo cubre la suite automatizada: se observó solo a mano, con el
-            build de desarrollo.
+          <p>
+            No lo cubre la suite automatizada. La captura de arriba se sacó el
+            12/10/2026 con el binario de release de iOS: se reproduce igual.
           </p>
         </div>
       </article>
-      <article class="defect" id="d29">
-        <header>
-          <h3>
-            <span class="did">#29</span> UX: al volver a Órdenes se ven datos
-            viejos hasta refrescar a mano
-          </h3>
-          <p class="chips">
-            <span class="chip chip--neutral">Menor</span>
-            <span class="chip chip--bad">Abierto</span>
-            <span class="chip chip--neutral">iOS · UX</span>
-            <span class="chip chip--neutral">Riesgo —</span>
-          </p>
-        </header>
 
-        <dl class="meta">
-          <dt>Cómo se observó</dt>
-          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
-          <dt>Plataforma</dt>
-          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
-          <dt>Nivel de defectos</dt>
-          <dd>
-            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
-            es real).
-          </dd>
-          <dt>Casos que lo destapan</dt>
-          <dd>
-            <a href="https://app.qase.io/case/COCOS-34">COCOS-34</a>,
-            <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
-          </dd>
-        </dl>
-
-        <div class="body">
-          <p>
-            Al entrar a la pestaña Órdenes, la pantalla muestra el contenido
-            cacheado de la visita anterior y no se actualiza sola: hay que tirar
-            hacia abajo para ver el estado real.
-          </p>
-          <h4>CASOS CONCRETOS OBSERVADOS (iOS 26.5)</h4>
-          <ul>
-            <li>
-              Después de reiniciar la cuenta desde la propia app, Órdenes seguía
-              mostrando &quot;12 órdenes&quot; con sus doce filas.
-            </li>
-            <li>
-              Después de crear órdenes nuevas, el conteo seguía en el valor
-              anterior hasta refrescar.
-            </li>
-            <li>
-              Lo mismo en Portafolio: mostraba una posición y un efectivo que ya
-              no correspondían.
-            </li>
-          </ul>
-          <p>
-            El dato termina siendo correcto apenas se refresca, así que no es
-            una inconsistencia de datos sino de momento: la app muestra como
-            actual algo que ya no lo es, sin ninguna señal de que está
-            desactualizado.
-          </p>
-          <h4>Propuesta</h4>
-          <p>
-            Refrescar al enfocar la pestaña (refetchOnMount / refetchOnFocus en
-            las queries de órdenes y portafolio), o al menos mostrar el
-            indicador de actualización mientras revalida.
-          </p>
-          <h4>Dónde se notó</h4>
-          <p>COCOS-34 (paso 6) y COCOS-50 (paso 3).</p>
-        </div>
-
-        <div class="release">
-          <h4>Confirmación con el binario de release</h4>
-          <p class="muted">
-            No lo cubre la suite automatizada: se observó solo a mano, con el
-            build de desarrollo.
-          </p>
-        </div>
-      </article>
       <article class="defect" id="d44">
         <header>
           <h3>
@@ -2686,11 +2746,25 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p>COCOS-33 (pasos 3 y 4), COCOS-15 (paso 4), COCOS-14 y COCOS-38.</p>
         </div>
 
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d44-network-error-sin-traducir.png"
+            ><img
+              src="evidencia/d44-network-error-sin-traducir.png"
+              alt="Tarjeta No pudimos cargar el mercado con el detalle Network Error"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            Android. Mercados sin conexión: título en español y detalle
+            &quot;Network Error&quot;.
+          </figcaption>
+        </figure>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
-          <p class="muted">
-            No lo cubre la suite automatizada: se observó solo a mano, con el
-            build de desarrollo.
+          <p>
+            No lo cubre la suite automatizada. La captura de arriba se sacó el
+            12/10/2026 con el binario de release de Android: se reproduce igual.
           </p>
         </div>
       </article>
@@ -2729,6 +2803,17 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
         </dl>
 
         <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Partir de una cuenta sin posiciones.</li>
+            <li>Ir a Portafolio y leer el estado vacío del listado.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Un texto dirigido a quien opera, sin mencionar la API, y con la
+            misma palabra que la pestaña (Portafolio).
+          </p>
+          <h4>Obtenido</h4>
           <p>Con la cuenta sin posiciones, el portafolio muestra:</p>
           <pre><code>  &quot;No hay posiciones en el portfolio
    Cuando la API devuelva tenencias, van a aparecer en esta lista.&quot;</code></pre>
@@ -2755,11 +2840,25 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
 
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d4-valor-total-cuenta-vacia.png"
+            ><img
+              src="evidencia/d4-valor-total-cuenta-vacia.png"
+              alt="Estado vacío del portafolio: Cuando la API devuelva tenencias, van a aparecer en esta lista"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. Es la misma captura del <a href="#d4">defecto #4</a>: el estado
+            vacío está al pie.
+          </figcaption>
+        </figure>
         <div class="release">
           <h4>Confirmación con el binario de release</h4>
-          <p class="muted">
-            No lo cubre la suite automatizada: se observó solo a mano, con el
-            build de desarrollo.
+          <p>
+            No lo cubre la suite automatizada. La captura de arriba se sacó el
+            12/10/2026 con el binario de release de iOS: se reproduce igual.
           </p>
         </div>
       </article>
@@ -2817,7 +2916,12 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             del lado de accesibilidad.
           </p>
           <hr />
-          <h4>Qué pasa</h4>
+          <h4>Esperado</h4>
+          <p>
+            Que cada control del ticket exista en el árbol de accesibilidad y
+            VoiceOver pueda recorrerlo.
+          </p>
+          <h4>Obtenido: qué pasa</h4>
           <p>
             En iOS, todo el contenido del ticket de trading es invisible para la
             capa de accesibilidad. Para VoiceOver el panel que mueve plata
@@ -2898,7 +3002,7 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             Destraba las dos cosas a la vez: la app se vuelve operable con
             VoiceOver y la suite automatizada corre en iOS.
           </p>
-          <h4>Cómo reproducir</h4>
+          <h4>Pasos para reproducir</h4>
           <ol>
             <li>
               Compilar la app de release para simulador y abrirla en un iPhone
@@ -2929,6 +3033,254 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           <p>
             Se encontró justamente con el binario de release, al automatizar en
             iOS. Corregido; la suite de iOS corre desde entonces.
+          </p>
+        </div>
+      </article>
+
+      <h3 class="sev" id="sev-norepro">
+        No reproducibles <span class="count">2</span>
+      </h3>
+      <p class="h2sub">
+        Se observaron a mano en septiembre con el build de desarrollo y no se
+        reprodujeron al re-verificarlos el 12/10/2026. Quedan documentados con
+        su observación original.
+      </p>
+      <article class="defect" id="d19">
+        <header>
+          <h3>
+            <span class="did">#19</span> iOS: los rechazos del servicio son
+            silenciosos, la app no avisa cuando la orden no se puede enviar
+          </h3>
+          <p class="chips">
+            <span class="chip chip--bad">Crítica</span>
+            <span class="chip chip--neutral">No reproducible</span>
+            <span class="chip chip--neutral">iOS</span>
+            <span class="chip chip--neutral">Riesgo R13, R5</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-9">COCOS-9</a>,
+            <a href="https://app.qase.io/case/COCOS-25">COCOS-25</a>,
+            <a href="https://app.qase.io/case/COCOS-33">COCOS-33</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <h4>Re-verificación del 12/10/2026: no se reprodujo</h4>
+          <p>
+            Con el binario de release de iOS, en nivel <code>off</code>, 12
+            rechazos de 12 mostraron el aviso &quot;No pudimos enviar la
+            orden&quot; con su detalle: compra por cantidad (200.000 DYCA),
+            compra por monto (5.000.000), venta de más acciones de las
+            disponibles, desde Mercados y desde Buscar, y también enviando con
+            el teclado abierto. Con el build de desarrollo servido por Metro, 4
+            de 4. Con el build de desarrollo y el código anterior al arreglo del
+            defecto #46, 2 de 2. En ningún intento se creó una orden.
+          </p>
+          <p>
+            No se pudo determinar por qué se observó en septiembre. En Qase
+            sigue como abierto; lo de abajo es la observación original, sin
+            cambios.
+          </p>
+          <figure class="evidence">
+            <a href="evidencia/d19-reverificacion-aviso-visible.png"
+              ><img
+                src="evidencia/d19-reverificacion-aviso-visible.png"
+                alt="Ticket de DYCA con el aviso No pudimos enviar la orden, No tenés efectivo suficiente"
+                loading="lazy"
+            /></a>
+            <figcaption>
+              Captura del 12/10/2026, binario de release, nivel
+              <code>off</code>, iOS. Compra de 200.000 DYCA: el aviso de rechazo
+              aparece.
+            </figcaption>
+          </figure>
+          <hr />
+          <h4>
+            Observación original (septiembre de 2026, build de desarrollo)
+          </h4>
+          <p>
+            SÓLO EN iOS. En Android el mismo escenario muestra el aviso
+            correcto, así que el problema está en la plataforma, no en la
+            lógica.
+          </p>
+          <p>
+            Al enviar una orden que el servicio rechaza por saldo o tenencia
+            insuficientes, la app iOS no muestra absolutamente nada: ni aviso,
+            ni mensaje de error, ni cambio de estado del botón. El usuario toca
+            &quot;Enviar orden&quot; y la pantalla queda igual.
+          </p>
+          <h4>PASOS PARA REPRODUCIR (iOS 26.5, iPhone 17 Pro, bugs=off)</h4>
+          <ol>
+            <li>Abrir un instrumento y tocar &quot;Operar ahora&quot;.</li>
+            <li>
+              Cargar una cantidad que supere el efectivo disponible (200.000
+              acciones de DYCA, estimado $ 9.144.000 con $ 999.405,64
+              disponibles). También se reproduce en modo Pesos con 5.000.000.
+            </li>
+            <li>Tocar &quot;Enviar orden&quot;.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Un mensaje de error explícito. El código lo tiene escrito (&quot;No
+            pudimos enviar la orden&quot;, 6 segundos) y en Android se muestra
+            sin problemas.
+          </p>
+          <h4>Obtenido en iOS</h4>
+          <p>
+            Nada. El historial no cambia, el efectivo no cambia, el botón sigue
+            diciendo &quot;Enviar orden&quot;. Reproducido cinco veces, en modo
+            Acciones y en modo Pesos, desde los dos accesos al panel. El mismo
+            panel envía sin problema una orden válida y, con el campo vacío,
+            muestra su mensaje de validación: el botón funciona; lo que falta es
+            la respuesta al rechazo.
+          </p>
+          <p>
+            También ocurre al vender: intentar vender 50 acciones teniendo 13 no
+            produce ningún aviso.
+          </p>
+          <h4>CONTRASTE CON ANDROID (mismo build, misma API)</h4>
+          <p>
+            &quot;No pudimos enviar la orden — No tenés efectivo
+            suficiente.&quot; y &quot;No pudimos enviar la orden — No tenés
+            acciones suficientes.&quot;, en rojo, en español y con botón de
+            cierre.
+          </p>
+          <h4>Confirmado contra la api</h4>
+          <pre><code>POST /orders con quantity 109361 → 400 {&quot;error&quot;:&quot;Insufficient cash&quot;}
+POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient shares&quot;}</code></pre>
+          <p>
+            La API no crea ninguna orden rechazada, así que tampoco queda rastro
+            en el historial.
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            En una app que mueve dinero, un envío que falla en silencio es
+            indistinguible de uno que no se registró: el usuario puede creer que
+            la orden quedó tomada, o seguir tocando el botón.
+          </p>
+          <h4>Casos que lo destapan</h4>
+          <p>
+            COCOS-9 (falla en iOS, pasa parcialmente en Android), COCOS-25 (paso
+            7) y COCOS-33 (pasos 1 y 2, que en iOS no pueden ni evaluarse porque
+            no hay texto que leer).
+          </p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            No. Esta ficha decía que sí, pero COCOS-9 nunca afirmó que el aviso
+            faltara: espera unos segundos y verifica por estado que no se creó
+            la orden. Al afirmarlo el 12/10/2026, el aviso aparece.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d29">
+        <header>
+          <h3>
+            <span class="did">#29</span> UX: al volver a Órdenes se ven datos
+            viejos hasta refrescar a mano
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--neutral">No reproducible</span>
+            <span class="chip chip--neutral">iOS · UX</span>
+            <span class="chip chip--neutral">Riesgo —</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>Corrida manual, con el build de desarrollo servido por Metro.</dd>
+          <dt>Plataforma</dt>
+          <dd>iOS 26.5 · simulador de iPhone 17 Pro.</dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>
+            <a href="https://app.qase.io/case/COCOS-34">COCOS-34</a>,
+            <a href="https://app.qase.io/case/COCOS-50">COCOS-50</a>
+          </dd>
+        </dl>
+
+        <div class="body">
+          <h4>Re-verificación del 12/10/2026: no se reprodujo</h4>
+          <p>
+            Con el binario de release de iOS, en nivel <code>off</code>: tras
+            crear una orden desde la app, Órdenes mostró al volver las mismas 7
+            órdenes que el servicio, sin refrescar; tras reiniciar la cuenta,
+            Órdenes pasó sola de 1 orden a vacía y Portafolio mostró $
+            1.000.000,00 sin posiciones.
+          </p>
+          <p>
+            Coincide con el código: <code>useCreateOrderMutation</code> y
+            <code>useOrdersResetMutation</code> invalidan las consultas de
+            órdenes y portafolio. Lo que sigue vigente es la caché de 30
+            segundos ante cambios hechos por fuera de la app; ese caso no se
+            re-verificó. En Qase sigue como abierto; lo de abajo es la
+            observación original, sin cambios.
+          </p>
+          <hr />
+          <h4>
+            Observación original (septiembre de 2026, build de desarrollo)
+          </h4>
+          <p>
+            Al entrar a la pestaña Órdenes, la pantalla muestra el contenido
+            cacheado de la visita anterior y no se actualiza sola: hay que tirar
+            hacia abajo para ver el estado real.
+          </p>
+          <h4>CASOS CONCRETOS OBSERVADOS (iOS 26.5)</h4>
+          <ul>
+            <li>
+              Después de reiniciar la cuenta desde la propia app, Órdenes seguía
+              mostrando &quot;12 órdenes&quot; con sus doce filas.
+            </li>
+            <li>
+              Después de crear órdenes nuevas, el conteo seguía en el valor
+              anterior hasta refrescar.
+            </li>
+            <li>
+              Lo mismo en Portafolio: mostraba una posición y un efectivo que ya
+              no correspondían.
+            </li>
+          </ul>
+          <p>
+            El dato termina siendo correcto apenas se refresca, así que no es
+            una inconsistencia de datos sino de momento: la app muestra como
+            actual algo que ya no lo es, sin ninguna señal de que está
+            desactualizado.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Refrescar al enfocar la pestaña (refetchOnMount / refetchOnFocus en
+            las queries de órdenes y portafolio), o al menos mostrar el
+            indicador de actualización mientras revalida.
+          </p>
+          <h4>Dónde se notó</h4>
+          <p>COCOS-34 (paso 6) y COCOS-50 (paso 3).</p>
+        </div>
+
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            No. Se observó a mano con el build de desarrollo y el 12/10/2026 no
+            se reprodujo con el binario de release.
           </p>
         </div>
       </article>
@@ -3104,10 +3456,13 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
       <footer class="footer">
         Reporte de defectos del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase
-        al 24/09/2026: 18 defectos abiertos y 1 resuelto. Las capturas son las
-        mismas que están adjuntas en Qase y viven en
-        <code>docs/evidencia/</code>, así que este reporte no depende del
-        proyecto. Documento vivo: se actualiza cuando cambian los defectos.
+        al 24/09/2026: 18 defectos abiertos y 1 resuelto. Re-verificación del
+        12/10/2026: 16 abiertos y 2 no reproducibles (#19 y #29). Las capturas
+        de #1, #2, #3 y #45 son las adjuntas en Qase; las de #4, #19, #22, #26,
+        #27, #28 y #44 se sacaron el 12/10/2026 con los binarios de release.
+        Todas viven en <code>docs/evidencia/</code>, así que este reporte no
+        depende del proyecto. Documento vivo: se actualiza cuando cambian los
+        defectos.
       </footer>
     </div>
   </body>

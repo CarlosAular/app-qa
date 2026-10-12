@@ -360,9 +360,11 @@ viviendo en Qase y no se codifican como fallas esperadas.
 - En Android el toast **"Orden ejecutada" nunca aparece**: la confirmación
   cross-platform es que el botón pase a "Enviar otra orden" más la orden en el
   historial. El toast se verifica sólo en iOS.
-- En iOS **un rechazo del servicio no muestra nada**: el rechazo por acciones
-  insuficientes se verifica por estado (no se creó orden, la tenencia no se
-  movió), no por mensaje.
+- El rechazo por efectivo o acciones insuficientes **se verifica por estado**
+  (no se creó orden, la tenencia no se movió), no por mensaje. Se diseñó así
+  por el defecto #19 (en iOS el rechazo no mostraba nada), que el 12/10/2026 no
+  se reprodujo: el aviso aparece. Afirmarlo en COCOS-9 y COCOS-25 queda como
+  mejora.
 - **El ticket era inoperable con VoiceOver en iOS** (defecto #46 de Qase,
   corregido en el código).
   `@gorhom/bottom-sheet` pone `accessible={true}` por defecto en el contenedor
