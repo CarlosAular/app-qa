@@ -8,10 +8,10 @@ la validación.
 
 - **53 casos de prueba** en Qase: 43 automatizados (9 de API con Playwright y 34
   de UI con Appium, en iOS y Android) y 10 manuales.
-- **21 defectos** reportados, con pasos, esperado, obtenido, severidad y
-  evidencia: 18 abiertos, 1 resuelto y 2 que no se reprodujeron al
+- **23 defectos** reportados, con pasos, esperado, obtenido, severidad y
+  evidencia: 20 abiertos, 1 resuelto y 2 que no se reprodujeron al
   re-verificarlos el 12/10/2026 (#19 y #29; en Qase siguen como abiertos). Los
-  dos últimos (#47 y #48) están en el reporte y todavía no en Qase.
+  cuatro últimos (#47 a #50) están en el reporte y todavía no en Qase.
 - **12 corridas** publicadas en Qase (API y UI, en los cuatro niveles de
   defectos de la API), cada una con su reporte público.
 - **Corrida completa de UI en `off`: 28 de 34** en cada plataforma. Cuatro casos

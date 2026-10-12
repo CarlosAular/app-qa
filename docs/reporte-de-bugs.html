@@ -678,7 +678,7 @@
         <h1>Reporte de defectos</h1>
         <p class="standfirst">
           Los defectos que están en Qase, para leerlos sin acceso al proyecto,
-          más dos que todavía no se cargaron ahí (#47 y #48): 18 abiertos, 1
+          más cuatro que todavía no se cargaron ahí (#47 a #50): 20 abiertos, 1
           resuelto y 2 que no se reprodujeron al re-verificarlos el 12/10/2026.
           Cada uno trae los pasos para reproducirlo, lo obtenido y lo esperado,
           la severidad, la evidencia y la configuración en que se corrió la app
@@ -789,7 +789,7 @@
           </li>
         </ul>
 
-        <h3><a href="#sev-minor">Menores</a> <span>6</span></h3>
+        <h3><a href="#sev-minor">Menores</a> <span>8</span></h3>
         <ul>
           <li>
             <a href="#d3"
@@ -825,6 +825,18 @@
             <a href="#d48"
               ><span class="did">#48</span> Android: los nombres largos se
               cortan sin puntos suspensivos</a
+            >
+          </li>
+          <li>
+            <a href="#d49"
+              ><span class="did">#49</span> El enlace a una posición depende de
+              su lugar en la lista</a
+            >
+          </li>
+          <li>
+            <a href="#d50"
+              ><span class="did">#50</span> Android: el indicador «En vivo»
+              sigue encendido sin conexión</a
             >
           </li>
         </ul>
@@ -914,8 +926,8 @@
 
       <h2 id="resumen">1 · Resumen</h2>
       <p class="h2sub">
-        21 defectos: 18 abiertos, 1 resuelto y 2 no reproducibles (#19 y #29,
-        que en Qase siguen como abiertos). En Qase hay 19: #47 y #48 se
+        23 defectos: 20 abiertos, 1 resuelto y 2 no reproducibles (#19 y #29,
+        que en Qase siguen como abiertos). En Qase hay 19: #47 a #50 se
         registraron el 12/10/2026 y por ahora están solo en este reporte.
       </p>
 
@@ -947,11 +959,12 @@
             </tr>
             <tr>
               <td>Menor</td>
-              <td class="num">6</td>
+              <td class="num">8</td>
               <td>
                 <a href="#d3">#3</a>, <a href="#d25">#25</a>,
                 <a href="#d26">#26</a>, <a href="#d28">#28</a>,
-                <a href="#d44">#44</a>, <a href="#d48">#48</a>
+                <a href="#d44">#44</a>, <a href="#d48">#48</a>,
+                <a href="#d49">#49</a>, <a href="#d50">#50</a>
               </td>
             </tr>
             <tr>
@@ -999,7 +1012,8 @@
               <td>Solo Android</td>
               <td>
                 <a href="#d43">#43</a>, <a href="#d44">#44</a>,
-                <a href="#d45">#45</a>, <a href="#d48">#48</a>
+                <a href="#d45">#45</a>, <a href="#d48">#48</a>,
+                <a href="#d50">#50</a> (en iOS no se pudo probar)
               </td>
             </tr>
             <tr>
@@ -1007,7 +1021,7 @@
               <td>
                 <a href="#d1">#1</a>, <a href="#d2">#2</a>,
                 <a href="#d3">#3</a>, <a href="#d4">#4</a>,
-                <a href="#d47">#47</a>
+                <a href="#d47">#47</a>, <a href="#d49">#49</a>
               </td>
             </tr>
             <tr>
@@ -1137,7 +1151,7 @@
       <h2 id="lectura">3 · Cómo se lee cada ficha</h2>
       <ul>
         <li>
-          <strong>Encabezado:</strong> el número de defecto en Qase (#47 y #48
+          <strong>Encabezado:</strong> el número de defecto en Qase (#47 a #50
           todavía no están cargados ahí), el título, la severidad y el estado,
           las plataformas, el riesgo de la matriz que compromete y, en amarillo,
           el hallazgo del análisis inicial al que corresponde (<a
@@ -2412,7 +2426,7 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
           </p>
         </div>
       </article>
-      <h3 class="sev" id="sev-minor">Menores <span class="count">6</span></h3>
+      <h3 class="sev" id="sev-minor">Menores <span class="count">8</span></h3>
       <article class="defect" id="d3">
         <header>
           <h3>
@@ -3013,6 +3027,245 @@ POST /orders {... &quot;type&quot;:&quot;LIMIT&quot;, &quot;quantity&quot;:1, &q
             No lo cubre la suite automatizada. Las capturas de arriba se sacaron
             el 12/10/2026 con los binarios de release: en Android se reproduce
             igual y en iOS no ocurre.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d49">
+        <header>
+          <h3>
+            <span class="did">#49</span> El enlace a una posición depende de su
+            lugar en la lista
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">iOS · Android</span>
+            <span class="chip chip--neutral">Riesgo R11</span>
+            <span class="hall">O1</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>
+            Lectura del código en el análisis inicial. Verificado el 12/10/2026
+            con los binarios de release, manejados con Appium.
+          </dd>
+          <dt>Plataforma</dt>
+          <dd>
+            iOS 26.5 · simulador de iPhone 17 Pro, y Android 16 / API 36 ·
+            emulador de Pixel 8.
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>Ninguno: se ve al abrir la app por un enlace a una posición.</dd>
+        </dl>
+
+        <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Tener DYCA como única posición del portafolio.</li>
+            <li>
+              Abrir el enlace <code>cocos://portfolio/1-0</code>: 1 es el id de
+              DYCA y 0 es el lugar que la posición ocupa en la lista.
+            </li>
+            <li>
+              Abrir <code>cocos://portfolio/1-1</code>: la misma acción, con
+              otro lugar en la lista.
+            </li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el enlace a una posición dependa solo del instrumento: mientras
+            DYCA esté en cartera, el enlace a DYCA abre su detalle.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            <code>cocos://portfolio/1-0</code> abre el detalle (&quot;DYCA · 3
+            acciones en cartera&quot; en Android, &quot;1 acciones en
+            cartera&quot; en iOS). <code>cocos://portfolio/1-1</code> responde
+            &quot;Posición no encontrada. No encontramos esta posición en tu
+            portafolio actual.&quot;, aunque DYCA sigue en cartera. Igual en las
+            dos plataformas.
+          </p>
+          <p>
+            El id de la posición se arma como
+            <code>instrument_id-índice</code>, donde el índice es el lugar de la
+            tenencia en la respuesta de <code>GET /portfolio</code>
+            (<code>portfolio.api.ts</code>).
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            Un enlace guardado a una posición deja de servir cuando cambia la
+            cantidad o el orden de las tenencias, aunque la posición siga en
+            cartera. Es menor porque solo afecta a quien entra por un enlace:
+            desde la lista de Portafolio el detalle abre siempre. Corresponde al
+            hallazgo O1.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Identificar la posición solo por el instrumento
+            (<code>instrument_id</code>): cada tenencia ya es única por
+            instrumento.
+          </p>
+        </div>
+
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d49-enlace-indice-correcto-android.png"
+            ><img
+              src="evidencia/d49-enlace-indice-correcto-android.png"
+              alt="Detalle de la posición de DYCA abierto desde el enlace cocos://portfolio/1-0 en Android"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            Android. <code>cocos://portfolio/1-0</code> abre el detalle de DYCA.
+          </figcaption>
+        </figure>
+        <figure class="evidence">
+          <a href="evidencia/d49-enlace-otro-indice-android.png"
+            ><img
+              src="evidencia/d49-enlace-otro-indice-android.png"
+              alt="Pantalla de posición no encontrada al abrir cocos://portfolio/1-1 en Android"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            Android. <code>cocos://portfolio/1-1</code>: &quot;Posición no
+            encontrada&quot;, con DYCA en cartera.
+          </figcaption>
+        </figure>
+        <figure class="evidence">
+          <a href="evidencia/d49-enlace-otro-indice-ios.png"
+            ><img
+              src="evidencia/d49-enlace-otro-indice-ios.png"
+              alt="Pantalla de posición no encontrada al abrir cocos://portfolio/1-1 en iOS"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            iOS. El mismo enlace, el mismo resultado.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            No lo cubre la suite automatizada. Las capturas de arriba se sacaron
+            el 12/10/2026 con los binarios de release: se reproduce igual en iOS
+            y en Android. Lo que no se ejecutó es el recorrido completo de
+            guardar un enlace, cambiar las tenencias y volver a abrirlo: la
+            prueba muestra que el enlace depende del índice, no solo del
+            instrumento.
+          </p>
+        </div>
+      </article>
+      <article class="defect" id="d50">
+        <header>
+          <h3>
+            <span class="did">#50</span> El indicador «En vivo» sigue encendido
+            sin conexión
+          </h3>
+          <p class="chips">
+            <span class="chip chip--neutral">Menor</span>
+            <span class="chip chip--bad">Abierto</span>
+            <span class="chip chip--neutral">Android</span>
+            <span class="chip chip--neutral">Riesgo R13</span>
+            <span class="hall">O10</span>
+          </p>
+        </header>
+
+        <dl class="meta">
+          <dt>Cómo se observó</dt>
+          <dd>
+            Lectura del código en el análisis inicial. Verificado el 12/10/2026
+            con el binario de release, manejado con Appium.
+          </dd>
+          <dt>Plataforma</dt>
+          <dd>
+            Android 16 / API 36 · emulador de Pixel 8. En iOS no se pudo probar:
+            el simulador usa la conexión de la Mac y no se puede cortar por
+            separado.
+          </dd>
+          <dt>Nivel de defectos</dt>
+          <dd>
+            <code>X-Enable-Bugs: off</code> (el golden path: todo lo que falla
+            es real).
+          </dd>
+          <dt>Casos que lo destapan</dt>
+          <dd>Ninguno: se ve en Mercados al quedarse sin conexión.</dd>
+        </dl>
+
+        <div class="body">
+          <h4>Pasos para reproducir</h4>
+          <ol>
+            <li>Abrir la app con conexión. Arranca en Mercados.</li>
+            <li>
+              Cortar la conexión del dispositivo (<code
+                >adb shell svc wifi disable</code
+              >
+              y <code>svc data disable</code>).
+            </li>
+            <li>Esperar sin tocar nada y mirar el indicador de arriba.</li>
+            <li>Ir a Portafolio y volver a Mercados.</li>
+          </ol>
+          <h4>Esperado</h4>
+          <p>
+            Que el indicador deje de decir &quot;En vivo&quot; cuando los
+            precios no se están actualizando, o que avise que no hay conexión.
+          </p>
+          <h4>Obtenido</h4>
+          <p>
+            45 segundos después del corte, el indicador sigue en verde con el
+            texto &quot;En vivo&quot;, sobre los precios cargados antes de
+            perder la conexión. Sigue igual al volver desde otra pestaña. Recién
+            al refrescar a mano la pantalla cambia, y lo que aparece es el error
+            del defecto <a href="#d44">#44</a>.
+          </p>
+          <p>
+            El indicador es un texto fijo del encabezado de Mercados
+            (<code>MarketsInstrumentList.tsx</code>): no lee ningún estado de
+            conexión ni de actualización.
+          </p>
+          <h4>Impacto</h4>
+          <p>
+            En una app para operar, &quot;En vivo&quot; al lado de los precios
+            afirma que están al día. Sin conexión, el usuario puede decidir una
+            compra o una venta con precios viejos creyendo que son los actuales.
+            Corresponde al hallazgo O10.
+          </p>
+          <h4>Propuesta</h4>
+          <p>
+            Atar el indicador al estado real de la consulta de precios (última
+            actualización correcta, o sin conexión), o quitarlo.
+          </p>
+        </div>
+
+        <h4>Evidencia</h4>
+        <figure class="evidence">
+          <a href="evidencia/d50-en-vivo-sin-red-android.png"
+            ><img
+              src="evidencia/d50-en-vivo-sin-red-android.png"
+              alt="Mercados en Android sin conexión: la barra de estado marca sin señal y el indicador sigue diciendo En vivo"
+              loading="lazy"
+          /></a>
+          <figcaption>
+            Captura del 12/10/2026, binario de release, nivel <code>off</code>,
+            Android. La barra de estado marca que no hay señal y el indicador
+            sigue en &quot;En vivo&quot;.
+          </figcaption>
+        </figure>
+        <div class="release">
+          <h4>Confirmación con el binario de release</h4>
+          <p>
+            No lo cubre la suite automatizada. La captura de arriba se sacó el
+            12/10/2026 con el binario de release de Android. En iOS el indicador
+            es el mismo componente, pero el comportamiento sin conexión no se
+            pudo comprobar en el simulador.
           </p>
         </div>
       </article>
@@ -3696,9 +3949,9 @@ POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient s
         </li>
         <li>
           <strong
-            >Los hallazgos del análisis inicial que no se reprodujeron</strong
+            >Los hallazgos del análisis inicial sin ficha de defecto</strong
           >
-          (O1, O5, O6 y O10):
+          (O4, O5 y O6), con lo que se verificó de cada uno:
           <a href="producto-y-qa.html#hallazgos">producto-y-qa.html</a>. El
           resto de los hallazgos O1 a O14 tiene su ficha acá.
         </li>
@@ -3714,10 +3967,10 @@ POST /orders SELL 50 teniendo 13 → 400 {&quot;error&quot;:&quot;Insufficient s
         Reporte de defectos del challenge de QA de Cocos · Contrastado con el
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase
         al 24/09/2026: 18 defectos abiertos y 1 resuelto. Re-verificación del
-        12/10/2026: 16 abiertos y 2 no reproducibles (#19 y #29), más #47 y #48,
+        12/10/2026: 16 abiertos y 2 no reproducibles (#19 y #29), más #47 a #50,
         que se registraron ese día y todavía no están en Qase. Las capturas de
         #1, #2, #3 y #45 son las adjuntas en Qase; las de #4, #19, #22, #26,
-        #27, #28, #44, #47 y #48 se sacaron el 12/10/2026 con los binarios de
+        #27, #28, #44 y #47 a #50 se sacaron el 12/10/2026 con los binarios de
         release. Todas viven en <code>docs/evidencia/</code>, así que este
         reporte no depende del proyecto. Documento vivo: se actualiza cuando
         cambian los defectos.

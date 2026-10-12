@@ -1870,7 +1870,8 @@ Modal transversal: Ticket de orden (panel deslizante)
         Estado tras dos pasadas de verificación manual, la misma batería en cada
         plataforma, con los defectos de la API en <code>off</code> y la cuenta
         recién reseteada: iPhone 17 Pro con iOS 26.5 (19/09/2026) y Pixel 8 con
-        Android 16 / API 36 (20/09/2026).
+        Android 16 / API 36 (20/09/2026). O1, O4 y O10 se verificaron después,
+        el 12/10/2026, sobre el binario de release en las dos plataformas.
       </p>
 
       <div class="tablewrap">
@@ -1978,10 +1979,8 @@ Modal transversal: Ticket de orden (panel deslizante)
                 El id de posición incluye el índice del array ⇒ el deep link no
                 es estable
               </td>
-              <td><span class="chip chip--wait">sin reproducir</span></td>
-              <td>
-                <span class="chip chip--wait">sin reproducir</span>
-              </td>
+              <td><span class="chip chip--ok">verificado</span></td>
+              <td><span class="chip chip--ok">verificado</span></td>
             </tr>
             <tr>
               <td class="id">O4</td>
@@ -1989,17 +1988,17 @@ Modal transversal: Ticket de orden (panel deslizante)
                 <code>quantity must be a positive number</code> no está
                 traducido ⇒ puede verse inglés
               </td>
-              <td><span class="chip chip--wait">sin reproducir</span></td>
-              <td>
-                <span class="chip chip--wait">sin reproducir</span>
+              <td colspan="2">
+                <span class="chip chip--neutral"
+                  >no alcanzable desde la app</span
+                >
               </td>
             </tr>
             <tr>
               <td class="id">O5</td>
               <td>El desempate del historial compara ids como textos</td>
-              <td><span class="chip chip--wait">sin reproducir</span></td>
-              <td>
-                <span class="chip chip--wait">sin reproducir</span>
+              <td colspan="2">
+                <span class="chip chip--wait">confirmado en código</span>
               </td>
             </tr>
             <tr>
@@ -2008,9 +2007,8 @@ Modal transversal: Ticket de orden (panel deslizante)
                 Si <code>/instruments</code> falla, el historial muestra
                 <code>N/D</code> en vez de un error
               </td>
-              <td><span class="chip chip--wait">sin reproducir</span></td>
-              <td>
-                <span class="chip chip--wait">sin reproducir</span>
+              <td colspan="2">
+                <span class="chip chip--wait">confirmado en código</span>
               </td>
             </tr>
             <tr>
@@ -2029,10 +2027,8 @@ Modal transversal: Ticket de orden (panel deslizante)
                 El chip "En vivo" es decorativo: no refleja el estado real de la
                 conexión
               </td>
-              <td><span class="chip chip--wait">sin reproducir</span></td>
-              <td>
-                <span class="chip chip--wait">sin reproducir</span>
-              </td>
+              <td><span class="chip chip--wait">confirmado en código</span></td>
+              <td><span class="chip chip--ok">verificado</span></td>
             </tr>
           </tbody>
         </table>
@@ -2040,15 +2036,78 @@ Modal transversal: Ticket de orden (panel deslizante)
       <p>
         <strong>Dónde quedó cada hallazgo.</strong> Los verificados están
         reportados como defectos en
-        <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: O2 es el #4, O3
-        el #1, O7 el #47, O8 el #20, O9 el #21, O11 el #24, O12 el #2 y O13 el
-        #3. O8 se confirmó después de las dos pasadas, en la ejecución del
-        catálogo (COCOS-41 y COCOS-42). De O4 no se llegó a ver el texto en
-        inglés que anticipaba, pero el mismo riesgo sí apareció con otros
-        síntomas: los defectos #25 y #44. O14 no se reporta porque solo ocurre
-        en el build de desarrollo: el binario de release no tiene esa capa de
-        avisos. O1, O5, O6 y O10 no se reprodujeron.
+        <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: O1 es el #49,
+        O2 el #4, O3 el #1, O7 el #47, O8 el #20, O9 el #21, O10 el #50, O11 el
+        #24, O12 el #2 y O13 el #3. O8 se confirmó después de las dos pasadas,
+        en la ejecución del catálogo (COCOS-41 y COCOS-42). O14 no se reporta
+        porque solo ocurre en el build de desarrollo: el binario de release no
+        tiene esa capa de avisos.
       </p>
+      <p>
+        <strong>Los hallazgos que salieron de leer el código.</strong> O1, O4,
+        O5, O6 y O10 no vienen de un recorrido por la app sino de la lectura del
+        código. El 12/10/2026 se llevaron a la app, con Appium y el binario de
+        release, los tres que se pueden provocar desde afuera:
+      </p>
+      <ul>
+        <li>
+          <strong>O1 · verificado, defecto #49.</strong> Con DYCA como única
+          posición, el enlace <code>cocos://portfolio/1-0</code> abre su detalle
+          y <code>cocos://portfolio/1-1</code> —la misma acción con otro índice—
+          responde "Posición no encontrada", en iOS y en Android. El enlace
+          depende del lugar que la posición ocupa en la lista, no solo del
+          instrumento. Capturas:
+          <a href="evidencia/d49-enlace-indice-correcto-android.png"
+            >índice correcto</a
+          >,
+          <a href="evidencia/d49-enlace-otro-indice-android.png"
+            >otro índice en Android</a
+          >
+          y
+          <a href="evidencia/d49-enlace-otro-indice-ios.png">en iOS</a>.
+        </li>
+        <li>
+          <strong>O4 · no alcanzable desde la app.</strong> La API responde
+          <code>quantity must be a positive number</code> ante una cantidad
+          ausente, cero o negativa (lo afirma COCOS-24) y la tabla de
+          traducciones de la app no incluye ese texto. Pero el ticket valida
+          antes de enviar: con cantidad 0 muestra "Ingresá una cantidad de
+          acciones." y con un monto en pesos menor al precio de una acción, "El
+          monto no alcanza para comprar una acción."; en ningún caso sale la
+          orden. El texto en inglés no llega a la pantalla. Capturas:
+          <a href="evidencia/o4-cantidad-cero-android.png">Android</a>
+          y
+          <a href="evidencia/o4-cantidad-cero-ios.png">iOS</a>. El mismo riesgo
+          sí apareció con otros síntomas: los defectos #25 y #44.
+        </li>
+        <li>
+          <strong>O10 · verificado en Android, defecto #50.</strong> Con wifi y
+          datos cortados, el chip siguió diciendo "En vivo" sobre los precios ya
+          cargados durante 45 segundos y después de cambiar de pestaña y volver
+          (<a href="evidencia/d50-en-vivo-sin-red-android.png">captura</a>).
+          Recién al refrescar a mano la pantalla pasa al error del defecto #44.
+          En iOS no se repitió porque el simulador usa la conexión de la Mac y
+          no se puede cortar por separado; el chip es el mismo componente, un
+          texto fijo que no lee ningún estado.
+        </li>
+      </ul>
+      <p>
+        Los otros dos quedan <strong>confirmados en código</strong>, porque no
+        hay forma de provocarlos desde la app:
+      </p>
+      <ul>
+        <li>
+          <strong>O5.</strong> El desempate solo actúa cuando dos órdenes tienen
+          exactamente la misma fecha de creación. COCOS-48 recorre un historial
+          de más de nueve órdenes y el orden cronológico se mantiene en las dos
+          plataformas.
+        </li>
+        <li>
+          <strong>O6.</strong> Requiere que <code>/instruments</code> falle
+          mientras <code>/orders</code> responde. El comportamiento está fijado
+          por un test unitario del repo (<code>ordersHistory.test.ts</code>).
+        </li>
+      </ul>
       <div class="note">
         <span class="note__label">Qué cambia entre plataformas</span>
         <p>

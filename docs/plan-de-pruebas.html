@@ -2663,10 +2663,10 @@
 
       <h2 id="defectos">10 · Hallazgos y defectos</h2>
       <p class="h2sub">
-        21 defectos: 18 abiertos (9 mayores, 2 normales, 6 menores y 1 trivial),
+        23 defectos: 20 abiertos (9 mayores, 2 normales, 8 menores y 1 trivial),
         1 resuelto (#46) y 2 que no se reprodujeron al re-verificarlos el
         12/10/2026 con el binario de release (#19 y #29; en Qase siguen como
-        abiertos). En Qase hay 19: #47 y #48 se registraron el 12/10/2026 y por
+        abiertos). En Qase hay 19: #47 a #50 se registraron el 12/10/2026 y por
         ahora están solo en el reporte. Cada ficha documenta qué pasa, cómo
         reproducirlo o dónde se notó, la plataforma y el impacto. El detalle
         completo de cada uno, con la configuración en que se corrió la app, está
@@ -2970,6 +2970,22 @@
               <td class="wrapnum">—</td>
             </tr>
             <tr>
+              <td class="num">#49</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>El enlace a una posición depende de su lugar en la lista</td>
+              <td>iOS, Android</td>
+              <td class="riesgos">R11 · O1</td>
+              <td class="wrapnum">—</td>
+            </tr>
+            <tr>
+              <td class="num">#50</td>
+              <td><span class="chip chip--neutral">Menor</span></td>
+              <td>El indicador «En vivo» sigue encendido sin conexión</td>
+              <td>Android</td>
+              <td class="riesgos">R13 · O10</td>
+              <td class="wrapnum">—</td>
+            </tr>
+            <tr>
               <td class="num">#27</td>
               <td><span class="chip chip--neutral">Trivial</span></td>
               <td>
@@ -3234,8 +3250,8 @@ bun run format:check</code></pre>
             <tr>
               <td>Reporte de bugs</td>
               <td>
-                <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 21
-                defectos (18 abiertos, 1 resuelto y 2 no reproducibles), cada
+                <a href="reporte-de-bugs.html">reporte-de-bugs.html</a>: los 23
+                defectos (20 abiertos, 1 resuelto y 2 no reproducibles), cada
                 uno con pasos, obtenido, esperado, severidad, evidencia y la
                 configuración en que se observó. Resumen en la sección 10 y
                 hallazgos iniciales en
@@ -3280,8 +3296,8 @@ bun run format:check</code></pre>
         proyecto <a href="https://app.qase.io/project/COCOS">COCOS</a> de Qase y
         con las suites del repositorio al 24/09/2026: 53 casos, 43
         automatizados, 18 defectos abiertos. Re-verificación del 12/10/2026: 16
-        abiertos, 2 no reproducibles (#19 y #29) y 2 nuevos que todavía no están
-        en Qase (#47 y #48). Documento vivo: se actualiza cuando cambian el
+        abiertos, 2 no reproducibles (#19 y #29) y 4 nuevos que todavía no están
+        en Qase (#47 a #50). Documento vivo: se actualiza cuando cambian el
         alcance o los resultados.
       </footer>
     </div>
